@@ -16,6 +16,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/shuffle_btn"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -27,6 +28,7 @@
                 android:textColor="@color/black" />
 
             <Button
+                android:id="@+id/favorites_btn"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -38,6 +40,7 @@
                 android:textColor="@color/black" />
 
             <Button
+                android:id="@+id/playlist_btn"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -1,11 +1,15 @@
 package com.example.musicplayer
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.musicplayer.databinding.ActivityFavoriteBinding
 
 class favorite : AppCompatActivity() {
+    private lateinit var binding : ActivityFavoriteBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_favorite)
+        setTheme(R.style.Theme_MusicPlayer)
+        binding = ActivityFavoriteBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }
