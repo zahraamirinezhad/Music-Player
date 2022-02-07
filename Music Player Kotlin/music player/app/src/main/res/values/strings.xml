@@ -12,4 +12,5 @@
     <string name="share">SHARE</string>
     <string name="repeat">REPEAT</string>
     <string name="equalizer">EQUALIZER</string>
+    <string name="playlist">PLAYLIST</string>
 </resources>

@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/slash_screen">
         <activity
+            android:name=".playlist"
+            android:exported="false" />
+        <activity
+            android:name=".favorite"
+            android:exported="false" />
+        <activity
             android:name=".Player"
             android:exported="false" />
         <activity
