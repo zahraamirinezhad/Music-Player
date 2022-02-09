@@ -13,7 +13,7 @@ import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestRuntimePermission()
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        toggle = ActionBarDrawerToggle(this,binding.root,R.string.open,R.string.close)
+        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
         binding.root.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.navView.setNavigationItemSelectedListener({
-            when(it.itemId){
-                R.id.feedback -> Toast.makeText(baseContext,"FEEDBACK",Toast.LENGTH_SHORT).show()
-                R.id.settings -> Toast.makeText(baseContext,"SETTINGS",Toast.LENGTH_SHORT).show()
-                R.id.about -> Toast.makeText(baseContext,"ABOUT",Toast.LENGTH_SHORT).show()
+            when (it.itemId) {
+                R.id.feedback -> Toast.makeText(baseContext, "FEEDBACK", Toast.LENGTH_SHORT).show()
+                R.id.settings -> Toast.makeText(baseContext, "SETTINGS", Toast.LENGTH_SHORT).show()
+                R.id.about -> Toast.makeText(baseContext, "ABOUT", Toast.LENGTH_SHORT).show()
                 R.id.exit -> exitProcess(1)
             }
             true
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(toggle.onOptionsItemSelected(item)){
+        if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         return super.onOptionsItemSelected(item)

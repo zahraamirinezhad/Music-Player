@@ -21,4 +21,6 @@
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="exit">Exit</string>
+    <string name="song_name">SONG NAME</string>
+    <string name="song_album">SONG ALBUM</string>
 </resources>
