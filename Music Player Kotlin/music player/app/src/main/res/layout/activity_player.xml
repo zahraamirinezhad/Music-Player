@@ -86,7 +86,7 @@
             android:textColorHighlight="#00EFAD"
             android:textColorLink="#00FFC4"
             android:backgroundTint="@android:color/holo_red_light"
-            app:backgroundTint="#FF0059"
+            app:backgroundTint="@color/cool_pink"
             app:icon="@drawable/play_music"
             app:iconSize="40dp"
             app:tint="@color/black"

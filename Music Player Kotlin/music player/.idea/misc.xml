@@ -12,9 +12,11 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/shuffle_icon.xml" value="0.17314814814814813" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/slash_screen.xml" value="0.17314814814814813" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_favorite.xml" value="0.20416666666666666" />
-        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_player.xml" value="0.22" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_playlist.xml" value="0.19010416666666666" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/nav_header.xml" value="0.25" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/nav_menu.xml" value="0.25" />
       </map>
     </option>
   </component>
