@@ -30,6 +30,8 @@ class MusicAdapter(private val context : Context, private val musicList : ArrayL
         Glide.with(context).load(musicList[position].artUri).apply(RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()).into(holder.image)
         holder.root.setOnClickListener{
             val intent = Intent(context,Player::class.java)
+            intent.putExtra("index",position)
+            intent.putExtra("class","MusicAdapter")
             ContextCompat.startActivity(context,intent,null)
         }
     }
