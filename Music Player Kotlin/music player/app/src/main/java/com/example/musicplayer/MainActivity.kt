@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initializeLayout()
 
-        binding.shuffleBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, Player::class.java)
-            startActivity(intent)
-        }
         binding.favoritesBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, favorite::class.java)
             startActivity(intent)
