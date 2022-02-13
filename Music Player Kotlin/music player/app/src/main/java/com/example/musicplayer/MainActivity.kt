@@ -3,6 +3,7 @@ package com.example.musicplayer
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -170,7 +171,8 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATE_ADDED,
-            MediaStore.Audio.Media.DATA
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.ALBUM_ID
         )
 
         val cursor = this.contentResolver.query(
@@ -195,13 +197,18 @@ class MainActivity : AppCompatActivity() {
                     val durationC =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
 
+                    val albumID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUriC = Uri.withAppendedPath(uri,albumID).toString()
+
                     val music = Music(
                         id = idC,
                         title = titleC,
                         album = albumC,
                         artist = artistC,
                         path = pathC,
-                        duration = durationC
+                        duration = durationC,
+                        artUri = artUriC
                     )
                     val file = File(music.path)
                     if (file.exists())
