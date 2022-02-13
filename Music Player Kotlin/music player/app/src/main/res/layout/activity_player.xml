@@ -73,6 +73,7 @@
         android:gravity="center">
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/previous_music"
@@ -98,6 +99,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/next_music"
