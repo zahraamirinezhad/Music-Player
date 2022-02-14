@@ -3,6 +3,9 @@ package com.example.musicplayer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -49,23 +52,24 @@ class NotificationReceiver : BroadcastReceiver() {
                 RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
             ).into(Player.binding.songImgPA)
             Player.binding.songNamePA.text = Player.musicListPA[Player.songPosition].title
+
+            val img = getImageArt(Player.musicListPA[Player.songPosition].path)
+            val image = if (img != null) {
+                BitmapFactory.decodeByteArray(img, 0, img.size)
+            } else {
+                BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            }
+
+            val dr: Drawable = BitmapDrawable(image)
+            Player.binding.musicContainer.background = dr
+
             playMusic()
         } catch (e: Exception) {
             return
         }
-
-//        val img = getImageArt(Player.musicListPA[Player.songPosition].path)
-//        val image = if (img != null) {
-//            BitmapFactory.decodeByteArray(img, 0, img.size)
-//        } else {
-//            BitmapFactory.decodeResource(
-//                resources,
-//                R.drawable.music_player_icon_slash_screen
-//            )
-//        }
-//
-//        val dr: Drawable = BitmapDrawable(image)
-//        Player.binding.musicContainer.background = dr
 
     }
 }
