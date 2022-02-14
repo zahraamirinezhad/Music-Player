@@ -32,10 +32,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setTheme(R.style.coolPinkNav)
+        //Initializing Binding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //for nav drawer
+        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
+        binding.root.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) initializeLayout()
 
-        binding.shuffleBtn.setOnClickListener{
+        binding.shuffleBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, Player::class.java)
             intent.putExtra("index", 0)
             intent.putExtra("class", "MainActivity")
@@ -72,15 +82,6 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
     private fun initializeLayout() {
-        setTheme(R.style.coolPinkNav)
-        //Initializing Binding
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        //for nav drawer
-        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
-        binding.root.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         MusicListMA = getAllAudio()
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
@@ -153,8 +154,7 @@ class MainActivity : AppCompatActivity() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
