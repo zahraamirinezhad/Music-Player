@@ -1,5 +1,6 @@
 package com.example.musicplayer
 
+import android.media.MediaMetadataRetriever
 import java.util.concurrent.TimeUnit
 
 data class Music(
@@ -19,4 +20,24 @@ fun formatDuration(duration: Long): String {
         TimeUnit.MILLISECONDS
     ) - minutes * TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
     return String.format("%02d:%02d", minutes, seconds)
+}
+
+fun getImageArt(path: String): ByteArray? {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(path)
+    return retriever.embeddedPicture
+}
+
+fun setSongPosition(increment: Boolean) {
+    if (increment) {
+        if (Player.songPosition == Player.musicListPA.size - 1)
+            Player.songPosition = 0
+        else
+            ++Player.songPosition
+    } else {
+        if (Player.songPosition == 0)
+            Player.songPosition = Player.musicListPA.size - 1
+        else
+            --Player.songPosition
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.musicplayer
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -153,12 +154,12 @@ class MainActivity : AppCompatActivity() {
     private fun requestRuntimePermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 13
             )
             return false
@@ -180,9 +181,10 @@ class MainActivity : AppCompatActivity() {
             } else
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     13
                 )
         }
     }
+
 }
