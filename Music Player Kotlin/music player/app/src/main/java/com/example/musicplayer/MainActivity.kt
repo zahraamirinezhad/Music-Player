@@ -35,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) initializeLayout()
 
+        binding.shuffleBtn.setOnClickListener{
+            val intent = Intent(this@MainActivity, Player::class.java)
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "MainActivity")
+            startActivity(intent)
+        }
+
         binding.favoritesBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, favorite::class.java)
             startActivity(intent)
