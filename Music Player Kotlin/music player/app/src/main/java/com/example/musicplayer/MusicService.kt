@@ -15,6 +15,7 @@ class MusicService : Service() {
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
     private lateinit var mediaSession: MediaSessionCompat
+
     override fun onBind(p0: Intent?): IBinder {
         return myBinder
     }

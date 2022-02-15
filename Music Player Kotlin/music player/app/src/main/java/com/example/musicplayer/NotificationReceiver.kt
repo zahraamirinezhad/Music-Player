@@ -66,6 +66,13 @@ class NotificationReceiver : BroadcastReceiver() {
             val dr: Drawable = BitmapDrawable(image)
             Player.binding.musicContainer.background = dr
 
+            Player.binding.seekMusic.progress = 0
+            Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
+            Player.binding.seekMusicStart.text =
+                formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
+            Player.binding.seekMusicEnd.text =
+                formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
+
             playMusic()
         } catch (e: Exception) {
             return

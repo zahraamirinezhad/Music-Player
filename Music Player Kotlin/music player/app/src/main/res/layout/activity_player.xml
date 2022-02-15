@@ -122,6 +122,7 @@
         android:paddingRight="20dp">
 
         <TextView
+            android:id="@+id/seekMusicStart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/start"
@@ -129,11 +130,13 @@
             android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekMusic"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/seekMusicEnd"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/end"

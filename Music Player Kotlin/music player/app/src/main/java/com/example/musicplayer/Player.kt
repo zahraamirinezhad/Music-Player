@@ -8,14 +8,19 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.musicplayer.databinding.ActivityPlayerBinding
 
 
-class Player : AppCompatActivity(), ServiceConnection {
+class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
+    private lateinit var runnable: Runnable
+
     companion object {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
@@ -48,6 +53,15 @@ class Player : AppCompatActivity(), ServiceConnection {
         binding.next.setOnClickListener {
             backNextMusic(true)
         }
+
+        binding.seekMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                if (b) musicService!!.mediaPlayer!!.seekTo(i)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+        })
     }
 
     private fun setLayout() {
@@ -78,6 +92,13 @@ class Player : AppCompatActivity(), ServiceConnection {
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
             musicService!!.mediaPlayer!!.prepare()
             playMusic()
+            binding.seekMusicStart.text =
+                formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+            binding.seekMusicEnd.text =
+                formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+            binding.seekMusic.progress = 0
+            binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
+            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
         } catch (e: Exception) {
             return
         }
@@ -127,9 +148,30 @@ class Player : AppCompatActivity(), ServiceConnection {
         val binder = p1 as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer()
+        seekbarSetup()
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
         musicService = null
+    }
+
+    private fun seekbarSetup() {
+        runnable = Runnable {
+            binding.seekMusicStart.text =
+                formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+            binding.seekMusic.progress = musicService!!.mediaPlayer!!.currentPosition
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        setSongPosition(true)
+        createMediaPlayer()
+        try {
+            setLayout()
+        } catch (e: Exception) {
+            return
+        }
     }
 }
