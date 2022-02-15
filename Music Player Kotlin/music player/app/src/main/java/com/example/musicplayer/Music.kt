@@ -29,15 +29,17 @@ fun getImageArt(path: String): ByteArray? {
 }
 
 fun setSongPosition(increment: Boolean) {
-    if (increment) {
-        if (Player.songPosition == Player.musicListPA.size - 1)
-            Player.songPosition = 0
-        else
-            ++Player.songPosition
-    } else {
-        if (Player.songPosition == 0)
-            Player.songPosition = Player.musicListPA.size - 1
-        else
-            --Player.songPosition
+    if (!Player.repeat) {
+        if (increment) {
+            if (Player.songPosition == Player.musicListPA.size - 1)
+                Player.songPosition = 0
+            else
+                ++Player.songPosition
+        } else {
+            if (Player.songPosition == 0)
+                Player.songPosition = Player.musicListPA.size - 1
+            else
+                --Player.songPosition
+        }
     }
 }

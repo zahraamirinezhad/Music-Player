@@ -13,6 +13,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.musicplayer.databinding.ActivityPlayerBinding
@@ -27,6 +28,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
         lateinit var binding: ActivityPlayerBinding
+        var repeat: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +64,26 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
         })
+
+        binding.repeatMusic.setOnClickListener {
+            if (!repeat) {
+                repeat = true
+                binding.repeatMusic.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.repeat_loop
+                    )
+                )
+            } else {
+                repeat = false
+                binding.repeatMusic.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.repeat_music
+                    )
+                )
+            }
+        }
     }
 
     private fun setLayout() {
@@ -83,6 +105,13 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         binding.musicContainer.background = dr
 
         binding.songNamePA.text = musicListPA[songPosition].title
+
+        if (repeat) binding.repeatMusic.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.repeat_loop
+            )
+        )
     }
 
     private fun createMediaPlayer() {
