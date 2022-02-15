@@ -16,12 +16,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/dragDownFA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/back"
             android:paddingLeft="20dp"
-            android:src="@drawable/former_music"
+            android:src="@drawable/down"
             app:tint="@color/white" />
 
         <TextView

@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,10 +13,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.ActivityMainBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -67,7 +70,27 @@ class MainActivity : AppCompatActivity() {
                 R.id.feedback -> Toast.makeText(baseContext, "Feedback", Toast.LENGTH_SHORT).show()
                 R.id.settings -> Toast.makeText(baseContext, "Settings", Toast.LENGTH_SHORT).show()
                 R.id.about -> Toast.makeText(baseContext, "About", Toast.LENGTH_SHORT).show()
-                R.id.exit -> exitProcess(1)
+                R.id.exit -> {
+                    val builder = MaterialAlertDialogBuilder(this)
+                    builder.setTitle("EXIT")
+                        .setMessage("Do You Want to Close the App ?")
+                        .setPositiveButton("YES") { _, _ ->
+//                            if(Player.musicService != null) {
+//                                Player.musicService!!.stopForeground(true)
+//                                Player.musicService!!.mediaPlayer!!.release()
+//                                Player.musicService = null
+//                            }
+//                            exitProcess(1)
+                            finish()
+                        }
+                        .setNegativeButton("NO") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    val customDialog = builder.create()
+                    customDialog.show()
+                    customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
+                    customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+                }
 
             }
             true
@@ -184,6 +207,16 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     13
                 )
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!Player.isPlaying && Player.musicService != null) {
+            Player.musicService!!.stopForeground(true)
+            Player.musicService!!.mediaPlayer!!.release()
+            Player.musicService = null
+            exitProcess(1)
         }
     }
 

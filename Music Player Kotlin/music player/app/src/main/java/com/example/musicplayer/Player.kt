@@ -84,6 +84,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
         }
+
+        binding.dragDownPL.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setLayout() {
