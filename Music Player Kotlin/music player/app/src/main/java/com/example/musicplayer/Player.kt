@@ -7,11 +7,13 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -87,6 +89,22 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         binding.dragDownPL.setOnClickListener {
             finish()
+        }
+
+        binding.equalizer.setOnClickListener {
+            try {
+                val EqIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+                EqIntent.putExtra(
+                    AudioEffect.EXTRA_AUDIO_SESSION,
+                    musicService!!.mediaPlayer!!.audioSessionId
+                )
+                EqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
+                EqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                startActivityForResult(EqIntent, 13)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Equalizer Feature Doesn't Support .", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -204,6 +222,13 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         try {
             setLayout()
         } catch (e: Exception) {
+            return
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 13 && resultCode == RESULT_OK) {
             return
         }
     }

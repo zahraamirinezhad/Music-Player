@@ -165,6 +165,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
+            android:id="@+id/equalizer"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
