@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
-import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     //Creating Binding Object
@@ -75,12 +74,7 @@ class MainActivity : AppCompatActivity() {
                     builder.setTitle("EXIT")
                         .setMessage("Do You Want to Close the App ?")
                         .setPositiveButton("YES") { _, _ ->
-//                            if(Player.musicService != null) {
-//                                Player.musicService!!.stopForeground(true)
-//                                Player.musicService!!.mediaPlayer!!.release()
-//                                Player.musicService = null
-//                            }
-//                            exitProcess(1)
+//                            exitApplication()
                             finish()
                         }
                         .setNegativeButton("NO") { dialog, _ ->
@@ -213,10 +207,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!Player.isPlaying && Player.musicService != null) {
-            Player.musicService!!.stopForeground(true)
-            Player.musicService!!.mediaPlayer!!.release()
-            Player.musicService = null
-            exitProcess(1)
+            exitApplication()
         }
     }
 

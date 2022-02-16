@@ -23,4 +23,7 @@
     <string name="exit">Exit</string>
     <string name="song_name">SONG NAME</string>
     <string name="song_album">SONG ALBUM</string>
+    <string name="min_15">15 Minutes</string>
+    <string name="min_30">30 Minutes</string>
+    <string name="min_60">60 Minutes</string>
 </resources>

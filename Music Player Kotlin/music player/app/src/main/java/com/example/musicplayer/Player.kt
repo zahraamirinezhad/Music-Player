@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
@@ -12,13 +13,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.musicplayer.databinding.ActivityPlayerBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
@@ -31,6 +36,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var musicService: MusicService? = null
         lateinit var binding: ActivityPlayerBinding
         var repeat: Boolean = false
+        var min15: Boolean = false
+        var min30: Boolean = false
+        var min60: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +114,35 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                     .show()
             }
         }
+
+        binding.timer.setOnClickListener {
+            val isTimer = min15 || min30 || min60
+            if (!isTimer) showButtonSheetDialog()
+            else {
+                val builder = MaterialAlertDialogBuilder(this)
+                builder.setTitle("STOP TIMER")
+                    .setMessage("Do You Want to Stop the Timer ?")
+                    .setPositiveButton("YES") { _, _ ->
+                        min15 = false
+                        min30 = false
+                        min60 = false
+                        binding.timer.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                this,
+                                R.drawable.timer
+                            )
+                        )
+                    }
+                    .setNegativeButton("NO") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val customDialog = builder.create()
+                customDialog.show()
+                customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
+                customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+            }
+
+        }
     }
 
     private fun setLayout() {
@@ -134,6 +171,15 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 R.drawable.repeat_loop
             )
         )
+
+        if (min15 || min30 || min60) {
+            binding.timer.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.selected_timer
+                )
+            )
+        }
     }
 
     private fun createMediaPlayer() {
@@ -230,6 +276,54 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 13 && resultCode == RESULT_OK) {
             return
+        }
+    }
+
+    private fun showButtonSheetDialog() {
+        val dialog = BottomSheetDialog(this@Player)
+        dialog.setContentView(R.layout.bottom_sheet_dialog)
+        dialog.show()
+        dialog.findViewById<LinearLayout>(R.id.min15)?.setOnClickListener {
+            binding.timer.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.selected_timer
+                )
+            )
+            min15 = true
+            Thread {
+                Thread.sleep(15 * 60000)
+                if (min15) exitApplication()
+            }.start()
+            dialog.dismiss()
+        }
+        dialog.findViewById<LinearLayout>(R.id.min30)?.setOnClickListener {
+            binding.timer.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.selected_timer
+                )
+            )
+            min30 = true
+            Thread {
+                Thread.sleep(30 * 60000)
+                if (min30) exitApplication()
+            }.start()
+            dialog.dismiss()
+        }
+        dialog.findViewById<LinearLayout>(R.id.min60)?.setOnClickListener {
+            binding.timer.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.selected_timer
+                )
+            )
+            min60 = true
+            Thread {
+                Thread.sleep(60 * 60000)
+                if (min60) exitApplication()
+            }.start()
+            dialog.dismiss()
         }
     }
 }
