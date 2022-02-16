@@ -145,12 +145,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         }
 
-        binding.shareMusic.setOnClickListener{
+        binding.shareMusic.setOnClickListener {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].path))
-            startActivity(Intent.createChooser(shareIntent,"Share Music File !!"))
+            startActivity(Intent.createChooser(shareIntent, "Share Music File !!"))
         }
     }
 
@@ -213,6 +213,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initializeLayout() {
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
+
+            "MusicAdapterSearch" -> {
+                musicListPA = ArrayList()
+                musicListPA.addAll(MainActivity.MusicListSearch)
+                setLayout()
+            }
 
             "MusicAdapter" -> {
                 musicListPA = ArrayList()
