@@ -40,6 +40,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var min15: Boolean = false
         var min30: Boolean = false
         var min60: Boolean = false
+        var nowPlayingID: String = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,10 +48,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         setTheme(R.style.coolPink)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val intent = Intent(this, MusicService::class.java)
-        bindService(intent, this, BIND_AUTO_CREATE)
-        startService(intent)
 
         initializeLayout()
 
@@ -205,6 +202,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             binding.seekMusic.progress = 0
             binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+            nowPlayingID = musicListPA[songPosition].id
         } catch (e: Exception) {
             return
         }
@@ -213,20 +211,42 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initializeLayout() {
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
-
+            "NowPlaying" -> {
+                setLayout()
+                binding.seekMusicStart.text =
+                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                binding.seekMusicEnd.text =
+                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                binding.seekMusic.progress = musicService!!.mediaPlayer!!.currentPosition
+                binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
+                if (isPlaying) binding.playPauseBTN.setIconResource(R.drawable.pause_music)
+                else binding.playPauseBTN.setIconResource(R.drawable.play_music)
+            }
             "MusicAdapterSearch" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+
                 musicListPA = ArrayList()
                 musicListPA.addAll(MainActivity.MusicListSearch)
                 setLayout()
             }
 
             "MusicAdapter" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+
                 musicListPA = ArrayList()
                 musicListPA.addAll(MainActivity.MusicListMA)
                 setLayout()
             }
 
             "MainActivity" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+
                 musicListPA = ArrayList()
                 musicListPA.addAll(MainActivity.MusicListMA)
                 musicListPA.shuffle()
@@ -307,7 +327,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
             min15 = true
             Thread {
-                Thread.sleep(15 * 60000)
+                Thread.sleep((15 * 60000).toLong())
                 if (min15) exitApplication()
             }.start()
             dialog.dismiss()
@@ -321,7 +341,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
             min30 = true
             Thread {
-                Thread.sleep(30 * 60000)
+                Thread.sleep((30 * 60000).toLong())
                 if (min30) exitApplication()
             }.start()
             dialog.dismiss()
@@ -335,7 +355,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
             min60 = true
             Thread {
-                Thread.sleep(60 * 60000)
+                Thread.sleep((60 * 60000).toLong())
                 if (min60) exitApplication()
             }.start()
             dialog.dismiss()

@@ -7,6 +7,7 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/down.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/favorite_icon.xml" value="0.17314814814814813" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/former_music.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/fragment_background.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/music_icon.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/next_music.xml" value="0.2046875" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/pause_music.xml" value="0.1125" />
@@ -25,6 +26,7 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_player.xml" value="0.22" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/activity_playlist.xml" value="0.19010416666666666" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/button_sheet_dialog.xml" value="0.22" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/fragment_now_playing.xml" value="0.21" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/music_view.xml" value="0.22" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/nav_menu.xml" value="0.25" />

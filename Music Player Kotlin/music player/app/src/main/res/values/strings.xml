@@ -27,4 +27,6 @@
     <string name="min_30">30 Minutes</string>
     <string name="min_60">60 Minutes</string>
     <string name="search_view">SEARCH VIEW</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
