@@ -3,6 +3,7 @@ package com.example.musicplayer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -63,7 +64,12 @@ class NotificationReceiver : BroadcastReceiver() {
             }
 
             val dr: Drawable = BitmapDrawable(image)
-            Player.binding.musicContainer.background = dr
+            val icon: Bitmap = (dr as BitmapDrawable).bitmap
+            val final_Bitmap = returnBlurredBackground(icon, context)
+            val newdr: Drawable = BitmapDrawable(final_Bitmap)
+            Player.binding.musicContainer.background = newdr
+
+            NowPlaying.binding.musicContainerNP.background = dr
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -78,6 +84,9 @@ class NotificationReceiver : BroadcastReceiver() {
             NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
             playMusic()
+            Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
+            if (Player.isFavorite) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+            else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
         } catch (e: Exception) {
             return
         }

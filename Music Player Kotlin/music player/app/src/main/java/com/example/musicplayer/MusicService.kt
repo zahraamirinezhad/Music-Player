@@ -92,7 +92,7 @@ class MusicService : Service() {
             .setOnlyAlertOnce(true)
             .addAction(R.drawable.previous_music, "Previous", prevPendingIntent)
             .addAction(playPause, "Play", playPendingIntent)
-            .addAction(R.drawable.next_music, "Nex", nextPendingIntent)
+            .addAction(R.drawable.next_music, "Next", nextPendingIntent)
             .addAction(R.drawable.exit, "Exit", exitPendingIntent)
             .build()
 

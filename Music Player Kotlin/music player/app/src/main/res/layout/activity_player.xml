@@ -29,15 +29,27 @@
             android:contentDescription="@string/back" />
 
         <TextView
+            android:id="@+id/songNamePA"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/world_of_music"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:text="@string/song_name"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="10"/>
 
         <ImageButton
+            android:id="@+id/favoritesBTN"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -56,18 +68,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:src="@drawable/music_player_icon_slash_screen"
-        app:strokeColor="@color/light_purple"
         app:strokeWidth="5dp"
-        app:shapeAppearanceOverlay="@style/curved"/>
-
-    <TextView
-        android:id="@+id/songNamePA"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:textColor="@color/black"/>
+        app:shapeAppearanceOverlay="@style/circle"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -116,7 +118,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="120dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
@@ -127,8 +129,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/start"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="20"
+            android:shadowDy="10"
+            android:shadowRadius="10"/>
 
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seekMusic"
@@ -141,14 +147,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/end"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="20"
+            android:shadowDy="10"
+            android:shadowRadius="10"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:orientation="horizontal">
 

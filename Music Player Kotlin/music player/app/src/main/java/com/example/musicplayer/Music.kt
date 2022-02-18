@@ -1,6 +1,12 @@
 package com.example.musicplayer
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
@@ -53,4 +59,35 @@ fun exitApplication() {
 
         exitProcess(1)
     }
+}
+
+fun returnBlurredBackground(input: Bitmap, context: Context): Bitmap? {
+    return try {
+        val rsScript: RenderScript = RenderScript.create(context)
+        val alloc: Allocation = Allocation.createFromBitmap(rsScript, input)
+        val blur: ScriptIntrinsicBlur =
+            ScriptIntrinsicBlur.create(rsScript, Element.U8_4(rsScript))
+        blur.setRadius(21F)
+        blur.setInput(alloc)
+        val result = Bitmap.createBitmap(input.width, input.height, Bitmap.Config.ARGB_8888)
+        val outAlloc: Allocation = Allocation.createFromBitmap(rsScript, result)
+        blur.forEach(outAlloc)
+        outAlloc.copyTo(result)
+        rsScript.destroy()
+        result
+    } catch (e: Exception) {
+        // TODO: handle exception
+        input
+    }
+}
+
+fun favoriteChecker(id: String): Int {
+    Player.isFavorite = false
+    favorite.favoriteSongs.forEachIndexed { index, music ->
+        if (id == music.id) {
+            Player.isFavorite = true
+            return index
+        }
+    }
+    return -1
 }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="260dp"
-    android:background="@color/cool_pink"
+    android:background="@drawable/fragment_background"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -19,6 +19,11 @@
         android:layout_marginTop="20dp"
         android:text="@string/text_nav"
         android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="10"
+        android:textStyle="italic|bold"
+        android:shadowDy="10"
+        android:shadowRadius="10"/>
 
 </LinearLayout>

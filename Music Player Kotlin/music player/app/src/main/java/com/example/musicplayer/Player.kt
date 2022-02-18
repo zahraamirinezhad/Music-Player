@@ -3,6 +3,7 @@ package com.example.musicplayer
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -41,11 +42,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var min30: Boolean = false
         var min60: Boolean = false
         var nowPlayingID: String = ""
+        var isFavorite: Boolean = false
+        var fIndex: Int = -1
+//        lateinit var myVs : CircleBarVisualizer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.coolPink)
+        setTheme(R.style.darkBlueTheme)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -149,9 +153,26 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].path))
             startActivity(Intent.createChooser(shareIntent, "Share Music File !!"))
         }
+
+        binding.favoritesBTN.setOnClickListener {
+            if (isFavorite) {
+                isFavorite = false;
+                binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+                favorite.favoriteSongs.removeAt(fIndex)
+            } else {
+                isFavorite = true;
+                binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+                favorite.favoriteSongs.add(musicListPA[songPosition])
+            }
+        }
     }
 
+
     private fun setLayout() {
+        fIndex = favoriteChecker(musicListPA[songPosition].id)
+        if (fIndex != -1) binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+        else binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+        binding.songNamePA.isSelected = true
         Glide.with(this).load(musicListPA[songPosition].artUri).apply(
             RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
         ).into(binding.songImgPA)
@@ -167,7 +188,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         val dr: Drawable = BitmapDrawable(image)
-        binding.musicContainer.background = dr
+        val icon: Bitmap = (dr as BitmapDrawable).bitmap
+        val final_Bitmap = returnBlurredBackground(icon, this)
+        val newdr: Drawable = BitmapDrawable(final_Bitmap)
+        binding.musicContainer.background = newdr
+
+        NowPlaying.binding.songImgNP.background = dr
 
         binding.songNamePA.text = musicListPA[songPosition].title
 
@@ -186,6 +212,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             )
         }
+
     }
 
     private fun createMediaPlayer() {
@@ -211,6 +238,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initializeLayout() {
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
+            "FavoriteAdapter" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+                musicListPA = ArrayList()
+                musicListPA.addAll(favorite.favoriteSongs)
+                setLayout()
+            }
             "NowPlaying" -> {
                 setLayout()
                 binding.seekMusicStart.text =
@@ -236,7 +271,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 val intent = Intent(this, MusicService::class.java)
                 bindService(intent, this, BIND_AUTO_CREATE)
                 startService(intent)
-
                 musicListPA = ArrayList()
                 musicListPA.addAll(MainActivity.MusicListMA)
                 setLayout()
@@ -260,6 +294,24 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicService!!.showNotification(R.drawable.pause_music)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
+
+//        myVs = findViewById(R.id.visualizerCircle)
+//        myVs.visibility = View.VISIBLE
+//        myVs.setColor(ContextCompat.getColor(this, R.color.purple_500))
+//        myVs.setPlayer(musicService!!.mediaPlayer!!.audioSessionId)
+//        val img = getImageArt(musicListPA[songPosition].path)
+//        val image = if (img != null) {
+//            BitmapFactory.decodeByteArray(img, 0, img.size)
+//        } else {
+//            BitmapFactory.decodeResource(
+//                resources,
+//                R.drawable.music_player_icon_slash_screen
+//            )
+//        }
+//
+//        val dr: Drawable = BitmapDrawable(image)
+//        myVs.background = dr
+
     }
 
     private fun pauseMusic() {
@@ -267,6 +319,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicService!!.showNotification(R.drawable.play_music)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
+//        myVs.release()
     }
 
     fun backNextMusic(increment: Boolean) {

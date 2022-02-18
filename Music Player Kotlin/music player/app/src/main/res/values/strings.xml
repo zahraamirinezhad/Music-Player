@@ -5,7 +5,7 @@
     <string name="playlist_btn">Playlist</string>
     <string name="world_of_music">WORLD OF MUSIC</string>
     <string name="back">BACK</string>
-    <string name="favorite">FAVORITE</string>
+    <string name="favorite">FAVORITES</string>
     <string name="start">00:00</string>
     <string name="end">LOADING...</string>
     <string name="timer">TIMER</string>
@@ -27,6 +27,5 @@
     <string name="min_30">30 Minutes</string>
     <string name="min_60">60 Minutes</string>
     <string name="search_view">SEARCH VIEW</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

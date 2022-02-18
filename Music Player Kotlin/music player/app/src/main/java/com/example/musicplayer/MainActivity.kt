@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTheme(R.style.coolPinkNav)
+        setTheme(R.style.darkBlueThemeNav)
         //Initializing Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
