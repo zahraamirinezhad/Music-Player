@@ -3,12 +3,13 @@ package com.example.musicplayer
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.musicplayer.databinding.MusicViewBinding
 
 class MusicAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
@@ -29,9 +30,20 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
-        Glide.with(context).load(musicList[position].artUri).apply(
-            RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
-        ).into(holder.image)
+
+        val img = getImageArt(musicList[position].path)
+        val myImage = if (img != null) {
+            BitmapFactory.decodeByteArray(img, 0, img.size)
+        } else {
+            BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.music_player_icon_slash_screen
+            )
+        }
+
+        val dr: Drawable = BitmapDrawable(myImage)
+        holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
+
         holder.root.setOnClickListener {
             when {
                 MainActivity.search -> sendIntent("MusicAdapterSearch", position)

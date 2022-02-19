@@ -2,12 +2,13 @@ package com.example.musicplayer
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.musicplayer.databinding.FavoriteViewBinding
 
 class FavoriteAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
@@ -23,9 +24,19 @@ class FavoriteAdapter(private val context: Context, private var musicList: Array
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        Glide.with(context).load(musicList[position].artUri).apply(
-            RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
-        ).into(holder.image)
+        val img = getImageArt(musicList[position].path)
+        val myImage = if (img != null) {
+            BitmapFactory.decodeByteArray(img, 0, img.size)
+        } else {
+            BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.music_player_icon_slash_screen
+            )
+        }
+
+        val dr: Drawable = BitmapDrawable(myImage)
+        holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
+
         holder.name.text = musicList[position].title
         holder.name.isSelected = true
         holder.root.setOnClickListener {

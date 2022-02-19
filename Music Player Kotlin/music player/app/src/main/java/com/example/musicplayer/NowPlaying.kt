@@ -60,6 +60,7 @@ class NowPlaying : Fragment() {
 
                 val dr: Drawable = BitmapDrawable(image)
                 binding.musicContainerNP.background = dr
+                binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
                 Player.binding.seekMusic.progress = 0
                 Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -68,10 +69,10 @@ class NowPlaying : Fragment() {
                 Player.binding.seekMusicEnd.text =
                     formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
-                Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                    RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen)
-                        .centerCrop()
-                ).into(binding.songImgNP)
+//                Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
+//                    RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen)
+//                        .centerCrop()
+//                ).into(binding.songImgNP)
                 binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
                 Player.musicService!!.showNotification(R.drawable.pause_music)
@@ -104,6 +105,7 @@ class NowPlaying : Fragment() {
 
                 val dr: Drawable = BitmapDrawable(image)
                 binding.musicContainerNP.background = dr
+                binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
                 Player.binding.seekMusic.progress = 0
                 Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -112,10 +114,6 @@ class NowPlaying : Fragment() {
                 Player.binding.seekMusicEnd.text =
                     formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
-                Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                    RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen)
-                        .centerCrop()
-                ).into(binding.songImgNP)
                 binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
 
@@ -141,9 +139,7 @@ class NowPlaying : Fragment() {
         if (Player.musicService != null) {
             binding.root.visibility = View.VISIBLE
             binding.songNameNP.isSelected = true
-            Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
-            ).into(binding.songImgNP)
+
             binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
             if (Player.isPlaying) binding.playPauseNP.setIconResource(R.drawable.pause_music)
             else binding.playPauseNP.setIconResource(R.drawable.play_music)
@@ -160,6 +156,7 @@ class NowPlaying : Fragment() {
 
             val dr: Drawable = BitmapDrawable(image)
             binding.musicContainerNP.background = dr
+            binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
             val rotateAnimation = RotateAnimation(
                 0f, 359f,

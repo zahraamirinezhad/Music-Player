@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">music player</string>
     <string name="shuffle_btn">Shuffle</string>
-    <string name="favorites_btn">Favorites</string>
+    <string name="favorites_btn">Favourites</string>
     <string name="playlist_btn">Playlist</string>
     <string name="world_of_music">WORLD OF MUSIC</string>
     <string name="back">BACK</string>

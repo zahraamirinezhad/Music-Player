@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/music_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context=".Player"
-    android:id="@+id/music_container">
+    tools:context=".Player">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/dragDownPL"
@@ -23,30 +26,30 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/back"
             android:src="@drawable/down"
             app:tint="@color/black"
-            tools:ignore="SpeakableTextPresentCheck"
-            android:contentDescription="@string/back" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/songNamePA"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/song_name"
-            android:textColor="@color/white"
-            android:textSize="18sp"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center_horizontal|center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
             android:shadowColor="@android:color/black"
             android:shadowDx="10"
             android:shadowDy="10"
-            android:shadowRadius="10"/>
+            android:shadowRadius="10"
+            android:singleLine="true"
+            android:text="@string/song_name"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <ImageButton
             android:id="@+id/favoritesBTN"
@@ -55,28 +58,42 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/favorite"
             android:src="@drawable/favorite_empty_icon"
             app:tint="@android:color/holo_red_dark"
-            tools:ignore="SpeakableTextPresentCheck"
-            android:contentDescription="@string/favorite" />
+            tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImgPA"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
         android:src="@drawable/music_player_icon_slash_screen"
-        app:strokeWidth="5dp"
-        app:shapeAppearanceOverlay="@style/circle"/>
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.32999998"
+        app:shapeAppearanceOverlay="@style/circle"
+        tools:ignore="MissingConstraints" />
+
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
         android:gravity="center"
-        android:layout_marginTop="30dp">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.82">
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/back"
@@ -93,15 +110,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="@android:color/holo_red_light"
             android:textColorHighlight="#00EFAD"
             android:textColorLink="#00FFC4"
-            android:backgroundTint="@android:color/holo_red_light"
             app:backgroundTint="@color/cool_pink"
             app:icon="@drawable/pause_music"
             app:iconSize="40dp"
-            app:tint="@color/black"
             app:iconTint="@color/white"
             app:shapeAppearanceOverlay="@style/curved"
+            app:tint="@color/black"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -116,25 +133,31 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.94">
 
         <TextView
             android:id="@+id/seekMusicStart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/start"
-            android:textColor="@color/white"
-            android:textSize="15sp"
             android:shadowColor="@android:color/black"
             android:shadowDx="20"
             android:shadowDy="10"
-            android:shadowRadius="10"/>
+            android:shadowRadius="10"
+            android:text="@string/start"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seekMusic"
@@ -146,21 +169,27 @@
             android:id="@+id/seekMusicEnd"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/end"
-            android:textColor="@color/white"
-            android:textSize="15sp"
             android:shadowColor="@android:color/black"
             android:shadowDx="20"
             android:shadowDy="10"
-            android:shadowRadius="10"/>
+            android:shadowRadius="10"
+            android:text="@string/end"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.90999997">
 
         <ImageButton
             android:id="@+id/repeatMusic"
@@ -211,4 +240,4 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

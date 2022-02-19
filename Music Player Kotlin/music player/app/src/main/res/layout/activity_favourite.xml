@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".favorite"
+    tools:context=".favourite"
     android:background="@drawable/fragment_background">
 
     <LinearLayout
@@ -52,6 +52,7 @@
         android:paddingBottom="40dp"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/shuffleFav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"

@@ -21,6 +21,8 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +52,17 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //checking for permission & if permission is granted then initializeLayout
-        if (requestRuntimePermission()) initializeLayout()
+        if (requestRuntimePermission()) {
+            initializeLayout()
+            favourite.favoriteSongs = ArrayList()
+            val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+            val jsonString = editor.getString("FavouriteSongs", null)
+            val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
+            if (jsonString != null) {
+                val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
+                favourite.favoriteSongs.addAll(data)
+            }
+        }
 
         binding.shuffleBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, Player::class.java)
@@ -60,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.favoritesBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, favorite::class.java)
+            val intent = Intent(this@MainActivity, favourite::class.java)
             startActivity(intent)
         }
         binding.playlistBtn.setOnClickListener {
@@ -214,6 +226,14 @@ class MainActivity : AppCompatActivity() {
         if (!Player.isPlaying && Player.musicService != null) {
             exitApplication()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+        val jsonString = GsonBuilder().create().toJson(favourite.favoriteSongs)
+        editor.putString("FavouriteSongs", jsonString)
+        editor.apply()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

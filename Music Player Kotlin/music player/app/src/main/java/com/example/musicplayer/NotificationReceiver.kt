@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
@@ -48,10 +46,6 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
-            Glide.with(context).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
-            ).into(Player.binding.songImgPA)
-            Player.binding.songNamePA.text = Player.musicListPA[Player.songPosition].title
 
             val img = getImageArt(Player.musicListPA[Player.songPosition].path)
             val image = if (img != null) {
@@ -70,6 +64,7 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.binding.musicContainer.background = newdr
 
             NowPlaying.binding.musicContainerNP.background = dr
+            NowPlaying.binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -78,9 +73,6 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.binding.seekMusicEnd.text =
                 formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
-            Glide.with(context).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop()
-            ).into(NowPlaying.binding.songImgNP)
             NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
             playMusic()
