@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".playlist"
-    android:background="@drawable/fragment_background">
+    android:background="@drawable/fragment_background"
+    tools:context=".playlist">
 
     <LinearLayout
         android:id="@+id/linearLayoutPL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/fragment_background"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,26 +30,26 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/playlist"
             android:gravity="center"
-            android:textSize="32sp"
-            android:textStyle="italic"
             android:shadowColor="@android:color/black"
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="10"
-            android:textColor="@color/white"/>
+            android:text="@string/playlist"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="italic" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlistRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutPL"
+        android:paddingBottom="40dp"
         android:scrollbars="vertical"
-        android:paddingBottom="40dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutPL" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/addPlaylist"
