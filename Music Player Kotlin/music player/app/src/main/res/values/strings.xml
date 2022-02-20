@@ -28,4 +28,11 @@
     <string name="min_60">60 Minutes</string>
     <string name="search_view">SEARCH VIEW</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="playlist_name">PLAYLIST NAME</string>
+    <string name="playlist_image">PLAYLIST IMAGE</string>
+    <string name="playlist_delete">PLAYLIST DELETE</string>
+    <string name="user_name">YOUR NAME</string>
+    <string name="add_music">ADD</string>
+    <string name="remove_all_musics_in_playlist">DELETE ALL</string>
+    <string name="search_song">SEARCH SONG</string>
 </resources>

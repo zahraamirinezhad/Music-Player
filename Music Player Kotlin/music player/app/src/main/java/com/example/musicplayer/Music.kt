@@ -7,6 +7,7 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
@@ -19,6 +20,17 @@ data class Music(
     val path: String,
     val artUri: String
 )
+
+class myPlaylist {
+    lateinit var name: String
+    lateinit var musics: ArrayList<Music>
+    lateinit var createdBy: String
+    lateinit var createdOn: String
+}
+
+class ListOfPlaylists {
+    var ref: ArrayList<myPlaylist> = ArrayList()
+}
 
 fun formatDuration(duration: Long): String {
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -142,4 +154,13 @@ fun getReflectionBackground(image: Bitmap): Bitmap? {
                 + reflectionGap).toFloat(), paint
     )
     return bitmapWithReflection
+}
+
+fun checkPlaylist(playlist: ArrayList<Music>): ArrayList<Music> {
+    playlist.forEachIndexed { index, music ->
+        val file = File(music.path)
+        if (!file.exists())
+            playlist.removeAt(index)
+    }
+    return playlist
 }

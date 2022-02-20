@@ -8,11 +8,17 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.databinding.MusicViewBinding
 
-class MusicAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
+class MusicAdapter(
+    private val context: Context,
+    private var musicList: ArrayList<Music>,
+    private val playlistDetails: Boolean = false,
+    private val selectionActivity: Boolean = false
+) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songName
@@ -44,11 +50,44 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
         val dr: Drawable = BitmapDrawable(myImage)
         holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
 
-        holder.root.setOnClickListener {
-            when {
-                MainActivity.search -> sendIntent("MusicAdapterSearch", position)
-                musicList[position].id == Player.nowPlayingID -> sendIntent("NowPlaying", position)
-                else -> sendIntent("MusicAdapter", position)
+        when {
+            playlistDetails -> {
+                holder.root.setOnClickListener {
+                    sendIntent("PlaylistDetailsAdapter", position)
+                }
+            }
+
+            selectionActivity -> {
+                holder.root.setOnClickListener {
+                    if (addSong(musicList[position])) {
+                        holder.root.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.dark_blue
+                            )
+                        )
+                    } else {
+                        holder.root.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.white
+                            )
+                        )
+                    }
+                }
+            }
+
+            else -> {
+                holder.root.setOnClickListener {
+                    when {
+                        MainActivity.search -> sendIntent("MusicAdapterSearch", position)
+                        musicList[position].id == Player.nowPlayingID -> sendIntent(
+                            "NowPlaying",
+                            position
+                        )
+                        else -> sendIntent("MusicAdapter", position)
+                    }
+                }
             }
         }
     }
@@ -69,5 +108,27 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
         intent.putExtra("index", pos)
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
+    }
+
+    private fun addSong(song: Music): Boolean {
+        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
+            if (song.id.equals(music.id)) {
+                Toast.makeText(
+                    context,
+                    "This Music is Already in this Playlist",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+        }
+        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(song)
+        return true
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshPlaylist() {
+        musicList = ArrayList()
+        musicList = playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
+        notifyDataSetChanged()
     }
 }

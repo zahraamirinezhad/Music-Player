@@ -55,12 +55,22 @@ class MainActivity : AppCompatActivity() {
         if (requestRuntimePermission()) {
             initializeLayout()
             favourite.favoriteSongs = ArrayList()
-            val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+            val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
             val jsonString = editor.getString("FavouriteSongs", null)
             val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
             if (jsonString != null) {
                 val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
                 favourite.favoriteSongs.addAll(data)
+            }
+
+            playlist.listOfPlaylists = ListOfPlaylists()
+            val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
+            val jsonStringPlaylist = editorPlaylist.getString("Playlists", null)
+            val typeTokenPlaylist = object : TypeToken<ListOfPlaylists>() {}.type
+            if (jsonStringPlaylist != null) {
+                val data: ListOfPlaylists =
+                    GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
+                playlist.listOfPlaylists = data
             }
         }
 
@@ -230,9 +240,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(favourite.favoriteSongs)
         editor.putString("FavouriteSongs", jsonString)
+        val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
+        editor.putString("Playlists", jsonStringPlaylist)
         editor.apply()
     }
 

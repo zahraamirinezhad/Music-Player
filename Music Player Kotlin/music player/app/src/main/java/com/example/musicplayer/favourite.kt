@@ -19,12 +19,13 @@ class favourite : AppCompatActivity() {
         setTheme(R.style.darkBlueTheme)
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        favoriteSongs = checkPlaylist(favoriteSongs)
 
         binding.dragDownFA.setOnClickListener {
             finish()
         }
 
-        binding.shuffleFav.setOnClickListener{
+        binding.shuffleFav.setOnClickListener {
             val intent = Intent(this@favourite, Player::class.java)
             intent.putExtra("index", 0)
             intent.putExtra("class", "FavouritesShuffle")
@@ -36,7 +37,7 @@ class favourite : AppCompatActivity() {
         binding.favoriteRV.layoutManager = GridLayoutManager(this, 3)
         adapter = FavoriteAdapter(this, favoriteSongs)
         binding.favoriteRV.adapter = adapter
-        if(favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
+        if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
         else binding.shuffleFav.visibility = View.VISIBLE
     }
 }

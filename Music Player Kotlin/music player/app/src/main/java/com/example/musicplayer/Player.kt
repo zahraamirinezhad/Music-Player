@@ -230,6 +230,25 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initializeLayout() {
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
+            "PlaylistDetailsShuffle" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+                musicListPA = ArrayList()
+                musicListPA.addAll(playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics)
+                musicListPA.shuffle()
+                setLayout()
+            }
+
+            "PlaylistDetailsAdapter" -> {
+                val intent = Intent(this, MusicService::class.java)
+                bindService(intent, this, BIND_AUTO_CREATE)
+                startService(intent)
+                musicListPA = ArrayList()
+                musicListPA.addAll(playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics)
+                setLayout()
+            }
+
             "FavoriteAdapter" -> {
                 val intent = Intent(this, MusicService::class.java)
                 bindService(intent, this, BIND_AUTO_CREATE)
@@ -238,6 +257,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 musicListPA.addAll(favourite.favoriteSongs)
                 setLayout()
             }
+
             "NowPlaying" -> {
                 setLayout()
                 binding.seekMusicStart.text =
@@ -249,6 +269,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 if (isPlaying) binding.playPauseBTN.setIconResource(R.drawable.pause_music)
                 else binding.playPauseBTN.setIconResource(R.drawable.play_music)
             }
+
             "MusicAdapterSearch" -> {
                 val intent = Intent(this, MusicService::class.java)
                 bindService(intent, this, BIND_AUTO_CREATE)
