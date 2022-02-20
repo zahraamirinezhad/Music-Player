@@ -1,11 +1,13 @@
 package com.example.musicplayer
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -336,6 +338,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicService = binder.currentService()
         createMediaPlayer()
         seekbarSetup()
+        musicService!!.audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        musicService!!.audioManager.requestAudioFocus(
+            musicService,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
