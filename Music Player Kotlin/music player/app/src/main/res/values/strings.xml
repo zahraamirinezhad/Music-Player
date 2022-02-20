@@ -35,4 +35,7 @@
     <string name="add_music">ADD</string>
     <string name="remove_all_musics_in_playlist">DELETE ALL</string>
     <string name="search_song">SEARCH SONG</string>
+    <string name="feedback_topic">Topic i.e Suggestion, Error, etc.</string>
+    <string name="feedback_email">Email Address (Optional)</string>
+    <string name="send_feedback">SEND</string>
 </resources>
