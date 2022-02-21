@@ -47,7 +47,12 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
 
-            val img = getImageArt(Player.musicListPA[Player.songPosition].path)
+            val img = getImageArt(
+                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            )
             val image = if (img != null) {
                 BitmapFactory.decodeByteArray(img, 0, img.size)
             } else {

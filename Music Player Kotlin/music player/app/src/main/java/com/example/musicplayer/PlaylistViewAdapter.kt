@@ -60,7 +60,13 @@ class PlaylistViewAdapter(
 
         if (playlist.listOfPlaylists.ref[position].musics.size > 0) {
             try {
-                val img = getImageArt(playlist.listOfPlaylists.ref[position].musics.get(0).path)
+                val img = getImageArt(
+                    playlist.listOfPlaylists.ref[position].musics.get(0).path,
+                    BitmapFactory.decodeResource(
+                        context.resources,
+                        R.drawable.music_player_icon_slash_screen
+                    )
+                )
                 val image = if (img != null) {
                     BitmapFactory.decodeByteArray(img, 0, img.size)
                 } else {

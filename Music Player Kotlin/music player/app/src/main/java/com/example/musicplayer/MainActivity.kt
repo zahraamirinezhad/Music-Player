@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.playlistBtn.setOnClickListener {
+            Toast.makeText(this, MusicListMA.size.toString(), Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MainActivity, playlist::class.java)
             startActivity(intent)
 
@@ -246,6 +247,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
         val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()

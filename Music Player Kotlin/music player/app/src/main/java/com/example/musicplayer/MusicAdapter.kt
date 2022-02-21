@@ -36,7 +36,12 @@ class MusicAdapter(
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
 
-        val img = getImageArt(musicList[position].path)
+        val img = getImageArt(
+            musicList[position].path, BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.music_player_icon_slash_screen
+            )
+        )
         val myImage = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {

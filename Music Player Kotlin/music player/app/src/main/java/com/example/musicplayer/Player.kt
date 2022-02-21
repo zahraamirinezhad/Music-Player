@@ -170,7 +170,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         else binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
         binding.songNamePA.isSelected = true
 
-        val img = getImageArt(musicListPA[songPosition].path)
+        val img = getImageArt(
+            musicListPA[songPosition].path, BitmapFactory.decodeResource(
+                this.resources,
+                R.drawable.music_player_icon_slash_screen
+            )
+        )
         val image = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {

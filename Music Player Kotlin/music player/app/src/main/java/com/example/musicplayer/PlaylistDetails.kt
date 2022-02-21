@@ -78,7 +78,13 @@ class PlaylistDetails : AppCompatActivity() {
         binding.moreInfoPLD.text =
             "Created On \n" + playlist.listOfPlaylists.ref[currentPlaylist].createdOn + "\n By \n" + playlist.listOfPlaylists.ref[currentPlaylist].createdBy
         if (adapter.itemCount > 0) {
-            val img = getImageArt(playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path)
+            val img = getImageArt(
+                playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path,
+                BitmapFactory.decodeResource(
+                    this.resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            )
             val image = if (img != null) {
                 BitmapFactory.decodeByteArray(img, 0, img.size)
             } else {

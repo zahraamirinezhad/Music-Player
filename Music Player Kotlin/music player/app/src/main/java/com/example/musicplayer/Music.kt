@@ -7,9 +7,11 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
+
 
 data class Music(
     val id: String,
@@ -41,10 +43,18 @@ fun formatDuration(duration: Long): String {
     return String.format("%02d:%02d", minutes, seconds)
 }
 
-fun getImageArt(path: String): ByteArray? {
-    val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(path)
-    return retriever.embeddedPicture
+fun getImageArt(path: String, dr: Bitmap): ByteArray? {
+    try {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(path)
+        return retriever.embeddedPicture
+    } catch (e: Exception) {
+        val bitmap = dr
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val bitmapdata = stream.toByteArray()
+        return bitmapdata
+    }
 }
 
 fun setSongPosition(increment: Boolean) {

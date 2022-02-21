@@ -48,7 +48,12 @@ class NowPlaying : Fragment() {
                 ).into(Player.binding.songImgPA)
                 Player.binding.songNamePA.text = Player.musicListPA[Player.songPosition].title
 
-                val img = getImageArt(Player.musicListPA[Player.songPosition].path)
+                val img = getImageArt(
+                    Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
+                        this.resources,
+                        R.drawable.music_player_icon_slash_screen
+                    )
+                )
                 val image = if (img != null) {
                     BitmapFactory.decodeByteArray(img, 0, img.size)
                 } else {
@@ -93,7 +98,12 @@ class NowPlaying : Fragment() {
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
 
-                val img = getImageArt(Player.musicListPA[Player.songPosition].path)
+                val img = getImageArt(
+                    Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
+                        this.resources,
+                        R.drawable.music_player_icon_slash_screen
+                    )
+                )
                 val image = if (img != null) {
                     BitmapFactory.decodeByteArray(img, 0, img.size)
                 } else {
@@ -144,7 +154,12 @@ class NowPlaying : Fragment() {
             if (Player.isPlaying) binding.playPauseNP.setIconResource(R.drawable.pause_music)
             else binding.playPauseNP.setIconResource(R.drawable.play_music)
 
-            val img = getImageArt(Player.musicListPA[Player.songPosition].path)
+            val img = getImageArt(
+                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
+                    this.resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            )
             val image = if (img != null) {
                 BitmapFactory.decodeByteArray(img, 0, img.size)
             } else {
