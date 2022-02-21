@@ -35,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
         var search: Boolean = false
+        var sortBy = 0;
+        val sortingList = arrayOf(
+            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC"
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -127,6 +133,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun initializeLayout() {
         search = false
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        sortBy = sortEditor.getInt("SORT ORDER", 0)
         MusicListMA = getAllAudio()
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
@@ -152,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         )
         val cursor = this.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            MediaStore.Audio.Media.DATE_ADDED + " DESC", null
+            sortingList[sortBy], null
         )
         if (cursor != null) {
             if (cursor.moveToFirst())
@@ -246,6 +254,14 @@ class MainActivity : AppCompatActivity() {
         val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
         editor.apply()
+
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        val sortValue = sortEditor.getInt("SORT ORDER", 0)
+        if (sortBy != sortValue) {
+            sortBy = sortValue
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_blue">#0006ab</color>
+    <color name="light_blue">#00a2ff</color>
     <color name="light_purple">#d1004d</color>
     <color name="dark_pink">#b8003d</color>
     <color name="cool_pink">#FF0059</color>

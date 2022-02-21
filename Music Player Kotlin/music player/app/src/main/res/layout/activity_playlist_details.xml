@@ -10,8 +10,8 @@
         android:id="@+id/linearLayoutPL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/fragment_background"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,20 +30,20 @@
             android:id="@+id/playlistNamePLD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/playlist"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
-            android:textSize="32sp"
-            android:textStyle="italic"
+            android:marqueeRepeatLimit="marquee_forever"
             android:shadowColor="@android:color/black"
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="10"
+            android:singleLine="true"
+            android:text="@string/playlist"
             android:textColor="@color/white"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:singleLine="true"/>
+            android:textSize="32sp"
+            android:textStyle="italic" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,24 +59,24 @@
             android:id="@+id/playlistImagePLD"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/music_player_icon_slash_screen"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="@drawable/music_player_icon_slash_screen" />
 
         <TextView
             android:id="@+id/moreInfoPLD"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/playlist_name"
+            android:layout_weight="1.5"
             android:background="@drawable/fragment_background"
             android:gravity="center_horizontal|center_vertical"
-            android:textSize="25sp"
-            android:textStyle="italic"
             android:shadowColor="@android:color/black"
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="10"
-            android:layout_weight="1.5"
-            android:textColor="@color/white"/>
+            android:text="@string/playlist_name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="italic" />
 
     </LinearLayout>
 
@@ -84,6 +84,7 @@
         android:id="@+id/playlistPLDRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
         android:paddingBottom="40dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
@@ -98,14 +99,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="90dp"
+        android:visibility="invisible"
         app:backgroundTint="@color/dark_blue"
         app:icon="@drawable/shuffle_icon"
         app:iconSize="35dp"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:visibility="invisible"/>
+        tools:ignore="SpeakableTextPresentCheck" />
 
 
     <LinearLayout

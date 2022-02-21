@@ -38,4 +38,6 @@
     <string name="feedback_topic">Topic i.e Suggestion, Error, etc.</string>
     <string name="feedback_email">Email Address (Optional)</string>
     <string name="send_feedback">SEND</string>
+    <string name="sort">SORT BY</string>
+    <string name="version">VERSION</string>
 </resources>
