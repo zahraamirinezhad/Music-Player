@@ -8,9 +8,10 @@ import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
 import android.media.MediaPlayer
-import android.os.Binder
-import android.os.IBinder
+import android.os.*
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
@@ -18,6 +19,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     var mediaPlayer: MediaPlayer? = null
     private lateinit var mediaSession: MediaSessionCompat
     lateinit var audioManager: AudioManager
+    private lateinit var runnable: Runnable
 
     override fun onBind(p0: Intent?): IBinder {
         return myBinder
@@ -31,7 +33,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    fun showNotification(playPause: Int) {
+    fun showNotification(playPause: Int, playbackSpeed: Float) {
         val intent = Intent(baseContext, MainActivity::class.java)
         intent.putExtra("index", Player.songPosition)
         intent.putExtra("class", "NowPlaying")
@@ -109,6 +111,26 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             .addAction(R.drawable.exit, "Exit", exitPendingIntent)
             .build()
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mediaSession.setMetadata(
+                MediaMetadataCompat.Builder()
+                    .putLong(
+                        MediaMetadataCompat.METADATA_KEY_DURATION,
+                        mediaPlayer!!.duration.toLong()
+                    )
+                    .build()
+            )
+            mediaSession.setPlaybackState(
+                PlaybackStateCompat.Builder().setState(
+                    PlaybackStateCompat.STATE_PLAYING,
+                    mediaPlayer!!.currentPosition.toLong(),
+                    playbackSpeed
+                )
+                    .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
+                    .build()
+            )
+        }
+
         startForeground(13, notification)
     }
 
@@ -116,15 +138,25 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         if (p0 == AUDIOFOCUS_LOSS_TRANSIENT) {
             Player.binding.playPauseBTN.setIconResource(R.drawable.play_music)
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
-            showNotification(R.drawable.play_music)
+            showNotification(R.drawable.play_music, 0F)
             Player.isPlaying = false
             mediaPlayer!!.pause()
         } else {
             Player.binding.playPauseBTN.setIconResource(R.drawable.pause_music)
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
-            showNotification(R.drawable.pause_music)
+            showNotification(R.drawable.pause_music, 1F)
             Player.isPlaying = true
             mediaPlayer!!.start()
         }
+    }
+
+    fun seekBarSetup() {
+        runnable = Runnable {
+            Player.binding.seekMusicStart.text =
+                formatDuration(mediaPlayer!!.currentPosition.toLong())
+            Player.binding.seekMusic.progress = mediaPlayer!!.currentPosition
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
     }
 }

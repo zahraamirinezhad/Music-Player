@@ -80,7 +80,7 @@ class NowPlaying : Fragment() {
 //                ).into(binding.songImgNP)
                 binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
-                Player.musicService!!.showNotification(R.drawable.pause_music)
+                Player.musicService!!.showNotification(R.drawable.pause_music, 1F)
                 Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
 
                 playMusic()
@@ -127,7 +127,7 @@ class NowPlaying : Fragment() {
                 binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
 
-                Player.musicService!!.showNotification(R.drawable.play_music)
+                Player.musicService!!.showNotification(R.drawable.play_music, 0F)
 
                 playMusic()
             } catch (e: Exception) {
@@ -193,7 +193,7 @@ class NowPlaying : Fragment() {
     private fun playMusic() {
         Player.musicService!!.mediaPlayer!!.start()
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
-        Player.musicService!!.showNotification(R.drawable.pause_music)
+        Player.musicService!!.showNotification(R.drawable.pause_music, 1F)
         Player.binding.playPauseBTN.setIconResource(R.drawable.pause_music)
         Player.isPlaying = true
     }
@@ -201,7 +201,7 @@ class NowPlaying : Fragment() {
     private fun pauseMusic() {
         Player.musicService!!.mediaPlayer!!.pause()
         binding.playPauseNP.setIconResource(R.drawable.play_music)
-        Player.musicService!!.showNotification(R.drawable.play_music)
+        Player.musicService!!.showNotification(R.drawable.play_music, 0F)
         Player.binding.playPauseBTN.setIconResource(R.drawable.play_music)
         Player.isPlaying = false
     }
