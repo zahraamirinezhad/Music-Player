@@ -28,12 +28,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
-    private lateinit var runnable: Runnable
 
     companion object {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
-        var isPlaying: Boolean = false
+        var isPlaying: Boolean = true
         var musicService: MusicService? = null
         lateinit var binding: ActivityPlayerBinding
         var repeat: Boolean = false
@@ -57,6 +56,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             startService(intentService)
             musicListPA = ArrayList()
             musicListPA.add(getMusicDetails(intent.data!!))
+            songPosition = 0
 
             binding.favoritesBTN.visibility = View.INVISIBLE
             binding.favoritesBTN.isEnabled = false
@@ -120,7 +120,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         binding.seekMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                if (b) musicService!!.mediaPlayer!!.seekTo(i)
+                if (b) {
+                    musicService!!.mediaPlayer!!.seekTo(i)
+                    musicService!!.showNotification(if (isPlaying) R.drawable.pause_music else R.drawable.play_music)
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
@@ -351,14 +354,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     private fun playMusic() {
         binding.playPauseBTN.setIconResource(R.drawable.pause_music)
-        musicService!!.showNotification(R.drawable.pause_music, 1F)
+        musicService!!.showNotification(R.drawable.pause_music)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBTN.setIconResource(R.drawable.play_music)
-        musicService!!.showNotification(R.drawable.play_music, 0F)
+        musicService!!.showNotification(R.drawable.play_music)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
     }
