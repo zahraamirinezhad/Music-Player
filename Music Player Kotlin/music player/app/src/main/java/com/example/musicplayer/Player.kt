@@ -1,9 +1,11 @@
 package com.example.musicplayer
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -15,6 +17,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -50,7 +53,59 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initializeLayout()
+        if (intent.data?.scheme.contentEquals("content")) {
+            val intentService = Intent(this, MusicService::class.java)
+            bindService(intentService, this, BIND_AUTO_CREATE)
+            startService(intentService)
+            musicListPA = ArrayList()
+            musicListPA.add(getMusicDetails(intent.data!!))
+            fIndex = favoriteChecker(musicListPA[songPosition].id)
+            if (fIndex != -1) binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+            else binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+            binding.songNamePA.isSelected = true
+
+            val img = getImageArt(
+                musicListPA[songPosition].path, BitmapFactory.decodeResource(
+                    this.resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            )
+            val image = if (img != null) {
+                BitmapFactory.decodeByteArray(img, 0, img.size)
+            } else {
+                BitmapFactory.decodeResource(
+                    resources,
+                    R.drawable.music_player_icon_slash_screen
+                )
+            }
+
+            val dr: Drawable = BitmapDrawable(image)
+            binding.songImgPA.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
+            val icon: Bitmap = (dr as BitmapDrawable).bitmap
+            val final_Bitmap = returnBlurredBackground(icon, this)
+            val newdr: Drawable = BitmapDrawable(final_Bitmap)
+            binding.musicContainer.background = newdr
+
+            binding.songNamePA.text = musicListPA[songPosition].title
+
+            if (repeat) binding.repeatMusic.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.repeat_loop
+                )
+            )
+
+            if (min15 || min30 || min60) {
+                binding.timer.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.selected_timer
+                    )
+                )
+            }
+        } else {
+            initializeLayout()
+        }
 
         binding.playPauseBTN.setOnClickListener {
             if (isPlaying) pauseMusic()
@@ -428,5 +483,39 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }.start()
             dialog.dismiss()
         }
+    }
+
+    @SuppressLint("Range")
+    private fun getMusicDetails(contentUri: Uri): Music {
+        var cursor: Cursor? = null
+        try {
+            val projection = arrayOf(
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.TITLE
+            )
+            cursor = this.contentResolver.query(contentUri, projection, null, null, null)
+            cursor!!.moveToFirst()
+            val path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+            val duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+            val title =
+                cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)) ?: "Unknown"
+            return Music(
+                id = "Unknown",
+                title = title,
+                album = "Unknown",
+                artist = "Unknown",
+                duration = duration,
+                artUri = "Unknown",
+                path = path
+            )
+        } finally {
+            cursor?.close()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (musicListPA[songPosition].id.equals("Unknown") && !isPlaying) exitApplication()
     }
 }

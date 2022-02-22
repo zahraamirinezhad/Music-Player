@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.playlistBtn.setOnClickListener {
-            Toast.makeText(this, MusicListMA.size.toString(), Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MainActivity, playlist::class.java)
             startActivity(intent)
 
