@@ -10,9 +10,9 @@ import com.example.musicplayer.databinding.ActivityFavouriteBinding
 class favourite : AppCompatActivity() {
     companion object {
         var favoriteSongs: ArrayList<Music> = ArrayList()
+        lateinit var binding: ActivityFavouriteBinding
     }
 
-    private lateinit var binding: ActivityFavouriteBinding
     private lateinit var adapter: FavoriteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,16 +21,7 @@ class favourite : AppCompatActivity() {
         setContentView(binding.root)
         favoriteSongs = checkPlaylist(favoriteSongs)
 
-        binding.dragDownFA.setOnClickListener {
-            finish()
-        }
-
-        binding.shuffleFav.setOnClickListener {
-            val intent = Intent(this@favourite, Player::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "FavouritesShuffle")
-            startActivity(intent)
-        }
+        if (favoriteSongs.isNotEmpty()) binding.instructionFV.visibility = View.GONE
 
         binding.favoriteRV.setHasFixedSize(true)
         binding.favoriteRV.setItemViewCacheSize(13)
@@ -39,5 +30,18 @@ class favourite : AppCompatActivity() {
         binding.favoriteRV.adapter = adapter
         if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
         else binding.shuffleFav.visibility = View.VISIBLE
+
+        binding.dragDownFA.setOnClickListener {
+            finish()
+        }
+
+        binding.shuffleFav.setOnClickListener {
+            if (favoriteSongs.isNotEmpty()) {
+                val intent = Intent(this@favourite, Player::class.java)
+                intent.putExtra("index", 0)
+                intent.putExtra("class", "FavouritesShuffle")
+                startActivity(intent)
+            }
+        }
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/AddToPNBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/add_music"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:icon="@drawable/next_music"
+        app:iconGravity="top"
+        app:iconTint="@color/white" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/infoBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/about"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:icon="@drawable/about"
+        app:iconGravity="top"
+        app:iconTint="@color/white" />
+
+</LinearLayout>

@@ -3,6 +3,7 @@ package com.example.musicplayer
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,9 +17,9 @@ import kotlin.collections.ArrayList
 class playlist : AppCompatActivity() {
     companion object {
         var listOfPlaylists: ListOfPlaylists = ListOfPlaylists()
+        lateinit var binding: ActivityPlaylistBinding
     }
 
-    private lateinit var binding: ActivityPlaylistBinding
     private lateinit var adapter: PlaylistViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,8 @@ class playlist : AppCompatActivity() {
         binding.playlistRV.layoutManager = GridLayoutManager(this@playlist, 2)
         adapter = PlaylistViewAdapter(this@playlist, listOfPlaylists.ref)
         binding.playlistRV.adapter = adapter
+
+        if (listOfPlaylists.ref.isNotEmpty()) binding.instructionPA.visibility = View.GONE
 
         binding.dragDownPLA.setOnClickListener {
             finish()
@@ -49,6 +52,7 @@ class playlist : AppCompatActivity() {
         val builder = MaterialAlertDialogBuilder(this)
         builder.setView(dialog).setTitle("PLAYLIST NAME")
             .setPositiveButton("ADD") { dialog, _ ->
+                binding.instructionPA.visibility = View.GONE
                 val name = binder.playListNamePL.text
                 val username = binder.userNamePL.text
                 if (name != null && username != null && name.isNotEmpty() && username.isNotEmpty()) {

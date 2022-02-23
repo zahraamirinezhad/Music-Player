@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -106,6 +107,7 @@ class PlaylistViewAdapter(
     fun refresh() {
         playlistList = ArrayList()
         playlistList.addAll(playlist.listOfPlaylists.ref)
+        if(!playlist.listOfPlaylists.ref.isNotEmpty()) playlist.binding.instructionPA.visibility = View.VISIBLE
         notifyDataSetChanged()
     }
 

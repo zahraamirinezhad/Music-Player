@@ -212,6 +212,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 isFavorite = false;
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
                 favourite.favoriteSongs.removeAt(fIndex)
+                if (favourite.favoriteSongs.isEmpty()) {
+                    favourite.binding.instructionFV.visibility = View.VISIBLE
+                }
             } else {
                 isFavorite = true;
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
@@ -338,11 +341,19 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             "FavouritesShuffle" -> {
                 initServiceAndPlaylist(favourite.favoriteSongs, shuffle = true)
             }
+
+            "PlayNext" -> {
+                initServiceAndPlaylist(PlayNext.playNextList, shuffle = false, playNext = true)
+            }
         }
         if (musicService != null && !isPlaying) playMusic()
     }
 
-    private fun initServiceAndPlaylist(playlist: ArrayList<Music>, shuffle: Boolean) {
+    private fun initServiceAndPlaylist(
+        playlist: ArrayList<Music>,
+        shuffle: Boolean,
+        playNext: Boolean = false
+    ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
         startService(intent)
@@ -350,6 +361,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicListPA.addAll(playlist)
         if (shuffle) musicListPA.shuffle()
         setLayout()
+        if (!playNext) PlayNext.playNextList = ArrayList()
     }
 
     private fun playMusic() {

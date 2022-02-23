@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fragment_background"
-    tools:context=".favourite">
+    tools:context=".PlayNext">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutPN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/fragment_background"
@@ -18,55 +18,34 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/dragDownFA"
+            android:id="@+id/backBtnPN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/back"
             android:paddingLeft="20dp"
             android:src="@drawable/down"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/play_next"
             android:gravity="center"
             android:shadowColor="@android:color/black"
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="10"
-            android:text="@string/favorite"
+            android:text="@string/play_next"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="italic" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favoriteRV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="40dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/shuffleFav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        app:backgroundTint="@color/dark_blue"
-        app:icon="@drawable/shuffle_icon"
-        app:iconSize="35dp"
-        app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <TextView
-        android:id="@+id/instructionFV"
+        android:id="@+id/instructionPN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -75,7 +54,7 @@
         android:shadowDx="10"
         android:shadowDy="10"
         android:shadowRadius="10"
-        android:text="@string/favourite_note"
+        android:text="@string/play_next_note"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="italic"
@@ -83,4 +62,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playNextRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="40dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutPN" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

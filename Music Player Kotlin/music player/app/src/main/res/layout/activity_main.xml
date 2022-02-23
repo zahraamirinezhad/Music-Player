@@ -30,7 +30,7 @@
                     <Button
                         android:id="@+id/shuffle_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:contentDescription="@string/shuffle_btn"
@@ -42,7 +42,7 @@
                     <Button
                         android:id="@+id/favorites_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:contentDescription="@string/favorites_btn"
@@ -54,12 +54,24 @@
                     <Button
                         android:id="@+id/playlist_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:contentDescription="@string/playlist_btn"
                         android:drawableTop="@drawable/playlist_icon"
                         android:text="@string/playlist_btn"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black" />
+
+                    <Button
+                        android:id="@+id/playNextBtn"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/play_next"
+                        android:drawableTop="@drawable/play_next"
+                        android:text="@string/play_next"
                         android:textAllCaps="false"
                         android:textColor="@color/black" />
                 </LinearLayout>

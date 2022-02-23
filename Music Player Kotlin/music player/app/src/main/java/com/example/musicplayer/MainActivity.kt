@@ -128,6 +128,12 @@ class MainActivity : AppCompatActivity() {
             binding.refreshLayout.isRefreshing = false
         }
 
+        binding.playNextBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, PlayNext::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

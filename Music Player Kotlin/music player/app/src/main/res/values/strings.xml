@@ -40,4 +40,9 @@
     <string name="send_feedback">SEND</string>
     <string name="sort">SORT BY</string>
     <string name="version">VERSION</string>
+    <string name="play_next">Play Next</string>
+    <string name="play_next_note">Long Press On Any Video To Add It Into Play Next. &#128522; </string>
+    <string name="favourite_note">Play Music And Click On &#10084; To Add It Into Favourites. </string>
+    <string name="playlist_note">Click On ➕ To Create New Playlist. </string>
+
 </resources>
