@@ -121,6 +121,13 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        binding.refreshLayout.setOnRefreshListener {
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+            binding.refreshLayout.isRefreshing = false
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
