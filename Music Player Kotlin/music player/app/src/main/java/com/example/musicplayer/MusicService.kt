@@ -13,6 +13,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     private var myBinder = MyBinder()
@@ -80,7 +81,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         val img = getImageArt(
             Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                 this.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         )
         val image = if (img != null) {
@@ -88,7 +89,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         } else {
             BitmapFactory.decodeResource(
                 resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         }
 
@@ -152,13 +153,23 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     override fun onAudioFocusChange(p0: Int) {
         if (p0 == AUDIOFOCUS_LOSS_TRANSIENT) {
-            Player.binding.playPauseBTN.setIconResource(R.drawable.play_music)
+            Player.binding.playPauseBTN.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.play_music
+                )
+            )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
             showNotification(R.drawable.play_music)
             Player.isPlaying = false
             mediaPlayer!!.pause()
         } else {
-            Player.binding.playPauseBTN.setIconResource(R.drawable.pause_music)
+            Player.binding.playPauseBTN.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.pause_music
+                )
+            )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
             showNotification(R.drawable.pause_music)
             Player.isPlaying = true

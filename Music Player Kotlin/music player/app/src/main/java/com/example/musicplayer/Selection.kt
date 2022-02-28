@@ -11,7 +11,7 @@ class Selection : AppCompatActivity() {
     lateinit var adapter: MusicAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivitySelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.selectionRV.setItemViewCacheSize(10)

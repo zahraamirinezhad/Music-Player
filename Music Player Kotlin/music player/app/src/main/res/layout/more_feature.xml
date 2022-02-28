@@ -34,4 +34,18 @@
         app:iconGravity="top"
         app:iconTint="@color/white" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/delete_music"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:icon="@drawable/delete"
+        app:iconGravity="top"
+        app:iconTint="@color/white" />
+
 </LinearLayout>

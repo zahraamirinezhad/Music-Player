@@ -24,7 +24,7 @@ class PlaylistDetails : AppCompatActivity() {
     lateinit var adapter: MusicAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         currentPlaylist = intent.extras?.get("index") as Int

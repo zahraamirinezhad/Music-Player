@@ -23,7 +23,7 @@ class playlist : AppCompatActivity() {
     private lateinit var adapter: PlaylistViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivityPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

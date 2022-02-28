@@ -5,7 +5,9 @@
       <map>
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.17685185185185184" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/add_playlist.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/delete.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/down.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/favorite_empty_icon.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/favorite_full_icon.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/favorite_icon.xml" value="0.17314814814814813" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/former_music.xml" value="0.2203125" />
@@ -16,6 +18,7 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/pause_music.xml" value="0.1125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/play_music.xml" value="0.1125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/play_next.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/player_background.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/playlist_icon.xml" value="0.17314814814814813" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/previous_music.xml" value="0.2046875" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/remove.xml" value="0.2203125" />

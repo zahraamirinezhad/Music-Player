@@ -16,7 +16,7 @@ class favourite : AppCompatActivity() {
     private lateinit var adapter: FavoriteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         favoriteSongs = checkPlaylist(favoriteSongs)

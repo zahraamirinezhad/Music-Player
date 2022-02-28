@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -43,7 +41,7 @@ class NowPlaying : Fragment() {
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
                 Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
-                    RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen)
+                    RequestOptions().placeholder(R.drawable.image_background)
                         .centerCrop()
                 ).into(Player.binding.songImgPA)
                 Player.binding.songNamePA.text = Player.musicListPA[Player.songPosition].title
@@ -51,7 +49,7 @@ class NowPlaying : Fragment() {
                 val img = getImageArt(
                     Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 )
                 val image = if (img != null) {
@@ -59,12 +57,11 @@ class NowPlaying : Fragment() {
                 } else {
                     BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 }
 
                 val dr: Drawable = BitmapDrawable(image)
-                binding.musicContainerNP.background = dr
                 binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
                 Player.binding.seekMusic.progress = 0
@@ -74,15 +71,26 @@ class NowPlaying : Fragment() {
                 Player.binding.seekMusicEnd.text =
                     formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
-//                Glide.with(this).load(Player.musicListPA[Player.songPosition].artUri).apply(
-//                    RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen)
-//                        .centerCrop()
-//                ).into(binding.songImgNP)
                 binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
                 Player.musicService!!.showNotification(R.drawable.pause_music)
                 Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
 
+//                mainImageAnimator = ObjectAnimator.ofFloat(
+//                    binding.songImgNP,
+//                    "rotation",
+//                    (Player.musicService!!.mediaPlayer!!.duration.toLong() * Math.toDegrees(2 * Math.PI) / 50000).toFloat()
+//                )
+//                mainImageAnimator.repeatCount = Animation.INFINITE
+//                mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+//                    override fun onAnimationEnd(animation: Animator) {
+//                        animation.removeListener(this)
+//                        animation.duration = 0
+//                        (animation as ValueAnimator).reverse()
+//                    }
+//                })
+//                mainImageAnimator.duration = Player.musicService!!.mediaPlayer!!.duration.toLong()
+//                mainImageAnimator.start()
                 playMusic()
             } catch (e: Exception) {
 
@@ -101,7 +109,7 @@ class NowPlaying : Fragment() {
                 val img = getImageArt(
                     Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 )
                 val image = if (img != null) {
@@ -109,12 +117,11 @@ class NowPlaying : Fragment() {
                 } else {
                     BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 }
 
                 val dr: Drawable = BitmapDrawable(image)
-                binding.musicContainerNP.background = dr
                 binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
                 Player.binding.seekMusic.progress = 0
@@ -128,6 +135,22 @@ class NowPlaying : Fragment() {
 
 
                 Player.musicService!!.showNotification(R.drawable.play_music)
+
+//                mainImageAnimator = ObjectAnimator.ofFloat(
+//                    binding.songImgNP,
+//                    "rotation",
+//                    (Player.musicService!!.mediaPlayer!!.duration.toLong() * Math.toDegrees(2 * Math.PI) / 50000).toFloat()
+//                )
+//                mainImageAnimator.repeatCount = Animation.INFINITE
+//                mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+//                    override fun onAnimationEnd(animation: Animator) {
+//                        animation.removeListener(this)
+//                        animation.duration = 0
+//                        (animation as ValueAnimator).reverse()
+//                    }
+//                })
+//                mainImageAnimator.duration = Player.musicService!!.mediaPlayer!!.duration.toLong() + 10000
+//                mainImageAnimator.start()
 
                 playMusic()
             } catch (e: Exception) {
@@ -157,7 +180,7 @@ class NowPlaying : Fragment() {
             val img = getImageArt(
                 Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                     this.resources,
-                    R.drawable.music_player_icon_slash_screen
+                    R.drawable.image_background
                 )
             )
             val image = if (img != null) {
@@ -165,28 +188,12 @@ class NowPlaying : Fragment() {
             } else {
                 BitmapFactory.decodeResource(
                     resources,
-                    R.drawable.music_player_icon_slash_screen
+                    R.drawable.image_background
                 )
             }
 
             val dr: Drawable = BitmapDrawable(image)
-            binding.musicContainerNP.background = dr
             binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
-
-            val rotateAnimation = RotateAnimation(
-                0f, 359f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
-
-            )
-            rotateAnimation.duration = 6000
-            rotateAnimation.repeatCount = Animation.INFINITE
-            rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-                override fun onAnimationRepeat(animation: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {}
-            })
-            binding.songImgNP.startAnimation(rotateAnimation)
         }
     }
 
@@ -195,7 +202,6 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.start()
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
         Player.musicService!!.showNotification(R.drawable.pause_music)
-        Player.binding.playPauseBTN.setIconResource(R.drawable.pause_music)
     }
 
     private fun pauseMusic() {
@@ -203,6 +209,5 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.pause()
         binding.playPauseNP.setIconResource(R.drawable.play_music)
         Player.musicService!!.showNotification(R.drawable.play_music)
-        Player.binding.playPauseBTN.setIconResource(R.drawable.play_music)
     }
 }

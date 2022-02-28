@@ -11,7 +11,7 @@ class Settings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueThemeNav)
+        setTheme(R.style.blackThemeNav)
         //Initializing Binding
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)

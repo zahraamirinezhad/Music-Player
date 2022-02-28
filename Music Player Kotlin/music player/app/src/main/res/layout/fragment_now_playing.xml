@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/musicContainerNP"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:background="@drawable/fragment_background"
-    tools:context=".NowPlaying"
-    android:id="@+id/musicContainerNP">
+    android:background="@drawable/player_background"
+    tools:context=".NowPlaying">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImgNP"
@@ -26,7 +26,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:backgroundTint="@color/dark_blue"
+        android:backgroundTint="@android:color/transparent"
         app:icon="@drawable/next_music"
         app:iconSize="30dp"
         app:iconTint="@color/white"
@@ -40,7 +40,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
         android:layout_toStartOf="@id/nextNP"
-        android:backgroundTint="@color/dark_blue"
+        android:backgroundTint="@android:color/transparent"
         app:icon="@drawable/play_music"
         app:iconSize="30dp"
         app:iconTint="@color/white"
@@ -53,7 +53,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:layout_toStartOf="@id/playPauseNP"
-        android:backgroundTint="@color/dark_blue"
+        android:backgroundTint="@android:color/transparent"
         app:icon="@drawable/previous_music"
         app:iconSize="30dp"
         app:iconTint="@color/white"

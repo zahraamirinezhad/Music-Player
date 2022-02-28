@@ -8,11 +8,14 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import androidx.core.content.ContextCompat
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
         when (p1?.action) {
-            ApplicationClass.PLAY -> if (Player.isPlaying) pauseMusic() else playMusic()
+            ApplicationClass.PLAY -> if (Player.isPlaying) pauseMusic(context = p0!!) else playMusic(
+                context = p0!!
+            )
             ApplicationClass.PREVIOUS -> prevNextSong(increment = false, context = p0!!)
             ApplicationClass.NEXT -> prevNextSong(increment = true, context = p0!!)
             ApplicationClass.EXIT -> {
@@ -21,19 +24,29 @@ class NotificationReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun playMusic() {
+    private fun playMusic(context: Context) {
         Player.isPlaying = true
         Player.musicService!!.mediaPlayer!!.start()
         Player.musicService!!.showNotification(R.drawable.pause_music)
-        Player.binding.playPauseBTN.setIconResource(R.drawable.pause_music)
+        Player.binding.playPauseBTN.setImageDrawable(
+            ContextCompat.getDrawable(
+                context,
+                R.drawable.pause_music
+            )
+        )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
     }
 
-    private fun pauseMusic() {
+    private fun pauseMusic(context: Context) {
         Player.isPlaying = false
         Player.musicService!!.mediaPlayer!!.pause()
         Player.musicService!!.showNotification(R.drawable.play_music)
-        Player.binding.playPauseBTN.setIconResource(R.drawable.play_music)
+        Player.binding.playPauseBTN.setImageDrawable(
+            ContextCompat.getDrawable(
+                context,
+                R.drawable.play_music
+            )
+        )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
     }
 
@@ -80,7 +93,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
             NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
-            playMusic()
+            playMusic(context)
             Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
             if (Player.isFavorite) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)

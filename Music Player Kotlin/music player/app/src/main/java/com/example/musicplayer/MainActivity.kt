@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTheme(R.style.darkBlueThemeNav)
+        setTheme(R.style.blackThemeNav)
         //Initializing Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -259,6 +259,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
@@ -302,5 +303,4 @@ class MainActivity : AppCompatActivity() {
         })
         return super.onCreateOptionsMenu(menu)
     }
-
 }

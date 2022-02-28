@@ -65,7 +65,7 @@ class PlaylistViewAdapter(
                     playlist.listOfPlaylists.ref[position].musics.get(0).path,
                     BitmapFactory.decodeResource(
                         context.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 )
                 val image = if (img != null) {
@@ -73,7 +73,7 @@ class PlaylistViewAdapter(
                 } else {
                     BitmapFactory.decodeResource(
                         context.resources,
-                        R.drawable.music_player_icon_slash_screen
+                        R.drawable.image_background
                     )
                 }
 
@@ -82,7 +82,7 @@ class PlaylistViewAdapter(
             } catch (e: Exception) {
                 val image = BitmapFactory.decodeResource(
                     context.resources,
-                    R.drawable.music_player_icon_slash_screen
+                    R.drawable.image_background
                 )
 
                 val dr: Drawable = BitmapDrawable(image)
@@ -91,7 +91,7 @@ class PlaylistViewAdapter(
         } else {
             val image = BitmapFactory.decodeResource(
                 context.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
 
             val dr: Drawable = BitmapDrawable(image)

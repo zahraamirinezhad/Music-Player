@@ -44,7 +44,7 @@ class FavoriteAdapter(
         } else {
             BitmapFactory.decodeResource(
                 context.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         }
 
@@ -57,10 +57,6 @@ class FavoriteAdapter(
         if (playNext) {
             holder.root.setOnClickListener {
                 sendIntent("PlayNext", position)
-//                val intent = Intent(context, Player::class.java)
-//                intent.putExtra("index", position)
-//                intent.putExtra("class", "PlayNext")
-//                ContextCompat.startActivity(context, intent, null)
             }
             holder.root.setOnLongClickListener {
                 val customDialog =

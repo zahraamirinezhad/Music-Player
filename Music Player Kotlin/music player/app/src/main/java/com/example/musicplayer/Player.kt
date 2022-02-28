@@ -1,5 +1,9 @@
 package com.example.musicplayer
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
@@ -16,6 +20,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.view.View
+import android.view.animation.Animation
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -42,11 +47,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var nowPlayingID: String = ""
         var isFavorite: Boolean = false
         var fIndex: Int = -1
+        lateinit var mainImageAnimator: ObjectAnimator
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -79,7 +85,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             val dr: Drawable = BitmapDrawable(image)
             binding.songImgPA.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
-            val icon: Bitmap = (dr as BitmapDrawable).bitmap
+            val icon: Bitmap = (dr).bitmap
             val final_Bitmap = returnBlurredBackground(icon, this)
             val newdr: Drawable = BitmapDrawable(final_Bitmap)
             binding.musicContainer.background = newdr
@@ -123,6 +129,13 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 if (b) {
                     musicService!!.mediaPlayer!!.seekTo(i)
                     musicService!!.showNotification(if (isPlaying) R.drawable.pause_music else R.drawable.play_music)
+                    mainImageAnimator.duration =
+                        musicService!!.mediaPlayer!!.duration.toLong() - i + 10000
+                    mainImageAnimator.setFloatValues(
+                        ((musicService!!.mediaPlayer!!.duration.toLong() - i + 10000) * Math.toDegrees(
+                            2 * Math.PI
+                        ) / 50000).toFloat()
+                    )
                 }
             }
 
@@ -223,6 +236,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
     }
 
+    @SuppressLint("Recycle")
     private fun setLayout() {
         fIndex = favoriteChecker(musicListPA[songPosition].id)
         if (fIndex != -1) binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
@@ -232,7 +246,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         val img = getImageArt(
             musicListPA[songPosition].path, BitmapFactory.decodeResource(
                 this.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         )
         val image = if (img != null) {
@@ -240,16 +254,49 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         } else {
             BitmapFactory.decodeResource(
                 resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         }
+        val dr: Drawable = BitmapDrawable(image.copy(image.config, true))
 
-        val dr: Drawable = BitmapDrawable(image)
-        binding.songImgPA.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
-        val icon: Bitmap = (dr as BitmapDrawable).bitmap
-        val final_Bitmap = returnBlurredBackground(icon, this)
-        val newdr: Drawable = BitmapDrawable(final_Bitmap)
-        binding.musicContainer.background = newdr
+        val output = Bitmap.createBitmap(
+            image.width,
+            image.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(output)
+
+        val color = -0xbdbdbe
+        val paint = Paint()
+        val rect = Rect(0, 0, image.width, image.height)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        canvas.drawCircle(
+            (image.width / 2).toFloat(), (image.height / 2).toFloat(),
+            (image.width / 3).toFloat(), paint
+        )
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(image, rect, rect, paint)
+
+
+        binding.songImgPA.setImageBitmap(output)
+
+        mainImageAnimator = ObjectAnimator.ofFloat(
+            binding.songImgPA,
+            "rotation",
+            (Math.toDegrees(2 * Math.PI)).toFloat()
+        )
+        mainImageAnimator.repeatCount = Animation.INFINITE
+        mainImageAnimator.duration = 20000
+        mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                animation.removeListener(this)
+                animation.duration = 0
+                (animation as ValueAnimator).reverse()
+            }
+        })
+        mainImageAnimator.start()
 
         NowPlaying.binding.songImgNP.background = dr
 
@@ -288,6 +335,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
             nowPlayingID = musicListPA[songPosition].id
+            mainImageAnimator.setFloatValues(
+                (musicService!!.mediaPlayer!!.duration.toLong() * Math.toDegrees(
+                    2 * Math.PI
+                ) / 50000).toFloat()
+            )
+            mainImageAnimator.duration = musicService!!.mediaPlayer!!.duration.toLong()
         } catch (e: Exception) {
             return
         }
@@ -322,8 +375,18 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                     formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekMusic.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
-                if (isPlaying) binding.playPauseBTN.setIconResource(R.drawable.pause_music)
-                else binding.playPauseBTN.setIconResource(R.drawable.play_music)
+                if (isPlaying) binding.playPauseBTN.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.pause_music
+                    )
+                )
+                else binding.playPauseBTN.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.play_music
+                    )
+                )
             }
 
             "MusicAdapterSearch" -> {
@@ -365,21 +428,46 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     private fun playMusic() {
-        binding.playPauseBTN.setIconResource(R.drawable.pause_music)
-        musicService!!.showNotification(R.drawable.pause_music)
+        binding.playPauseBTN.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.pause_music
+            )
+        )
         isPlaying = true
+        musicService!!.showNotification(R.drawable.pause_music)
         musicService!!.mediaPlayer!!.start()
+        val isPausedOrNot = binding.pauseOrPlay
+        val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", 2f)
+        imageViewObjectAnimator.duration = 800
+        isPausedOrNot.pivotX = isPausedOrNot.drawable.bounds.width().toFloat() - 200f
+        isPausedOrNot.pivotY = 100f
+        imageViewObjectAnimator.start()
+        mainImageAnimator.resume()
     }
 
     private fun pauseMusic() {
-        binding.playPauseBTN.setIconResource(R.drawable.play_music)
-        musicService!!.showNotification(R.drawable.play_music)
+        binding.playPauseBTN.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.play_music
+            )
+        )
         isPlaying = false
+        musicService!!.showNotification(R.drawable.play_music)
         musicService!!.mediaPlayer!!.pause()
+        val isPausedOrNot = binding.pauseOrPlay
+        val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", -5f)
+        imageViewObjectAnimator.duration = 800
+        isPausedOrNot.pivotX = isPausedOrNot.drawable.bounds.width().toFloat() - 200f
+        isPausedOrNot.pivotY = 100f
+        imageViewObjectAnimator.start()
+        mainImageAnimator.pause()
     }
 
     fun backNextMusic(increment: Boolean) {
         setSongPosition(increment)
+        mainImageAnimator.end()
         setLayout()
         createMediaPlayer()
     }
@@ -406,9 +494,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     override fun onCompletion(p0: MediaPlayer?) {
         setSongPosition(true)
-        createMediaPlayer()
         try {
+            mainImageAnimator.end()
             setLayout()
+            createMediaPlayer()
         } catch (e: Exception) {
             return
         }

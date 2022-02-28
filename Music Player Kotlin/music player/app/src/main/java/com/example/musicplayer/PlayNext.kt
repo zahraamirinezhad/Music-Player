@@ -14,7 +14,7 @@ class PlayNext : AppCompatActivity() {
     private lateinit var binding: ActivityPlayNextBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueTheme)
+        setTheme(R.style.blackTheme)
         binding = ActivityPlayNextBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

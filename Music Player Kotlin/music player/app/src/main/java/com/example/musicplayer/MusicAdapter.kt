@@ -21,6 +21,7 @@ import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.example.musicplayer.databinding.MusicViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.io.File
 
 class MusicAdapter(
     private val context: Context,
@@ -49,7 +50,7 @@ class MusicAdapter(
         val img = getImageArt(
             musicList[position].path, BitmapFactory.decodeResource(
                 context.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         )
         val myImage = if (img != null) {
@@ -57,7 +58,7 @@ class MusicAdapter(
         } else {
             BitmapFactory.decodeResource(
                 context.resources,
-                R.drawable.music_player_icon_slash_screen
+                R.drawable.image_background
             )
         }
 
@@ -113,6 +114,28 @@ class MusicAdapter(
                         .append(DateUtils.formatElapsedTime(musicList[position].duration / 1000))
                         .bold { append("\n\nLocation: ") }.append(musicList[position].path)
                     binder.detailsTV.text = str
+                }
+
+                bindingMF.deleteBtn.setOnClickListener {
+                    dialog.dismiss()
+                    val file = File(musicList[position].path)
+                    if (file.exists()) {
+                        if (favourite.favoriteSongs.contains(musicList[position])) {
+                            favourite.favoriteSongs.remove(musicList[position])
+                        }
+                        if (playlist.listOfPlaylists.ref.size != 0) {
+                            for (x in playlist.listOfPlaylists.ref) {
+                                if (x.musics.contains(musicList[position])) {
+                                    x.musics.remove(musicList[position])
+                                }
+                            }
+                        }
+                        MainActivity.MusicListMA.remove(musicList[position])
+                        updateMusicList(MainActivity.MusicListMA)
+                        Player.songPosition--
+                        Player.musicListPA = MainActivity.MusicListMA
+                        file.delete()
+                    }
                 }
 
                 return@setOnLongClickListener true

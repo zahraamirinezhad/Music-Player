@@ -15,7 +15,7 @@ class Feedback : AppCompatActivity() {
     private lateinit var binding: ActivityFeedbackBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.darkBlueThemeNav)
+        setTheme(R.style.blackThemeNav)
         //Initializing Binding
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)

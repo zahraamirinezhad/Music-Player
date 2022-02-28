@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="@drawable/player_background"
     android:orientation="vertical"
     tools:context=".Player">
 
@@ -15,9 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageButton
             android:id="@+id/dragDownPL"
@@ -28,7 +31,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/back"
             android:src="@drawable/down"
-            app:tint="@color/black"
+            app:tint="@color/dark_pink"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
@@ -60,74 +63,93 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/favorite"
             android:src="@drawable/favorite_empty_icon"
-            app:tint="@android:color/holo_red_dark"
+            app:tint="@color/dark_pink"
             tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/songImgPA"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageContainer"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:src="@drawable/music_player_icon_slash_screen"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.32999998"
-        app:shapeAppearanceOverlay="@style/circle"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.41000003">
+
+        <ImageView
+            android:id="@+id/songImgPA"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/song_image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_background"
+            app:layout_constraintBottom_toBottomOf="@+id/imageContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageContainer"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/pauseOrPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/song_image"
+            android:src="@drawable/gramophone"
+            app:layout_constraintBottom_toBottomOf="@+id/songImgPA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/songImgPA" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.82">
+        app:layout_constraintVertical_bias="0.9">
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <ImageButton
             android:id="@+id/back"
-            android:layout_width="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/previous_music"
-            app:iconSize="30dp"
-            app:tint="@color/black"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/previous_music"
+            android:src="@drawable/previous_music"
+            app:tint="@color/white"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <ImageButton
             android:id="@+id/playPauseBTN"
-            android:layout_width="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:textColorHighlight="#00EFAD"
-            android:textColorLink="#00FFC4"
-            app:backgroundTint="@color/cool_pink"
-            app:icon="@drawable/pause_music"
-            app:iconSize="40dp"
-            app:iconTint="@color/white"
-            app:shapeAppearanceOverlay="@style/curved"
-            app:tint="@color/black"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/play_pause"
+            android:src="@drawable/pause_music"
+            app:tint="@color/white"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <ImageButton
             android:id="@+id/next"
-            android:layout_width="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/next_music"
-            app:iconSize="30dp"
-            app:tint="@color/black"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/next_music"
+            android:src="@drawable/next_music"
+            app:tint="@color/white"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
@@ -136,7 +158,6 @@
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:layout_marginTop="0dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="20dp"

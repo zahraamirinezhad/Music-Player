@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        app:backgroundTint="@color/dark_blue"
+        app:backgroundTint="@color/dark_pink"
         app:icon="@drawable/shuffle_icon"
         app:iconSize="35dp"
         app:iconTint="@color/white"

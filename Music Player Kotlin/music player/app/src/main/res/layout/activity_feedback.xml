@@ -38,7 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/dark_blue"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
         android:text="@string/send_feedback" />
 
 </LinearLayout>
