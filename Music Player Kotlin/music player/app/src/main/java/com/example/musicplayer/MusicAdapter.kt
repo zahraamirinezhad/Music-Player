@@ -65,7 +65,6 @@ class MusicAdapter(
         val dr: Drawable = BitmapDrawable(myImage)
         holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
 
-        //for play next feature
         if (!selectionActivity)
             holder.root.setOnLongClickListener {
                 val customDialog =
@@ -118,23 +117,33 @@ class MusicAdapter(
 
                 bindingMF.deleteBtn.setOnClickListener {
                     dialog.dismiss()
-                    val file = File(musicList[position].path)
-                    if (file.exists()) {
-                        if (favourite.favoriteSongs.contains(musicList[position])) {
-                            favourite.favoriteSongs.remove(musicList[position])
-                        }
-                        if (playlist.listOfPlaylists.ref.size != 0) {
-                            for (x in playlist.listOfPlaylists.ref) {
-                                if (x.musics.contains(musicList[position])) {
-                                    x.musics.remove(musicList[position])
+                    if (playlistDetails) {
+                        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                            position
+                        )
+                        Player.songPosition--
+                        Player.musicListPA =
+                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
+                        refreshPlaylist()
+                    } else {
+                        val file = File(musicList[position].path)
+                        if (file.exists()) {
+                            if (favourite.favoriteSongs.contains(musicList[position])) {
+                                favourite.favoriteSongs.remove(musicList[position])
+                            }
+                            if (playlist.listOfPlaylists.ref.size != 0) {
+                                for (x in playlist.listOfPlaylists.ref) {
+                                    if (x.musics.contains(musicList[position])) {
+                                        x.musics.remove(musicList[position])
+                                    }
                                 }
                             }
+                            MainActivity.MusicListMA.remove(musicList[position])
+                            updateMusicList(MainActivity.MusicListMA)
+                            Player.songPosition--
+                            Player.musicListPA = MainActivity.MusicListMA
+                            file.delete()
                         }
-                        MainActivity.MusicListMA.remove(musicList[position])
-                        updateMusicList(MainActivity.MusicListMA)
-                        Player.songPosition--
-                        Player.musicListPA = MainActivity.MusicListMA
-                        file.delete()
                     }
                 }
 
