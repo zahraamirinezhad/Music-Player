@@ -16,7 +16,7 @@ class Settings : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.title = "SETTINGS"
-        binding.version.text = "1.0.0"
+        binding.version.text = "1.0.1"
         binding.sortBy.setOnClickListener {
             val menuList = arrayOf("Recently Added", "Song Title", "File Size")
             var currentSort = MainActivity.sortBy
