@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.content.ContentUris
 import android.content.Intent
 import android.content.ServiceConnection
 import android.database.Cursor
@@ -14,11 +15,15 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
+import android.provider.Settings
+import android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS
 import android.view.View
 import android.view.animation.Animation
 import android.widget.LinearLayout
@@ -233,6 +238,47 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
                 favourite.favoriteSongs.add(musicListPA[songPosition])
             }
+        }
+
+        binding.setAsRingtone.setOnClickListener {
+            try {
+                if (checkSystemWritePermission()) {
+                    val uri = ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        (musicListPA[songPosition].id).toLong()
+                    )
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        this,
+                        RingtoneManager.TYPE_RINGTONE,
+                        uri
+                    )
+                    Toast.makeText(this, "Set as Ringtone Successfully ", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Allow Modify System Settings ==> ON ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkSystemWritePermission(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Settings.System.canWrite(this)) return true else openAndroidPermissionsMenu()
+        }
+        return false
+    }
+
+    private fun openAndroidPermissionsMenu() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent(ACTION_MANAGE_WRITE_SETTINGS)
+            intent.data = Uri.parse("package:" + this.getPackageName())
+            this.startActivity(intent)
         }
     }
 
