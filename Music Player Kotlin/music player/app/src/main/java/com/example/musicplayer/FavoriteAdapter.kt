@@ -49,7 +49,7 @@ class FavoriteAdapter(
         }
 
         val dr: Drawable = BitmapDrawable(myImage)
-        holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
+        holder.image.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
 
         holder.name.text = musicList[position].title
         holder.name.isSelected = true

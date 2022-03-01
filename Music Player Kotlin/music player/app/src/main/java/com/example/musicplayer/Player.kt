@@ -1,9 +1,6 @@
 package com.example.musicplayer
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.ContentUris
@@ -393,6 +390,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     private fun initializeLayout() {
+        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.background =
+            null
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
             "PlaylistDetailsShuffle" -> {
@@ -440,6 +439,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "MusicAdapter" -> {
+                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.setBackgroundResource(
+                    R.drawable.fragment_background
+                )
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
 
@@ -512,7 +514,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     fun backNextMusic(increment: Boolean) {
+        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.background =
+            null
         setSongPosition(increment)
+        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.setBackgroundResource(
+            R.drawable.fragment_background
+        )
         mainImageAnimator.end()
         setLayout()
         createMediaPlayer()

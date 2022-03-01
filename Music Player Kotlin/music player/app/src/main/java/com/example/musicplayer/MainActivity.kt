@@ -27,11 +27,11 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
     //Creating Binding Object
-    private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var musicAdapter: MusicAdapter
 
     companion object {
+        lateinit var binding: ActivityMainBinding
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
         var search: Boolean = false
@@ -81,10 +81,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.shuffleBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, Player::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "MainActivity")
-            startActivity(intent)
+            if (MusicListMA.size != 0) {
+                val intent = Intent(this@MainActivity, Player::class.java)
+                intent.putExtra("index", 0)
+                intent.putExtra("class", "MainActivity")
+                startActivity(intent)
+            }
         }
 
         binding.favoritesBtn.setOnClickListener {

@@ -36,7 +36,13 @@ class NowPlaying : Fragment() {
             try {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
+
+                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
+                    null
                 setSongPosition(true)
+                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
+                    R.drawable.fragment_background
+                )
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
@@ -76,21 +82,6 @@ class NowPlaying : Fragment() {
                 Player.musicService!!.showNotification(R.drawable.pause_music)
                 Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
 
-//                mainImageAnimator = ObjectAnimator.ofFloat(
-//                    binding.songImgNP,
-//                    "rotation",
-//                    (Player.musicService!!.mediaPlayer!!.duration.toLong() * Math.toDegrees(2 * Math.PI) / 50000).toFloat()
-//                )
-//                mainImageAnimator.repeatCount = Animation.INFINITE
-//                mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
-//                    override fun onAnimationEnd(animation: Animator) {
-//                        animation.removeListener(this)
-//                        animation.duration = 0
-//                        (animation as ValueAnimator).reverse()
-//                    }
-//                })
-//                mainImageAnimator.duration = Player.musicService!!.mediaPlayer!!.duration.toLong()
-//                mainImageAnimator.start()
                 playMusic()
             } catch (e: Exception) {
 
@@ -101,7 +92,13 @@ class NowPlaying : Fragment() {
             try {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
+
+                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
+                    null
                 setSongPosition(false)
+                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
+                    R.drawable.fragment_background
+                )
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
@@ -135,22 +132,6 @@ class NowPlaying : Fragment() {
 
 
                 Player.musicService!!.showNotification(R.drawable.play_music)
-
-//                mainImageAnimator = ObjectAnimator.ofFloat(
-//                    binding.songImgNP,
-//                    "rotation",
-//                    (Player.musicService!!.mediaPlayer!!.duration.toLong() * Math.toDegrees(2 * Math.PI) / 50000).toFloat()
-//                )
-//                mainImageAnimator.repeatCount = Animation.INFINITE
-//                mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
-//                    override fun onAnimationEnd(animation: Animator) {
-//                        animation.removeListener(this)
-//                        animation.duration = 0
-//                        (animation as ValueAnimator).reverse()
-//                    }
-//                })
-//                mainImageAnimator.duration = Player.musicService!!.mediaPlayer!!.duration.toLong() + 10000
-//                mainImageAnimator.start()
 
                 playMusic()
             } catch (e: Exception) {

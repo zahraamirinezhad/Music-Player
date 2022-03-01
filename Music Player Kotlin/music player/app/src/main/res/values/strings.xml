@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">music player</string>
+    <string name="app_name">Z.A music</string>
     <string name="shuffle_btn">Shuffle</string>
     <string name="favorites_btn">Favourites</string>
     <string name="playlist_btn">Playlist</string>

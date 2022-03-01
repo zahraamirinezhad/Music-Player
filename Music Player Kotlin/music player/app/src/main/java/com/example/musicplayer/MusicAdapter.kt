@@ -30,6 +30,7 @@ class MusicAdapter(
     private val selectionActivity: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
+
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songName
         val album = binding.songAlbum
@@ -196,7 +197,9 @@ class MusicAdapter(
                             "NowPlaying",
                             position
                         )
-                        else -> sendIntent("MusicAdapter", position)
+                        else -> {
+                            sendIntent("MusicAdapter", position)
+                        }
                     }
                 }
             }

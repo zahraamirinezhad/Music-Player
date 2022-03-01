@@ -55,7 +55,13 @@ class NotificationReceiver : BroadcastReceiver() {
         try {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
+
+            MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
+                null
             setSongPosition(increment)
+            MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
+                R.drawable.fragment_background
+            )
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@android:color/transparent">
 
     <ImageView
@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:contentDescription="@string/song_name"
-        android:src="@drawable/music_player_icon_slash_screen" />
+        android:src="@drawable/image_background" />
 
     <TextView
         android:id="@+id/songNameFA"
@@ -21,19 +21,19 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:shadowColor="@android:color/black"
-        android:shadowDx="10"
-        android:shadowDy="10"
-        android:shadowRadius="10"
-        android:text="@string/song_name"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="center_horizontal|center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
-        android:singleLine="true"/>
+        android:shadowColor="@android:color/black"
+        android:shadowDx="10"
+        android:shadowDy="10"
+        android:shadowRadius="10"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </androidx.cardview.widget.CardView>
