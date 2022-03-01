@@ -262,6 +262,32 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 Toast.makeText(this, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.setAsAlarmRingtone.setOnClickListener {
+            try {
+                if (checkSystemWritePermission()) {
+                    val uri = ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        (musicListPA[songPosition].id).toLong()
+                    )
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        this,
+                        RingtoneManager.TYPE_ALARM,
+                        uri
+                    )
+                    Toast.makeText(this, "Set as Alarm Ringtone Successfully ", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Allow Modify System Settings ==> ON ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "Unable to Set as Alarm Ringtone ", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun checkSystemWritePermission(): Boolean {

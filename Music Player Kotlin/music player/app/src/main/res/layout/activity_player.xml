@@ -272,5 +272,17 @@
             app:tint="@color/dark_pink"
             tools:ignore="SpeakableTextPresentCheck" />
 
+        <ImageButton
+            android:id="@+id/setAsAlarmRingtone"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/set_as_alarm_ringtone"
+            android:src="@drawable/alarm"
+            app:tint="@color/dark_pink"
+            tools:ignore="SpeakableTextPresentCheck" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
