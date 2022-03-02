@@ -56,12 +56,10 @@ class NotificationReceiver : BroadcastReceiver() {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
 
-            MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
-                null
+            Player.musicListPA[Player.songPosition].isPlayingOrNot = false
             setSongPosition(increment)
-            MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
-                R.drawable.fragment_background
-            )
+            Player.musicListPA[Player.songPosition].isPlayingOrNot = true
+            MainActivity.musicAdapter.updateMusicList(Player.musicListPA)
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
@@ -87,7 +85,6 @@ class NotificationReceiver : BroadcastReceiver() {
             val newdr: Drawable = BitmapDrawable(final_Bitmap)
             Player.binding.musicContainer.background = newdr
 
-            NowPlaying.binding.musicContainerNP.background = dr
             NowPlaying.binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
 
             Player.binding.seekMusic.progress = 0

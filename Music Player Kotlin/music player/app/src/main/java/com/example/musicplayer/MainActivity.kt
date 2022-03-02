@@ -28,9 +28,10 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
     //Creating Binding Object
     private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var musicAdapter: MusicAdapter
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var musicAdapter: MusicAdapter
         lateinit var binding: ActivityMainBinding
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
@@ -126,6 +127,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.refreshLayout.setOnRefreshListener {
             MusicListMA = getAllAudio()
+            MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
             binding.refreshLayout.isRefreshing = false
         }
@@ -154,6 +156,10 @@ class MainActivity : AppCompatActivity() {
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        if(Player.musicService!=null){
+            MusicListMA[Player.songPosition].isPlayingOrNot = true
+            musicAdapter.updateMusicList(MusicListMA)
+        }
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         binding.musicRV.adapter = musicAdapter
     }

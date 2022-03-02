@@ -416,8 +416,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     private fun initializeLayout() {
-        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.background =
-            null
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
             "PlaylistDetailsShuffle" -> {
@@ -465,9 +463,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "MusicAdapter" -> {
-                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.setBackgroundResource(
-                    R.drawable.fragment_background
-                )
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
 
@@ -540,12 +535,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     fun backNextMusic(increment: Boolean) {
-        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.background =
-            null
+        musicListPA[songPosition].isPlayingOrNot = false
         setSongPosition(increment)
-        MainActivity.binding.musicRV.findViewHolderForAdapterPosition(songPosition)?.itemView?.setBackgroundResource(
-            R.drawable.fragment_background
-        )
+        musicListPA[songPosition].isPlayingOrNot = true
+        MainActivity.musicAdapter.updateMusicList(musicListPA)
         mainImageAnimator.end()
         setLayout()
         createMediaPlayer()

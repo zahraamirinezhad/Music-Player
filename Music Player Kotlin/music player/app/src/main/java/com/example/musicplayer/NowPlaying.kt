@@ -1,5 +1,6 @@
 package com.example.musicplayer
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -20,6 +21,7 @@ class NowPlaying : Fragment() {
         lateinit var binding: FragmentNowPlayingBinding
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,12 +39,10 @@ class NowPlaying : Fragment() {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
 
-                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
-                    null
+                Player.musicListPA[Player.songPosition].isPlayingOrNot = false
                 setSongPosition(true)
-                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
-                    R.drawable.fragment_background
-                )
+                Player.musicListPA[Player.songPosition].isPlayingOrNot = true
+                MainActivity.musicAdapter.updateMusicList(Player.musicListPA)
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
@@ -93,12 +93,10 @@ class NowPlaying : Fragment() {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
 
-                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.background =
-                    null
+                Player.musicListPA[Player.songPosition].isPlayingOrNot = false
                 setSongPosition(false)
-                MainActivity.binding.musicRV.findViewHolderForAdapterPosition(Player.songPosition)?.itemView?.setBackgroundResource(
-                    R.drawable.fragment_background
-                )
+                Player.musicListPA[Player.songPosition].isPlayingOrNot = true
+                MainActivity.musicAdapter.updateMusicList(Player.musicListPA)
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()

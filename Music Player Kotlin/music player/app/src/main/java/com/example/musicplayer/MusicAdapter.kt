@@ -30,6 +30,7 @@ class MusicAdapter(
     private val selectionActivity: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
+    private var playingPosition: Int = 0
 
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songName
@@ -43,10 +44,18 @@ class MusicAdapter(
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: MusicAdapter.MyHolder, position: Int) {
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onBindViewHolder(
+        holder: MusicAdapter.MyHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
+        if (musicList[position].isPlayingOrNot) {
+            holder.root.setBackgroundResource(R.drawable.fragment_background)
+            playingPosition = position
+        } else holder.root.background = null
 
         val img = getImageArt(
             musicList[position].path, BitmapFactory.decodeResource(
@@ -198,7 +207,10 @@ class MusicAdapter(
                             position
                         )
                         else -> {
+                            musicList[playingPosition].isPlayingOrNot = false
+                            musicList[position].isPlayingOrNot = true
                             sendIntent("MusicAdapter", position)
+                            notifyDataSetChanged()
                         }
                     }
                 }
