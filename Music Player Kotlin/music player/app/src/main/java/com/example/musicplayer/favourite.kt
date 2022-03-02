@@ -11,6 +11,7 @@ class favourite : AppCompatActivity() {
     companion object {
         var favoriteSongs: ArrayList<Music> = ArrayList()
         lateinit var binding: ActivityFavouriteBinding
+        var favouritesChanged: Boolean = false
     }
 
     private lateinit var adapter: FavoriteAdapter
@@ -28,6 +29,7 @@ class favourite : AppCompatActivity() {
         binding.favoriteRV.layoutManager = GridLayoutManager(this, 3)
         adapter = FavoriteAdapter(this, favoriteSongs)
         binding.favoriteRV.adapter = adapter
+        favouritesChanged = false
         if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
         else binding.shuffleFav.visibility = View.VISIBLE
 
@@ -42,6 +44,14 @@ class favourite : AppCompatActivity() {
                 intent.putExtra("class", "FavouritesShuffle")
                 startActivity(intent)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (favouritesChanged) {
+            adapter.update(favoriteSongs)
+            favouritesChanged = false
         }
     }
 }

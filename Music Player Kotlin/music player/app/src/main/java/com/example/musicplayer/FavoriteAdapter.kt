@@ -1,5 +1,6 @@
 package com.example.musicplayer
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -32,7 +33,8 @@ class FavoriteAdapter(
         return MyHolder(FavoriteViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onBindViewHolder(holder: MyHolder, @SuppressLint("RecyclerView") position: Int) {
         val img = getImageArt(
             musicList[position].path, BitmapFactory.decodeResource(
                 context.resources,
@@ -85,6 +87,9 @@ class FavoriteAdapter(
             }
         } else {
             holder.root.setOnClickListener {
+                refreshBackground()
+                MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot = true
+                MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
                 sendIntent("FavoriteAdapter", position)
             }
         }
@@ -99,5 +104,12 @@ class FavoriteAdapter(
         intent.putExtra("index", pos)
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(newList: ArrayList<Music>) {
+        musicList = ArrayList()
+        musicList.addAll(newList)
+        notifyDataSetChanged()
     }
 }

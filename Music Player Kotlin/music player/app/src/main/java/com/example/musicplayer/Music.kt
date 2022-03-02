@@ -176,3 +176,18 @@ fun checkPlaylist(playlist: ArrayList<Music>): ArrayList<Music> {
     }
     return playlist
 }
+
+fun findMusicById(music: Music): Int {
+    var index = 0
+    for (x in MainActivity.MusicListMA) {
+        if (x.id == music.id)
+            return index
+        index++
+    }
+    return index
+}
+
+fun refreshBackground() {
+    for (x in MainActivity.MusicListMA)
+        x.isPlayingOrNot = false
+}

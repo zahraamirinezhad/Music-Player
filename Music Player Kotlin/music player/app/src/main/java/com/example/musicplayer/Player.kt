@@ -235,6 +235,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
                 favourite.favoriteSongs.add(musicListPA[songPosition])
             }
+            favourite.favouritesChanged = true
         }
 
         binding.setAsRingtone.setOnClickListener {
@@ -535,10 +536,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     }
 
     fun backNextMusic(increment: Boolean) {
-        musicListPA[songPosition].isPlayingOrNot = false
+        MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
+            false
         setSongPosition(increment)
-        musicListPA[songPosition].isPlayingOrNot = true
-        MainActivity.musicAdapter.updateMusicList(musicListPA)
+        MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
+            true
+        MainActivity.musicAdapter.update()
         mainImageAnimator.end()
         setLayout()
         createMediaPlayer()

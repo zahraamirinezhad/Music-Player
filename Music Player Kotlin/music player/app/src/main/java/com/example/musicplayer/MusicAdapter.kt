@@ -25,7 +25,7 @@ import java.io.File
 
 class MusicAdapter(
     private val context: Context,
-    private var musicList: ArrayList<Music>,
+    var musicList: ArrayList<Music>,
     private val playlistDetails: Boolean = false,
     private val selectionActivity: Boolean = false
 ) :
@@ -84,6 +84,8 @@ class MusicAdapter(
                     .create()
                 dialog.show()
                 dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+                if (playlistDetails)
+                    bindingMF.deleteBtn.text = "Remove"
 
                 bindingMF.AddToPNBtn.setOnClickListener {
                     try {
@@ -163,12 +165,16 @@ class MusicAdapter(
         when {
             playlistDetails -> {
                 holder.root.setOnClickListener {
+                    refreshBackground()
+                    MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot =
+                        true
+                    MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
                     sendIntent("PlaylistDetailsAdapter", position)
                 }
             }
 
             selectionActivity -> {
-                var itExists: Boolean = false
+                var itExists = false
                 playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
                     if (musicList[position].id.equals(music.id)) {
                         itExists = true
@@ -183,7 +189,7 @@ class MusicAdapter(
                             holder.root.setBackgroundColor(
                                 ContextCompat.getColor(
                                     context,
-                                    R.color.light_blue
+                                    R.color.cool_pink
                                 )
                             )
                         } else {
@@ -220,6 +226,11 @@ class MusicAdapter(
 
     override fun getItemCount(): Int {
         return musicList.size
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun update() {
+        notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -38,11 +38,12 @@ class NowPlaying : Fragment() {
             try {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
-
-                Player.musicListPA[Player.songPosition].isPlayingOrNot = false
+                MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                    false
                 setSongPosition(true)
-                Player.musicListPA[Player.songPosition].isPlayingOrNot = true
-                MainActivity.musicAdapter.updateMusicList(Player.musicListPA)
+                MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                    true
+                MainActivity.musicAdapter.update()
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
@@ -93,10 +94,14 @@ class NowPlaying : Fragment() {
                 if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                     MediaPlayer()
 
-                Player.musicListPA[Player.songPosition].isPlayingOrNot = false
+                MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                    false
                 setSongPosition(false)
-                Player.musicListPA[Player.songPosition].isPlayingOrNot = true
-                MainActivity.musicAdapter.updateMusicList(Player.musicListPA)
+                MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                    true
+                MainActivity.musicAdapter.update()
+
+
                 Player.musicService!!.mediaPlayer!!.reset()
                 Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
                 Player.musicService!!.mediaPlayer!!.prepare()
