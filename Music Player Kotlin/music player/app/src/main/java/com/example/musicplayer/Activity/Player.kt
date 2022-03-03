@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.animation.*
 import android.annotation.SuppressLint
@@ -29,6 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.musicplayer.*
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityPlayerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

@@ -1,9 +1,11 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.Adaptor.MusicAdapter
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivitySelectionBinding
 
 class Selection : AppCompatActivity() {

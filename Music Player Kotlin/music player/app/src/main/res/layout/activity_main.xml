@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity"
+    tools:context=".Activity.MainActivity"
     tools:openDrawer="start">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -74,6 +74,18 @@
                         android:text="@string/play_next"
                         android:textAllCaps="false"
                         android:textColor="@color/black" />
+
+                    <Button
+                        android:id="@+id/sortByBtn"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/sort"
+                        android:contentDescription="@string/sort"
+                        android:text="@string/sort"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -85,7 +97,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nowPlaying"
-                android:name="com.example.musicplayer.NowPlaying"
+                android:name="com.example.musicplayer.Music_Stuff.NowPlaying"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"

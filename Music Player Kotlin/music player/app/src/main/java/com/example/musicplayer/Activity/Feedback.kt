@@ -1,10 +1,11 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityFeedbackBinding
 import java.util.*
 import javax.mail.*

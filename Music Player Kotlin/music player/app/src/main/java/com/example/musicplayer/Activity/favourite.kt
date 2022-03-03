@@ -1,10 +1,14 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.musicplayer.Adaptor.FavoriteAdapter
+import com.example.musicplayer.Music_Stuff.Music
+import com.example.musicplayer.R
+import com.example.musicplayer.Music_Stuff.checkPlaylist
 import com.example.musicplayer.databinding.ActivityFavouriteBinding
 
 class favourite : AppCompatActivity() {

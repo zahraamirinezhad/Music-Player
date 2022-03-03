@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Adaptor
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,15 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicplayer.*
+import com.example.musicplayer.Activity.MainActivity
+import com.example.musicplayer.Activity.PlayNext
+import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.FavoriteViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class FavoriteAdapter(
@@ -64,10 +67,7 @@ class FavoriteAdapter(
                 val customDialog =
                     LayoutInflater.from(context).inflate(R.layout.more_feature, holder.root, false)
                 val bindingMF = MoreFeatureBinding.bind(customDialog)
-                val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
-                    .create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+                val dialog = getDialogForOnLongClickListener(context, customDialog)
                 bindingMF.AddToPNBtn.text = "Remove"
                 bindingMF.AddToPNBtn.setOnClickListener {
                     if (position == Player.songPosition)

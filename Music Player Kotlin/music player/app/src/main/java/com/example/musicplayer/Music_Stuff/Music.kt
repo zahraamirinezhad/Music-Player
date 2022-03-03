@@ -1,12 +1,22 @@
-package com.example.musicplayer
+package com.example.musicplayer.Music_Stuff
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaMetadataRetriever
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import android.text.SpannableStringBuilder
+import android.text.format.DateUtils
+import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.text.bold
+import com.example.musicplayer.Activity.MainActivity
+import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Activity.favourite
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -191,3 +201,33 @@ fun refreshBackground() {
     for (x in MainActivity.MusicListMA)
         x.isPlayingOrNot = false
 }
+
+fun getDialogForOnLongClickListener(context: Context, customDialog: View): AlertDialog {
+    val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
+        .create()
+    dialog.show()
+    dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+    return dialog
+}
+
+fun getInfoDialog(context: Context, detailsDialog: View) {
+    val dDialog = MaterialAlertDialogBuilder(context)
+        .setBackground(ColorDrawable(0x99000000.toInt()))
+        .setView(detailsDialog)
+        .setPositiveButton("OK") { self, _ -> self.dismiss() }
+        .setCancelable(false)
+        .create()
+    dDialog.show()
+    dDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
+    dDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+}
+
+fun getDetails(music: Music): SpannableStringBuilder {
+    val str = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
+        .append(music.title)
+        .bold { append("\n\nDuration: ") }
+        .append(DateUtils.formatElapsedTime(music.duration / 1000))
+        .bold { append("\n\nLocation: ") }.append(music.path)
+    return str
+}
+

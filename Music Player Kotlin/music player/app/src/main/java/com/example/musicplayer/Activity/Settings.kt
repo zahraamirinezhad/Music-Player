@@ -1,9 +1,10 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivitySettingsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,8 +7,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.musicplayer.Music_Stuff.ListOfPlaylists
+import com.example.musicplayer.Adaptor.PlaylistViewAdapter
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityPlaylistBinding
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
+import com.example.musicplayer.Music_Stuff.myPlaylist
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Music_Stuff
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,6 +9,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import androidx.core.content.ContextCompat
+import com.example.musicplayer.Activity.MainActivity
+import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.R
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {

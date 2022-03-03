@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Adaptor
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,20 +6,17 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.SpannableStringBuilder
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicplayer.*
+import com.example.musicplayer.Activity.*
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.example.musicplayer.databinding.MusicViewBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
@@ -40,13 +37,13 @@ class MusicAdapter(
         val root = binding.root
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicAdapter.MyHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(
-        holder: MusicAdapter.MyHolder,
+        holder: MyHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
         holder.title.text = musicList[position].title
@@ -80,10 +77,7 @@ class MusicAdapter(
                 val customDialog =
                     LayoutInflater.from(context).inflate(R.layout.more_feature, holder.root, false)
                 val bindingMF = MoreFeatureBinding.bind(customDialog)
-                val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
-                    .create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+                val dialog = getDialogForOnLongClickListener(context, customDialog)
                 if (playlistDetails)
                     bindingMF.deleteBtn.text = "Remove"
 
@@ -110,20 +104,8 @@ class MusicAdapter(
                     val binder = DetailsViewBinding.bind(detailsDialog)
                     binder.detailsTV.setTextColor(Color.WHITE)
                     binder.root.setBackgroundColor(Color.TRANSPARENT)
-                    val dDialog = MaterialAlertDialogBuilder(context)
-                        .setBackground(ColorDrawable(0x99000000.toInt()))
-                        .setView(detailsDialog)
-                        .setPositiveButton("OK") { self, _ -> self.dismiss() }
-                        .setCancelable(false)
-                        .create()
-                    dDialog.show()
-                    dDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
-                    dDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
-                    val str = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
-                        .append(musicList[position].title)
-                        .bold { append("\n\nDuration: ") }
-                        .append(DateUtils.formatElapsedTime(musicList[position].duration / 1000))
-                        .bold { append("\n\nLocation: ") }.append(musicList[position].path)
+                    getInfoDialog(context, detailsDialog)
+                    val str = getDetails(music = musicList[position])
                     binder.detailsTV.text = str
                 }
 

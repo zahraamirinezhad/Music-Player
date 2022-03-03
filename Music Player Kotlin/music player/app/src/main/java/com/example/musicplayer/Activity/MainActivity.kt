@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -19,6 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.*
+import com.example.musicplayer.Adaptor.MusicAdapter
+import com.example.musicplayer.Music_Stuff.ListOfPlaylists
+import com.example.musicplayer.Music_Stuff.Music
+import com.example.musicplayer.Music_Stuff.exitApplication
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
@@ -137,6 +142,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.sortByBtn.setOnClickListener{
+            val menuList = arrayOf("Recently Added", "Song Title", "File Size")
+            var currentSort = sortBy
+            val build = MaterialAlertDialogBuilder(this)
+            build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+                val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
+                editor.putInt("SORT ORDER", currentSort)
+                editor.apply()
+                finish()
+                startActivity(intent)
+            }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
+                currentSort = wich
+            }
+            val customDialog = build.create()
+            customDialog.show()
+            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
+        }
 
     }
 
@@ -156,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
-        if(Player.musicService!=null){
+        if(Player.musicService !=null){
             MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
         }

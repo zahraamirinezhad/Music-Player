@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:background="@drawable/player_background"
-    tools:context=".NowPlaying">
+    tools:context=".Music_Stuff.NowPlaying">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImgNP"

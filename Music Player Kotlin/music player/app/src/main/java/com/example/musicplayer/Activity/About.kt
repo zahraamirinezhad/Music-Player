@@ -1,7 +1,8 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityAboutBinding
 
 class About : AppCompatActivity() {

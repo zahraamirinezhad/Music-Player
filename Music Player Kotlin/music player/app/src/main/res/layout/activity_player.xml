@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     android:background="@drawable/player_background"
     android:orientation="vertical"
-    tools:context=".Player">
+    tools:context=".Activity.Player">
 
     <LinearLayout
         android:id="@+id/linearLayout2"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Feedback">
+    tools:context=".Activity.Feedback">
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/topicFD"

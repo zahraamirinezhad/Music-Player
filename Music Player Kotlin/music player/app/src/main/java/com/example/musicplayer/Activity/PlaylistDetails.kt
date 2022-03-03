@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,7 +11,11 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.Adaptor.MusicAdapter
+import com.example.musicplayer.R
+import com.example.musicplayer.Music_Stuff.checkPlaylist
 import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
+import com.example.musicplayer.Music_Stuff.getImageArt
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 
@@ -57,7 +61,7 @@ class PlaylistDetails : AppCompatActivity() {
             builder.setTitle("Remove All The Musics")
                 .setMessage("Do You Want to Remove All the Musics in this Playlist ?")
                 .setPositiveButton("YES") { dialog, _ ->
-                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.clear()
+                    playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
                     adapter.refreshPlaylist()
                     dialog.dismiss()
                 }

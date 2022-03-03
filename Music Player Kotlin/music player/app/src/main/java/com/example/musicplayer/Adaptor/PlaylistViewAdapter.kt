@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.Adaptor
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicplayer.Activity.PlaylistDetails
+import com.example.musicplayer.Activity.playlist
+import com.example.musicplayer.Music_Stuff.getImageArt
+import com.example.musicplayer.Music_Stuff.getReflectionBackground
+import com.example.musicplayer.Music_Stuff.myPlaylist
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -109,12 +115,5 @@ class PlaylistViewAdapter(
         playlistList.addAll(playlist.listOfPlaylists.ref)
         if(!playlist.listOfPlaylists.ref.isNotEmpty()) playlist.binding.instructionPA.visibility = View.VISIBLE
         notifyDataSetChanged()
-    }
-
-    private fun sendIntent(ref: String, pos: Int) {
-        val intent = Intent(context, Player::class.java)
-        intent.putExtra("index", pos)
-        intent.putExtra("class", ref)
-        ContextCompat.startActivity(context, intent, null)
     }
 }
