@@ -76,6 +76,19 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             binding.favoritesBTN.isEnabled = false
             binding.songNamePA.isSelected = true
 
+            binding.repeatMusic.isEnabled = false
+            binding.repeatMusic.visibility = View.GONE
+            binding.timer.isEnabled = false
+            binding.timer.visibility = View.GONE
+            binding.setAsRingtone.isEnabled = false
+            binding.setAsRingtone.visibility = View.GONE
+            binding.setAsAlarmRingtone.isEnabled = false
+            binding.setAsAlarmRingtone.visibility = View.GONE
+            binding.back.isEnabled = false
+            binding.back.visibility = View.GONE
+            binding.next.isEnabled = false
+            binding.next.visibility = View.GONE
+
             val img = getImageArt(
                 musicListPA[songPosition].path, BitmapFactory.decodeResource(
                     this.resources,
@@ -91,14 +104,44 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
 
-            val dr: Drawable = BitmapDrawable(image)
-            binding.songImgPA.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
-            val icon: Bitmap = (dr).bitmap
-            val final_Bitmap = returnBlurredBackground(icon, this)
-            val newdr: Drawable = BitmapDrawable(final_Bitmap)
-            binding.musicContainer.background = newdr
+            val output = Bitmap.createBitmap(
+                image.width,
+                image.height, Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(output)
+
+            val color = -0xbdbdbe
+            val paint = Paint()
+            val rect = Rect(0, 0, image.width, image.height)
+
+            paint.isAntiAlias = true
+            canvas.drawARGB(0, 0, 0, 0)
+            paint.color = color
+            canvas.drawCircle(
+                (image.width / 2).toFloat(), (image.height / 2).toFloat(),
+                (image.width / 3).toFloat(), paint
+            )
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(image, rect, rect, paint)
+            binding.songImgPA.setImageBitmap(output)
 
             binding.songNamePA.text = musicListPA[songPosition].title
+
+            mainImageAnimator = ObjectAnimator.ofFloat(
+                binding.songImgPA,
+                "rotation",
+                (Math.toDegrees(2 * Math.PI)).toFloat()
+            )
+            mainImageAnimator.repeatCount = Animation.INFINITE
+            mainImageAnimator.duration = 20000
+            mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    animation.removeListener(this)
+                    animation.duration = 0
+                    (animation as ValueAnimator).reverse()
+                }
+            })
+            mainImageAnimator.start()
 
             if (repeat) binding.repeatMusic.setImageDrawable(
                 ContextCompat.getDrawable(
