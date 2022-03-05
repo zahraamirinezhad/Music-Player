@@ -52,6 +52,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var isFavorite: Boolean = false
         var fIndex: Int = -1
         lateinit var mainImageAnimator: ObjectAnimator
+        var isPlayingPlaylist: Boolean = false
+        fun isMusicListPaInitialized(): Boolean {
+            return this::musicListPA.isInitialized
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +79,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             val img = getImageArt(
                 musicListPA[songPosition].path, BitmapFactory.decodeResource(
                     this.resources,
-                    R.drawable.music_player_icon_slash_screen
+                    R.drawable.image_background
                 )
             )
             val image = if (img != null) {
@@ -83,7 +87,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             } else {
                 BitmapFactory.decodeResource(
                     resources,
-                    R.drawable.music_player_icon_slash_screen
+                    R.drawable.image_background
                 )
             }
 
@@ -303,7 +307,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun openAndroidPermissionsMenu() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val intent = Intent(ACTION_MANAGE_WRITE_SETTINGS)
-            intent.data = Uri.parse("package:" + this.getPackageName())
+            intent.data = Uri.parse("package:" + this.packageName)
             this.startActivity(intent)
         }
     }
@@ -374,6 +378,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         binding.songNamePA.text = musicListPA[songPosition].title
 
+
         if (repeat) binding.repeatMusic.setImageDrawable(
             ContextCompat.getDrawable(
                 this,
@@ -413,6 +418,20 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 ) / 50000).toFloat()
             )
             mainImageAnimator.duration = musicService!!.mediaPlayer!!.duration.toLong()
+
+            val currentPosition = intent.getIntExtra("recentMusicCurrentPosition", -1)
+            val recentMusicIsPlaying = intent.getBooleanExtra("RecentMusicIsPlaying", false)
+            if (currentPosition != -1 && !recentMusicIsPlaying) {
+                musicService!!.mediaPlayer!!.seekTo(currentPosition)
+                binding.seekMusic.progress = musicService!!.mediaPlayer!!.currentPosition
+                binding.playPauseBTN.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.play_music
+                    )
+                )
+                pauseMusic()
+            }
         } catch (e: Exception) {
             return
         }
@@ -422,6 +441,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
             "PlaylistDetailsShuffle" -> {
+                isPlayingPlaylist = true
                 initServiceAndPlaylist(
                     playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
                     shuffle = true
@@ -429,6 +449,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "PlaylistDetailsAdapter" -> {
+                isPlayingPlaylist = true
                 initServiceAndPlaylist(
                     playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
                     shuffle = false
@@ -436,6 +457,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "FavoriteAdapter" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(favourite.favoriteSongs, shuffle = false)
             }
 
@@ -462,23 +484,35 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "MusicAdapterSearch" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(MainActivity.MusicListSearch, shuffle = false)
             }
 
             "MusicAdapter" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
 
             "MainActivity" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = true)
             }
 
             "FavouritesShuffle" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(favourite.favoriteSongs, shuffle = true)
             }
 
             "PlayNext" -> {
+                isPlayingPlaylist = false
                 initServiceAndPlaylist(PlayNext.playNextList, shuffle = false, playNext = true)
+            }
+
+            "RecentMusic" -> {
+                MainActivity.musicAdapter.musicList[songPosition].isPlayingOrNot = true
+                MainActivity.musicAdapter.update()
+                isPlayingPlaylist = false
+                initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
         }
         if (musicService != null && !isPlaying) playMusic()
@@ -537,13 +571,17 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         mainImageAnimator.pause()
     }
 
-    fun backNextMusic(increment: Boolean) {
+    private fun backNextMusic(increment: Boolean) {
         MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
             false
+        if (isPlayingPlaylist) PlaylistDetails.adapter.musicList[songPosition].isPlayingOrNot =
+            false
         setSongPosition(increment)
+        if (isPlayingPlaylist) PlaylistDetails.adapter.musicList[songPosition].isPlayingOrNot = true
         MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
-            true
+            false
         MainActivity.musicAdapter.update()
+        if (isPlayingPlaylist) PlaylistDetails.adapter.update()
         mainImageAnimator.end()
         setLayout()
         createMediaPlayer()
@@ -666,6 +704,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     override fun onDestroy() {
         super.onDestroy()
-        if (musicListPA[songPosition].id.equals("Unknown") && !isPlaying) exitApplication()
+        if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
     }
 }

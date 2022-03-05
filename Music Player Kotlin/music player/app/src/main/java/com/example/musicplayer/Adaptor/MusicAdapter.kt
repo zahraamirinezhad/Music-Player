@@ -23,8 +23,8 @@ import java.io.File
 class MusicAdapter(
     private val context: Context,
     var musicList: ArrayList<Music>,
-    private val playlistDetails: Boolean = false,
-    private val selectionActivity: Boolean = false
+    val playlistDetails: Boolean = false,
+    val selectionActivity: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
     private var playingPosition: Int = 0
@@ -147,10 +147,14 @@ class MusicAdapter(
         when {
             playlistDetails -> {
                 holder.root.setOnClickListener {
-                    refreshBackground()
+                    musicList[playingPosition].isPlayingOrNot = false
+                    musicList[position].isPlayingOrNot = true
+                    MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                        false
                     MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot =
                         true
-                    MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
+                    PlaylistDetails.adapter.update()
+                    MainActivity.musicAdapter.update()
                     sendIntent("PlaylistDetailsAdapter", position)
                 }
             }
@@ -217,7 +221,7 @@ class MusicAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateMusicList(searchList: ArrayList<Music>) {
-        musicList = ArrayList()
+        musicList.clear()
         musicList.addAll(searchList)
         notifyDataSetChanged()
     }

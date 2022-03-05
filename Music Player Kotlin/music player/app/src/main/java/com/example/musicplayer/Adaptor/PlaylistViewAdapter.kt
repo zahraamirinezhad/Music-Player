@@ -113,7 +113,8 @@ class PlaylistViewAdapter(
     fun refresh() {
         playlistList = ArrayList()
         playlistList.addAll(playlist.listOfPlaylists.ref)
-        if(!playlist.listOfPlaylists.ref.isNotEmpty()) playlist.binding.instructionPA.visibility = View.VISIBLE
+        if (!playlist.listOfPlaylists.ref.isNotEmpty()) playlist.binding.instructionPA.visibility =
+            View.VISIBLE
         notifyDataSetChanged()
     }
 }

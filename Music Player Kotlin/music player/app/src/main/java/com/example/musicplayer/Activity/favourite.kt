@@ -1,5 +1,6 @@
 package com.example.musicplayer.Activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.musicplayer.Adaptor.FavoriteAdapter
 import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.R
 import com.example.musicplayer.Music_Stuff.checkPlaylist
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityFavouriteBinding
 
 class favourite : AppCompatActivity() {
@@ -16,9 +17,14 @@ class favourite : AppCompatActivity() {
         var favoriteSongs: ArrayList<Music> = ArrayList()
         lateinit var binding: ActivityFavouriteBinding
         var favouritesChanged: Boolean = false
+
+        @SuppressLint("StaticFieldLeak")
+        lateinit var adapter: FavoriteAdapter
+        fun isAdapterInitialized(): Boolean {
+            return this::adapter.isInitialized
+        }
     }
 
-    private lateinit var adapter: FavoriteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.blackTheme)
@@ -31,7 +37,7 @@ class favourite : AppCompatActivity() {
         binding.favoriteRV.setHasFixedSize(true)
         binding.favoriteRV.setItemViewCacheSize(13)
         binding.favoriteRV.layoutManager = GridLayoutManager(this, 3)
-        adapter = FavoriteAdapter(this, favoriteSongs)
+        adapter = FavoriteAdapter(this, favoriteSongs, isFavourite = true)
         binding.favoriteRV.adapter = adapter
         favouritesChanged = false
         if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
@@ -57,5 +63,10 @@ class favourite : AppCompatActivity() {
             adapter.update(favoriteSongs)
             favouritesChanged = false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.isFavourite = false
     }
 }

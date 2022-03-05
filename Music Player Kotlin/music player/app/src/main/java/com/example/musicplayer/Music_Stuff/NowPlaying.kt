@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentNowPlayingBinding
 
@@ -59,11 +60,15 @@ class NowPlaying : Fragment() {
 
             MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
                 false
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
+                false
             setSongPosition(prevOrNext)
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
+                true
             MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
                 true
             MainActivity.musicAdapter.update()
-
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
 
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)

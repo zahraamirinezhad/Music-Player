@@ -11,6 +11,7 @@ import android.media.MediaPlayer
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.R
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -61,10 +62,15 @@ class NotificationReceiver : BroadcastReceiver() {
 
             MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
                 false
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
+                false
             setSongPosition(increment)
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
+                true
             MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
                 true
             MainActivity.musicAdapter.update()
+            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()

@@ -18,12 +18,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.*
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.ListOfPlaylists
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.exitApplication
+import com.example.musicplayer.Music_Stuff.findMusicById
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
@@ -84,6 +86,27 @@ class MainActivity : AppCompatActivity() {
                     GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
                 playlist.listOfPlaylists = data
             }
+
+            val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
+            if (!recentMusicIsPlaying.toBoolean()) {
+                val editorRecentMusic = getSharedPreferences("savedInfo", MODE_PRIVATE)
+                val jsonStringRecentMusic = editorRecentMusic.getString("RecentMusic", null)
+                val typeTokenRecentMusic = object : TypeToken<Music>() {}.type
+                if (jsonStringRecentMusic != null) {
+                    val music: Music =
+                        GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
+                    val pos = findMusicById(music)
+                    if (pos != -1) {
+                        val intent = Intent(this, Player::class.java)
+                        intent.putExtra("index", pos)
+                        intent.putExtra("class", "RecentMusic")
+                        val currentPosition = editor.getString("RecentMusicCurrentPosition", "")
+                        intent.putExtra("recentMusicCurrentPosition", currentPosition?.toInt())
+                        intent.putExtra("RecentMusicIsPlaying", recentMusicIsPlaying?.toBoolean())
+                        ContextCompat.startActivity(this, intent, null)
+                    }
+                }
+            }
         }
 
         binding.shuffleBtn.setOnClickListener {
@@ -142,16 +165,34 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.sortByBtn.setOnClickListener{
+        binding.sortByBtn.setOnClickListener {
             val menuList = arrayOf("Recently Added", "Song Title", "File Size")
             var currentSort = sortBy
             val build = MaterialAlertDialogBuilder(this)
             build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
-                val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
-                editor.putInt("SORT ORDER", currentSort)
-                editor.apply()
-                finish()
-                startActivity(intent)
+                if (sortBy != currentSort) {
+                    sortBy = currentSort
+                    if (Player.isMusicListPaInitialized()) {
+                        val music = Player.musicListPA[Player.songPosition]
+                        MusicListMA[Player.songPosition].isPlayingOrNot = false
+                        musicAdapter.update()
+                        MusicListMA = getAllAudio()
+                        Player.songPosition = findMusicById(music)
+                        MusicListMA[findMusicById(music)].isPlayingOrNot = true
+                        musicAdapter.updateMusicList(MusicListMA)
+                    } else {
+                        MusicListMA = getAllAudio()
+                        musicAdapter.updateMusicList(MusicListMA)
+                    }
+                    val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
+                    editor.putInt("SORT ORDER", currentSort)
+                    editor.apply()
+
+                    if (!musicAdapter.selectionActivity && !musicAdapter.playlistDetails && (!favourite.isAdapterInitialized() || !favourite.adapter.isFavourite) && PlayNext.playNextList.size == 0) {
+                        Player.musicListPA = MusicListMA
+                    }
+                }
+
             }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
                 currentSort = wich
             }
@@ -178,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
-        if(Player.musicService !=null){
+        if (Player.musicService != null) {
             MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
         }
@@ -289,7 +330,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
@@ -298,14 +338,32 @@ class MainActivity : AppCompatActivity() {
         editor.putString("FavouriteSongs", jsonString)
         val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
+        if (Player.musicService != null) {
+            val recentMusic = GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])
+            editor.putString("RecentMusic", recentMusic)
+            editor.putString(
+                "RecentMusicCurrentPosition",
+                Player.musicService!!.mediaPlayer!!.currentPosition.toString()
+            )
+            editor.putString("RecentMusicIsPlaying", Player.isPlaying.toString())
+        }
         editor.apply()
 
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
         val sortValue = sortEditor.getInt("SORT ORDER", 0)
         if (sortBy != sortValue) {
-            sortBy = sortValue
-            MusicListMA = getAllAudio()
-            musicAdapter.updateMusicList(MusicListMA)
+            if (Player.isMusicListPaInitialized()) {
+                val music = Player.musicListPA[Player.songPosition]
+                MusicListMA[Player.songPosition].isPlayingOrNot = false
+                musicAdapter.update()
+                MusicListMA = getAllAudio()
+                Player.songPosition = findMusicById(music)
+                MusicListMA[findMusicById(music)].isPlayingOrNot = true
+                musicAdapter.updateMusicList(MusicListMA)
+            } else {
+                MusicListMA = getAllAudio()
+                musicAdapter.updateMusicList(MusicListMA)
+            }
         }
     }
 

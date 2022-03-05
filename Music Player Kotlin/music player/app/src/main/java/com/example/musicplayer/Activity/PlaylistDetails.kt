@@ -12,20 +12,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
-import com.example.musicplayer.R
 import com.example.musicplayer.Music_Stuff.checkPlaylist
-import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
 import com.example.musicplayer.Music_Stuff.getImageArt
+import com.example.musicplayer.R
+import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 
 class PlaylistDetails : AppCompatActivity() {
     companion object {
         var currentPlaylist = -1
+
+        @SuppressLint("StaticFieldLeak")
+        lateinit var adapter: MusicAdapter
     }
 
     lateinit var binding: ActivityPlaylistDetailsBinding
-    lateinit var adapter: MusicAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.blackTheme)
@@ -38,7 +41,11 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistPLDRV.setItemViewCacheSize(10)
         binding.playlistPLDRV.setHasFixedSize(true)
         binding.playlistPLDRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, playlist.listOfPlaylists.ref[currentPlaylist].musics, true)
+        adapter = MusicAdapter(
+            this,
+            playlist.listOfPlaylists.ref[currentPlaylist].musics,
+            playlistDetails = true
+        )
         binding.playlistPLDRV.adapter = adapter
 
         binding.dragDownPLD.setOnClickListener {

@@ -23,7 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 class FavoriteAdapter(
     private val context: Context,
     private var musicList: ArrayList<Music>,
-    private var playNext: Boolean = false
+    var isFavourite: Boolean = false,
+    var playNext: Boolean = false
 ) :
     RecyclerView.Adapter<FavoriteAdapter.MyHolder>() {
     class MyHolder(binding: FavoriteViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -85,11 +86,12 @@ class FavoriteAdapter(
                 }
                 return@setOnLongClickListener true
             }
-        } else {
+        } else if (isFavourite) {
             holder.root.setOnClickListener {
-                refreshBackground()
+                MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                    false
                 MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot = true
-                MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
+                MainActivity.musicAdapter.update()
                 sendIntent("FavoriteAdapter", position)
             }
         }

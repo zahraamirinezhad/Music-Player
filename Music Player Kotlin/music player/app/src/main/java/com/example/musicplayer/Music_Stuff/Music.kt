@@ -188,19 +188,18 @@ fun checkPlaylist(playlist: ArrayList<Music>): ArrayList<Music> {
 }
 
 fun findMusicById(music: Music): Int {
-    var index = 0
-    for (x in MainActivity.MusicListMA) {
-        if (x.id == music.id)
+    for ((index, x) in MainActivity.MusicListMA.withIndex()) {
+        if (x.id == music.id) {
             return index
-        index++
+        }
     }
-    return index
+    return -1
 }
 
-fun refreshBackground() {
-    for (x in MainActivity.MusicListMA)
-        x.isPlayingOrNot = false
-}
+//fun refreshBackground() {
+//    for (x in MainActivity.MusicListMA)
+//        x.isPlayingOrNot = false
+//}
 
 fun getDialogForOnLongClickListener(context: Context, customDialog: View): AlertDialog {
     val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
