@@ -38,7 +38,7 @@
     <string name="feedback_topic">Topic i.e Suggestion, Error, etc.</string>
     <string name="feedback_email">Email Address (Optional)</string>
     <string name="send_feedback">SEND</string>
-    <string name="sort">SORT BY</string>
+    <string name="sort">Sort By</string>
     <string name="version">VERSION</string>
     <string name="play_next">Play Next</string>
     <string name="song_image">SONG IMAGE</string>
@@ -49,6 +49,7 @@
     <string name="previous_music">Previous Music</string>
     <string name="play_pause">Play Pause</string>
     <string name="delete_music">Delete Music</string>
+    <string name="more">More Items</string>
     <string name="set_as_ringtone">Set As Ringtone</string>
     <string name="set_as_alarm_ringtone">Set As Alarm Ringtone</string>
 </resources>

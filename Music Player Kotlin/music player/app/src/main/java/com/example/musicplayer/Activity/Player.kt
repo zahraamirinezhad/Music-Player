@@ -2,10 +2,7 @@ package com.example.musicplayer.Activity
 
 import android.animation.*
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.ContentUris
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
@@ -21,11 +18,14 @@ import android.os.IBinder
 import android.provider.MediaStore
 import android.provider.Settings
 import android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.animation.Animation
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -58,6 +58,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
     }
 
+    @SuppressLint("Recycle")
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.blackTheme)
@@ -80,10 +82,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             binding.repeatMusic.visibility = View.GONE
             binding.timer.isEnabled = false
             binding.timer.visibility = View.GONE
-            binding.setAsRingtone.isEnabled = false
-            binding.setAsRingtone.visibility = View.GONE
-            binding.setAsAlarmRingtone.isEnabled = false
-            binding.setAsAlarmRingtone.visibility = View.GONE
+            binding.moreOptions.isEnabled = false
+            binding.moreOptions.visibility = View.GONE
             binding.back.isEnabled = false
             binding.back.visibility = View.GONE
             binding.next.isEnabled = false
@@ -287,56 +287,82 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             favourite.favouritesChanged = true
         }
 
-        binding.setAsRingtone.setOnClickListener {
-            try {
-                if (checkSystemWritePermission()) {
-                    val uri = ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        (musicListPA[songPosition].id).toLong()
-                    )
-                    RingtoneManager.setActualDefaultRingtoneUri(
-                        this,
-                        RingtoneManager.TYPE_RINGTONE,
-                        uri
-                    )
-                    Toast.makeText(this, "Set as Ringtone Successfully ", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Allow Modify System Settings ==> ON ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT).show()
-            }
-        }
+        binding.moreOptions.setOnClickListener {
+            val wrapper: Context = ContextThemeWrapper(this, R.style.Player_PopupMenu)
+            val popupMenu = PopupMenu(wrapper, binding.moreOptions)
+            popupMenu.setForceShowIcon(true)
+            popupMenu.menuInflater.inflate(R.menu.player_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { p0 ->
+                when (p0.itemId) {
+                    R.id.ringtone_player_menu -> {
+                        try {
+                            if (checkSystemWritePermission()) {
+                                val uri = ContentUris.withAppendedId(
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    (musicListPA[songPosition].id).toLong()
+                                )
+                                RingtoneManager.setActualDefaultRingtoneUri(
+                                    this,
+                                    RingtoneManager.TYPE_RINGTONE,
+                                    uri
+                                )
+                                Toast.makeText(
+                                    this,
+                                    "Set as Ringtone Successfully ",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Allow Modify System Settings ==> ON ",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(this, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
 
-        binding.setAsAlarmRingtone.setOnClickListener {
-            try {
-                if (checkSystemWritePermission()) {
-                    val uri = ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        (musicListPA[songPosition].id).toLong()
-                    )
-                    RingtoneManager.setActualDefaultRingtoneUri(
-                        this,
-                        RingtoneManager.TYPE_ALARM,
-                        uri
-                    )
-                    Toast.makeText(this, "Set as Alarm Ringtone Successfully ", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Allow Modify System Settings ==> ON ",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    R.id.alarm_ringtone_player_menu -> {
+                        try {
+                            if (checkSystemWritePermission()) {
+                                val uri = ContentUris.withAppendedId(
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    (musicListPA[songPosition].id).toLong()
+                                )
+                                RingtoneManager.setActualDefaultRingtoneUri(
+                                    this,
+                                    RingtoneManager.TYPE_ALARM,
+                                    uri
+                                )
+                                Toast.makeText(
+                                    this,
+                                    "Set as Alarm Ringtone Successfully ",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Allow Modify System Settings ==> ON ",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                this,
+                                "Unable to Set as Alarm Ringtone ",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this, "Unable to Set as Alarm Ringtone ", Toast.LENGTH_SHORT).show()
+                true
             }
+            popupMenu.show()
         }
     }
 

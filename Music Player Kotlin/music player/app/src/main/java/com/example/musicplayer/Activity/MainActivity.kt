@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -109,15 +110,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.shuffleBtn.setOnClickListener {
-            if (MusicListMA.size != 0) {
-                val intent = Intent(this@MainActivity, Player::class.java)
-                intent.putExtra("index", 0)
-                intent.putExtra("class", "MainActivity")
-                startActivity(intent)
-            }
-        }
-
         binding.favoritesBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, favourite::class.java)
             startActivity(intent)
@@ -160,45 +152,65 @@ class MainActivity : AppCompatActivity() {
             binding.refreshLayout.isRefreshing = false
         }
 
-        binding.playNextBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, PlayNext::class.java)
-            startActivity(intent)
-        }
-
-        binding.sortByBtn.setOnClickListener {
-            val menuList = arrayOf("Recently Added", "Song Title", "File Size")
-            var currentSort = sortBy
-            val build = MaterialAlertDialogBuilder(this)
-            build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
-                if (sortBy != currentSort) {
-                    sortBy = currentSort
-                    if (Player.isMusicListPaInitialized()) {
-                        val music = Player.musicListPA[Player.songPosition]
-                        MusicListMA[Player.songPosition].isPlayingOrNot = false
-                        musicAdapter.update()
-                        MusicListMA = getAllAudio()
-                        Player.songPosition = findMusicById(music)
-                        MusicListMA[findMusicById(music)].isPlayingOrNot = true
-                        musicAdapter.updateMusicList(MusicListMA)
-                    } else {
-                        MusicListMA = getAllAudio()
-                        musicAdapter.updateMusicList(MusicListMA)
+        binding.moreBtn.setOnClickListener {
+            val popupMenu = PopupMenu(this, binding.moreBtn)
+            popupMenu.setForceShowIcon(true)
+            popupMenu.menuInflater.inflate(R.menu.main_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { p0 ->
+                when (p0.itemId) {
+                    R.id.shuffle_menu -> {
+                        if (MusicListMA.size != 0) {
+                            val intent = Intent(this@MainActivity, Player::class.java)
+                            intent.putExtra("index", 0)
+                            intent.putExtra("class", "MainActivity")
+                            startActivity(intent)
+                        }
                     }
-                    val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
-                    editor.putInt("SORT ORDER", currentSort)
-                    editor.apply()
+                    R.id.play_next_menu -> {
+                        val intent = Intent(this@MainActivity, PlayNext::class.java)
+                        startActivity(intent)
+                    }
 
-                    if (!musicAdapter.selectionActivity && !musicAdapter.playlistDetails && (!favourite.isAdapterInitialized() || !favourite.adapter.isFavourite) && PlayNext.playNextList.size == 0) {
-                        Player.musicListPA = MusicListMA
+                    R.id.sort_by_menu -> {
+                        val menuList = arrayOf("Recently Added", "Song Title", "File Size")
+                        var currentSort = sortBy
+                        val build = MaterialAlertDialogBuilder(this)
+                        build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+                            if (sortBy != currentSort) {
+                                sortBy = currentSort
+                                if (Player.isMusicListPaInitialized()) {
+                                    val music = Player.musicListPA[Player.songPosition]
+                                    MusicListMA[Player.songPosition].isPlayingOrNot = false
+                                    musicAdapter.update()
+                                    MusicListMA = getAllAudio()
+                                    Player.songPosition = findMusicById(music)
+                                    MusicListMA[findMusicById(music)].isPlayingOrNot = true
+                                    musicAdapter.updateMusicList(MusicListMA)
+                                } else {
+                                    MusicListMA = getAllAudio()
+                                    musicAdapter.updateMusicList(MusicListMA)
+                                }
+                                val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
+                                editor.putInt("SORT ORDER", currentSort)
+                                editor.apply()
+
+                                if (!musicAdapter.selectionActivity && !musicAdapter.playlistDetails && (!favourite.isAdapterInitialized() || !favourite.adapter.isFavourite) && PlayNext.playNextList.size == 0) {
+                                    Player.musicListPA = MusicListMA
+                                }
+                            }
+
+                        }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
+                            currentSort = wich
+                        }
+                        val customDialog = build.create()
+                        customDialog.show()
+                        customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setTextColor(Color.GREEN)
                     }
                 }
-
-            }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
-                currentSort = wich
+                true
             }
-            val customDialog = build.create()
-            customDialog.show()
-            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
+            popupMenu.show()
         }
 
     }

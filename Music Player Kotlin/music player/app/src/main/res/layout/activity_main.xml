@@ -28,18 +28,6 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/shuffle_btn"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/shuffle_btn"
-                        android:drawableTop="@drawable/shuffle_icon"
-                        android:text="@string/shuffle_btn"
-                        android:textAllCaps="false"
-                        android:textColor="@color/black" />
-
-                    <Button
                         android:id="@+id/favorites_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
@@ -64,28 +52,17 @@
                         android:textColor="@color/black" />
 
                     <Button
-                        android:id="@+id/playNextBtn"
+                        android:id="@+id/more_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:contentDescription="@string/play_next"
-                        android:drawableTop="@drawable/play_next"
-                        android:text="@string/play_next"
+                        android:contentDescription="@string/more"
+                        android:drawableTop="@drawable/more"
+                        android:text="@string/more"
                         android:textAllCaps="false"
                         android:textColor="@color/black" />
 
-                    <Button
-                        android:id="@+id/sortByBtn"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/sort"
-                        android:contentDescription="@string/sort"
-                        android:text="@string/sort"
-                        android:textAllCaps="false"
-                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
