@@ -49,10 +49,26 @@ class MusicAdapter(
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
-        if (musicList[position].isPlayingOrNot) {
-            holder.root.setBackgroundResource(R.drawable.fragment_background)
-            playingPosition = position
-        } else holder.root.background = null
+        if (!selectionActivity) {
+            if (musicList[position].isPlayingOrNot) {
+                holder.root.setBackgroundResource(R.drawable.fragment_background)
+                playingPosition = position
+            } else holder.root.background = null
+        } else {
+            var exist: Boolean = false
+            for (song in playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
+                if (musicList[position].id == song.id) {
+                    exist = true
+                }
+            }
+            if (exist) {
+                holder.root.isEnabled = false
+                holder.root.alpha = 0.6F
+            } else {
+                holder.root.isEnabled = true
+                holder.root.alpha = 1F
+            }
+        }
 
         val img = getImageArt(
             musicList[position].path, BitmapFactory.decodeResource(
@@ -160,32 +176,21 @@ class MusicAdapter(
             }
 
             selectionActivity -> {
-                var itExists = false
-                playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
-                    if (musicList[position].id.equals(music.id)) {
-                        itExists = true
-                    }
-                }
-                if (itExists) {
-                    holder.root.isEnabled = false
-                    holder.root.alpha = 0.6F
-                } else {
-                    holder.root.setOnClickListener {
-                        if (addSong(musicList[position])) {
-                            holder.root.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.cool_pink
-                                )
+                holder.root.setOnClickListener {
+                    if (addSong(musicList[position])) {
+                        holder.root.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.cool_pink
                             )
-                        } else {
-                            holder.root.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.white
-                                )
+                        )
+                    } else {
+                        holder.root.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.white
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -235,7 +240,7 @@ class MusicAdapter(
 
     private fun addSong(song: Music): Boolean {
         playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
-            if (song.id.equals(music.id)) {
+            if (song.id == music.id) {
                 playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(index)
                 return false
             }
