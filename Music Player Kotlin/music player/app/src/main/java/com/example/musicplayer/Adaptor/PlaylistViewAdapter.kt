@@ -74,10 +74,17 @@ class PlaylistViewAdapter(
                         R.drawable.image_background
                     )
                 )
-                val image = if (img != null) {
+                var image = if (img != null) {
                     BitmapFactory.decodeByteArray(img, 0, img.size)
                 } else {
                     BitmapFactory.decodeResource(
+                        context.resources,
+                        R.drawable.image_background
+                    )
+                }
+
+                if (image == null) {
+                    image = BitmapFactory.decodeResource(
                         context.resources,
                         R.drawable.image_background
                     )

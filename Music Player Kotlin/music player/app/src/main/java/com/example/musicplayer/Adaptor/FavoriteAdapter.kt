@@ -45,10 +45,17 @@ class FavoriteAdapter(
                 R.drawable.music_player_icon_slash_screen
             )
         )
-        val myImage = if (img != null) {
+        var myImage = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {
             BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.image_background
+            )
+        }
+
+        if(myImage == null){
+            myImage = BitmapFactory.decodeResource(
                 context.resources,
                 R.drawable.image_background
             )

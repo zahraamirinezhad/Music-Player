@@ -24,7 +24,8 @@ class MusicAdapter(
     private val context: Context,
     var musicList: ArrayList<Music>,
     val playlistDetails: Boolean = false,
-    val selectionActivity: Boolean = false
+    val selectionActivity: Boolean = false,
+    val album: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
     private var playingPosition: Int = 0
@@ -55,7 +56,7 @@ class MusicAdapter(
                 playingPosition = position
             } else holder.root.background = null
         } else {
-            var exist: Boolean = false
+            var exist = false
             for (song in playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
                 if (musicList[position].id == song.id) {
                     exist = true
@@ -76,10 +77,17 @@ class MusicAdapter(
                 R.drawable.image_background
             )
         )
-        val myImage = if (img != null) {
+        var myImage = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {
             BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.image_background
+            )
+        }
+
+        if (myImage == null) {
+            myImage = BitmapFactory.decodeResource(
                 context.resources,
                 R.drawable.image_background
             )
@@ -165,13 +173,32 @@ class MusicAdapter(
                 holder.root.setOnClickListener {
                     musicList[playingPosition].isPlayingOrNot = false
                     musicList[position].isPlayingOrNot = true
-                    MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                        false
-                    MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot =
-                        true
-                    PlaylistDetails.adapter.update()
-                    MainActivity.musicAdapter.update()
+                    if (Player.isMusicListPaInitialized()) {
+                        MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                            false
+                        MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot =
+                            true
+                        PlaylistDetails.adapter.update()
+                        MainActivity.musicAdapter.update()
+                    }
                     sendIntent("PlaylistDetailsAdapter", position)
+                }
+            }
+
+            album -> {
+                holder.root.setOnClickListener {
+                    musicList[playingPosition].isPlayingOrNot = false
+                    musicList[position].isPlayingOrNot = true
+                    if (Player.isMusicListPaInitialized()) {
+                        MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+                            false
+                        MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot =
+                            true
+                        MainActivity.musicAdapter.update()
+
+                    }
+                    ShowByAlbumDetails.adapter.update()
+                    sendIntent("AlbumDetailsAdapter", position)
                 }
             }
 

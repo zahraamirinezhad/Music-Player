@@ -52,4 +52,7 @@
     <string name="more">More Items</string>
     <string name="set_as_ringtone">Set As Ringtone</string>
     <string name="set_as_alarm_ringtone">Set As Alarm Ringtone</string>
+    <string name="album_name">ALBUM NAME</string>
+    <string name="album_image">ALBUM IMAGE</string>
+    <string name="show_by_album">SOW BY ALBUM</string>
 </resources>

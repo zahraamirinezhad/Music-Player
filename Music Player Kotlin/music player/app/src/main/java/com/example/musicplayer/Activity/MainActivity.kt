@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
         var search: Boolean = false
-        var sortBy = 0;
+        var sortBy = 0
+        lateinit var songByAlbum: LinkedHashMap<String, ArrayList<Music>>
         val sortingList = arrayOf(
             MediaStore.Audio.Media.DATE_ADDED + " DESC",
             MediaStore.Audio.Media.TITLE,
@@ -116,6 +117,11 @@ class MainActivity : AppCompatActivity() {
         }
         binding.playlistBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, playlist::class.java)
+            startActivity(intent)
+
+        }
+        binding.showByAlbumBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, ShowByAlbum::class.java)
             startActivity(intent)
 
         }
@@ -242,6 +248,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getAllAudio(): ArrayList<Music> {
+        songByAlbum = LinkedHashMap()
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
@@ -290,8 +297,15 @@ class MainActivity : AppCompatActivity() {
                         artUri = artUriC
                     )
                     val file = File(music.path)
-                    if (file.exists())
+                    if (file.exists()) {
                         tempList.add(music)
+                        if (songByAlbum.containsKey(music.album)) {
+                            songByAlbum.get(music.album)?.add(music)
+                        } else {
+                            songByAlbum.put(music.album, ArrayList())
+                            songByAlbum.get(music.album)?.add(music)
+                        }
+                    }
                 } while (cursor.moveToNext())
             cursor.close()
         }

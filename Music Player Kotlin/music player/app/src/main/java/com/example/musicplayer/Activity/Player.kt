@@ -95,10 +95,16 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                     R.drawable.image_background
                 )
             )
-            val image = if (img != null) {
+            var image = if (img != null) {
                 BitmapFactory.decodeByteArray(img, 0, img.size)
             } else {
                 BitmapFactory.decodeResource(
+                    resources,
+                    R.drawable.image_background
+                )
+            }
+            if (image == null) {
+                image = BitmapFactory.decodeResource(
                     resources,
                     R.drawable.image_background
                 )
@@ -394,7 +400,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 R.drawable.image_background
             )
         )
-        val image = if (img != null) {
+        var image = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {
             BitmapFactory.decodeResource(
@@ -402,7 +408,15 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 R.drawable.image_background
             )
         }
-        val dr: Drawable = BitmapDrawable(image.copy(image.config, true))
+        if (image == null) {
+            image = BitmapFactory.decodeResource(
+                resources,
+                R.drawable.image_background
+            )
+        }
+
+        val dr: Drawable = BitmapDrawable(image)
+        NowPlaying.binding.songImgNP.background = dr
 
         val output = Bitmap.createBitmap(
             image.width,
@@ -442,8 +456,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
         })
         mainImageAnimator.start()
-
-        NowPlaying.binding.songImgNP.background = dr
 
         binding.songNamePA.text = musicListPA[songPosition].title
 
@@ -517,10 +529,30 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
 
+            "AlbumDetailsShuffle" -> {
+                isPlayingPlaylist = false
+                initServiceAndPlaylist(
+                    MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                        ShowByAlbumDetails.currentAlbum
+                    )]!!,
+                    shuffle = true
+                )
+            }
+
             "PlaylistDetailsAdapter" -> {
                 isPlayingPlaylist = true
                 initServiceAndPlaylist(
                     playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
+                    shuffle = false
+                )
+            }
+
+            "AlbumDetailsAdapter" -> {
+                isPlayingPlaylist = false
+                initServiceAndPlaylist(
+                    MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                        ShowByAlbumDetails.currentAlbum
+                    )]!!,
                     shuffle = false
                 )
             }
@@ -650,6 +682,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
             false
         MainActivity.musicAdapter.update()
+        if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
         mainImageAnimator.end()
         setLayout()

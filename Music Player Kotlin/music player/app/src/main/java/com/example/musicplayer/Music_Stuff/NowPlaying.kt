@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Activity.PlaylistDetails
+import com.example.musicplayer.Activity.ShowByAlbumDetails
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentNowPlayingBinding
 
@@ -68,6 +69,7 @@ class NowPlaying : Fragment() {
             MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
                 true
             MainActivity.musicAdapter.update()
+            if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
 
             Player.musicService!!.mediaPlayer!!.reset()
