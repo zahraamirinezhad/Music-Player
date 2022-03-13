@@ -10,30 +10,29 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/fragment_background"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/dragDownSL"
-            android:layout_width="wrap_content"
+        <CheckBox
+            android:id="@+id/selectAll"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:contentDescription="@string/back"
-            android:paddingLeft="20dp"
-            android:src="@drawable/down"
-            app:tint="@color/white" />
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchSongSL"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:queryHint="@string/search_song"
-            app:searchIcon="@drawable/search"
+            android:layout_weight="8"
             android:focusable="false"
-            app:iconifiedByDefault="false"/>
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/search_song"
+            app:searchIcon="@drawable/search" />
 
     </LinearLayout>
 
@@ -41,10 +40,10 @@
         android:id="@+id/selectionRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        android:paddingBottom="50dp"
         android:scrollbars="vertical"
-        android:paddingBottom="50dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

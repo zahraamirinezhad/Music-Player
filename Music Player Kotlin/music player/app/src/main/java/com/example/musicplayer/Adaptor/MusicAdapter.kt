@@ -25,7 +25,8 @@ class MusicAdapter(
     var musicList: ArrayList<Music>,
     val playlistDetails: Boolean = false,
     val selectionActivity: Boolean = false,
-    val album: Boolean = false
+    val album: Boolean = false,
+    var selectAll: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
     private var playingPosition: Int = 0
@@ -50,24 +51,42 @@ class MusicAdapter(
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
+
         if (!selectionActivity) {
             if (musicList[position].isPlayingOrNot) {
                 holder.root.setBackgroundResource(R.drawable.fragment_background)
                 playingPosition = position
             } else holder.root.background = null
         } else {
-            var exist = false
-            for (song in playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
-                if (musicList[position].id == song.id) {
-                    exist = true
+            if (!selectAll) {
+                var exist = false
+                for (song in playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
+                    if (musicList[position].id == song.id) {
+                        exist = true
+                    }
                 }
-            }
-            if (exist) {
-                holder.root.isEnabled = false
-                holder.root.alpha = 0.6F
+                if (exist) {
+                    holder.root.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.cool_pink
+                        )
+                    )
+                } else {
+                    holder.root.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.white
+                        )
+                    )
+                }
             } else {
-                holder.root.isEnabled = true
-                holder.root.alpha = 1F
+                holder.root.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.cool_pink
+                    )
+                )
             }
         }
 

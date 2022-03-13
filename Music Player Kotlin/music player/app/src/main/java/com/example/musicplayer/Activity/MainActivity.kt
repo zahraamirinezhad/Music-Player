@@ -11,22 +11,21 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.*
 import com.example.musicplayer.Adaptor.MusicAdapter
-import com.example.musicplayer.Music_Stuff.ListOfPlaylists
-import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.Music_Stuff.exitApplication
-import com.example.musicplayer.Music_Stuff.findMusicById
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
@@ -53,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("RestrictedApi", "DiscouragedPrivateApi")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,8 +160,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.moreBtn.setOnClickListener {
             val popupMenu = PopupMenu(this, binding.moreBtn)
-            popupMenu.setForceShowIcon(true)
             popupMenu.menuInflater.inflate(R.menu.main_menu, popupMenu.menu)
+            val menuHelper = MenuPopupHelper(this, popupMenu.menu as MenuBuilder, binding.moreBtn)
+            menuHelper.setForceShowIcon(true)
             popupMenu.setOnMenuItemClickListener { p0 ->
                 when (p0.itemId) {
                     R.id.shuffle_menu -> {
@@ -216,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-            popupMenu.show()
+            menuHelper.show()
         }
 
     }

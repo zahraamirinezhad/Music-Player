@@ -86,6 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
         android:paddingBottom="40dp"
+        app:layout_goneMarginBottom="100dp"
         app:fastScrollEnabled="true"
         app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
         app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"

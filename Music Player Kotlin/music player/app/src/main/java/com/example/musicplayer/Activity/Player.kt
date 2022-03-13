@@ -18,17 +18,16 @@ import android.os.IBinder
 import android.provider.MediaStore
 import android.provider.Settings
 import android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS
-import android.view.ContextThemeWrapper
-import android.view.View
+import android.view.*
 import android.view.animation.Animation
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import com.example.musicplayer.*
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityPlayerBinding
@@ -58,7 +57,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
     }
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "RestrictedApi")
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -279,14 +278,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         binding.favoritesBTN.setOnClickListener {
             if (isFavorite) {
-                isFavorite = false;
+                isFavorite = false
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
                 favourite.favoriteSongs.removeAt(fIndex)
                 if (favourite.favoriteSongs.isEmpty()) {
                     favourite.binding.instructionFV.visibility = View.VISIBLE
                 }
             } else {
-                isFavorite = true;
+                isFavorite = true
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
                 favourite.favoriteSongs.add(musicListPA[songPosition])
             }
@@ -294,96 +293,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         binding.moreOptions.setOnClickListener {
-            val wrapper: Context = ContextThemeWrapper(this, R.style.Player_PopupMenu)
-            val popupMenu = PopupMenu(wrapper, binding.moreOptions)
-            popupMenu.setForceShowIcon(true)
-            popupMenu.menuInflater.inflate(R.menu.player_menu, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { p0 ->
-                when (p0.itemId) {
-                    R.id.ringtone_player_menu -> {
-                        try {
-                            if (checkSystemWritePermission()) {
-                                val uri = ContentUris.withAppendedId(
-                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                    (musicListPA[songPosition].id).toLong()
-                                )
-                                RingtoneManager.setActualDefaultRingtoneUri(
-                                    this,
-                                    RingtoneManager.TYPE_RINGTONE,
-                                    uri
-                                )
-                                Toast.makeText(
-                                    this,
-                                    "Set as Ringtone Successfully ",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "Allow Modify System Settings ==> ON ",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(this, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-
-                    R.id.alarm_ringtone_player_menu -> {
-                        try {
-                            if (checkSystemWritePermission()) {
-                                val uri = ContentUris.withAppendedId(
-                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                    (musicListPA[songPosition].id).toLong()
-                                )
-                                RingtoneManager.setActualDefaultRingtoneUri(
-                                    this,
-                                    RingtoneManager.TYPE_ALARM,
-                                    uri
-                                )
-                                Toast.makeText(
-                                    this,
-                                    "Set as Alarm Ringtone Successfully ",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "Allow Modify System Settings ==> ON ",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                this,
-                                "Unable to Set as Alarm Ringtone ",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                }
-                true
-            }
-            popupMenu.show()
-        }
-    }
-
-    private fun checkSystemWritePermission(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (Settings.System.canWrite(this)) return true else openAndroidPermissionsMenu()
-        }
-        return false
-    }
-
-    private fun openAndroidPermissionsMenu() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent(ACTION_MANAGE_WRITE_SETTINGS)
-            intent.data = Uri.parse("package:" + this.packageName)
-            this.startActivity(intent)
+            val menu = PlayerMenu()
+            menu.show(supportFragmentManager, "PLAYER MENU")
         }
     }
 
@@ -807,5 +718,106 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     override fun onDestroy() {
         super.onDestroy()
         if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
+    }
+}
+
+class PlayerMenu : DialogFragment() {
+    var root: View? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val rootView: View = inflater.inflate(R.layout.player_menu, container, false)
+        root = rootView
+        dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val wmlp = dialog!!.window!!.attributes
+        wmlp.gravity = Gravity.BOTTOM or Gravity.CENTER
+        wmlp.x = 100
+        wmlp.y = 100
+
+        rootView.findViewById<LinearLayout>(R.id.alarm_ringtone_player_menu_FD).setOnClickListener {
+            try {
+                if (checkSystemWritePermission()) {
+                    val uri = ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        (Player.musicListPA[Player.songPosition].id).toLong()
+                    )
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        context,
+                        RingtoneManager.TYPE_ALARM,
+                        uri
+                    )
+                    Toast.makeText(
+                        context,
+                        "Set as Alarm Ringtone Successfully ",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Allow Modify System Settings ==> ON ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "Unable to Set as Alarm Ringtone ",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        rootView.findViewById<LinearLayout>(R.id.ringtone_player_menu_FD).setOnClickListener {
+            try {
+                if (checkSystemWritePermission()) {
+                    val uri = ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        (Player.musicListPA[Player.songPosition].id).toLong()
+                    )
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        context,
+                        RingtoneManager.TYPE_RINGTONE,
+                        uri
+                    )
+                    Toast.makeText(
+                        context,
+                        "Set as Ringtone Successfully ",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Allow Modify System Settings ==> ON ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Unable to Set as Ringtone ", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+        return rootView
+    }
+
+    private fun checkSystemWritePermission(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Settings.System.canWrite(context))
+                return true
+            else openAndroidPermissionsMenu()
+        }
+        return false
+    }
+
+    private fun openAndroidPermissionsMenu() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent(ACTION_MANAGE_WRITE_SETTINGS)
+            intent.data = Uri.parse("package:" + (context?.packageName ?: ""))
+            this.startActivity(intent)
+        }
     }
 }

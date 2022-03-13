@@ -3,6 +3,7 @@ package com.example.musicplayer.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.R
@@ -21,8 +22,44 @@ class Selection : AppCompatActivity() {
         binding.selectionRV.layoutManager = LinearLayoutManager(this)
         adapter = MusicAdapter(this, MainActivity.MusicListMA, selectionActivity = true)
         binding.selectionRV.adapter = adapter
-        binding.dragDownSL.setOnClickListener {
-            finish()
+
+        binding.selectAll.setOnClickListener {
+            if (binding.selectAll.isChecked) {
+                for (x in binding.selectionRV.touchables)
+                    x.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.cool_pink
+                        )
+                    )
+
+                for (song in MainActivity.MusicListMA) {
+                    var exist = false
+                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
+                        if (song.id == music.id) {
+                            exist = true
+                        }
+                    }
+                    if (!exist) {
+                        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(
+                            song
+                        )
+                    }
+                }
+            } else {
+                for (x in binding.selectionRV.touchables)
+                    x.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
+                    )
+                for (song in MainActivity.MusicListMA) {
+                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.clear()
+                }
+            }
+            adapter.selectAll = binding.selectAll.isChecked
+            adapter.update()
         }
         binding.searchSongSL.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean = true
@@ -43,5 +80,10 @@ class Selection : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.selectAll = false
     }
 }
