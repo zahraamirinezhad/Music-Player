@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -22,11 +23,14 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.*
+import com.example.musicplayer.Adaptor.AlbumViewAdapter
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityMainBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -39,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var musicAdapter: MusicAdapter
+
+        @SuppressLint("StaticFieldLeak")
+        lateinit var albumAdapter: AlbumViewAdapter
         lateinit var binding: ActivityMainBinding
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
@@ -120,11 +127,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
-        binding.showByAlbumBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, ShowByAlbum::class.java)
-            startActivity(intent)
 
-        }
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.feedback -> startActivity(Intent(this@MainActivity, Feedback::class.java))
@@ -220,6 +223,36 @@ class MainActivity : AppCompatActivity() {
             menuHelper.show()
         }
 
+        binding.showByBtn.setOnClickListener {
+            showButtonSheetDialog()
+        }
+
+    }
+
+    private fun showButtonSheetDialog() {
+        val dialog = BottomSheetDialog(this@MainActivity)
+        dialog.setContentView(R.layout.bottom_sheet_dialog_show_by)
+        dialog.show()
+        dialog.findViewById<LinearLayout>(R.id.showByAlbums)?.setOnClickListener {
+            if (binding.musicRV.adapter !is AlbumViewAdapter) {
+                binding.musicRV.layoutManager = GridLayoutManager(this, 2)
+                binding.musicRV.adapter = albumAdapter
+                val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
+                editor.putString("SHOW BY", (binding.musicRV.adapter as Any).javaClass.toString())
+                editor.apply()
+            }
+            dialog.dismiss()
+        }
+        dialog.findViewById<LinearLayout>(R.id.showBySongs)?.setOnClickListener {
+            if (binding.musicRV.adapter !is MusicAdapter) {
+                binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+                binding.musicRV.adapter = musicAdapter
+                val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
+                editor.putString("SHOW BY", (binding.musicRV.adapter as Any).javaClass.toString())
+                editor.apply()
+            }
+            dialog.dismiss()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -237,13 +270,21 @@ class MainActivity : AppCompatActivity() {
         MusicListMA = getAllAudio()
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
-        binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+        albumAdapter = AlbumViewAdapter(this, songByAlbum)
+        val editor = getSharedPreferences("ShowBy", MODE_PRIVATE)
+        val show = editor.getString("SHOW BY", "")
+        if (show.equals("class com.example.musicplayer.Adaptor.MusicAdapter")) {
+            binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+            binding.musicRV.adapter = musicAdapter
+        } else if (show.equals("class com.example.musicplayer.Adaptor.AlbumViewAdapter")) {
+            binding.musicRV.layoutManager = GridLayoutManager(this@MainActivity, 2)
+            binding.musicRV.adapter = albumAdapter
+        }
         if (Player.musicService != null) {
             MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
         }
-        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
-        binding.musicRV.adapter = musicAdapter
     }
 
     @SuppressLint("Recycle", "Range")

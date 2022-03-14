@@ -54,5 +54,7 @@
     <string name="set_as_alarm_ringtone">Set As Alarm Ringtone</string>
     <string name="album_name">ALBUM NAME</string>
     <string name="album_image">ALBUM IMAGE</string>
-    <string name="show_by_album">SOW BY ALBUM</string>
+    <string name="show_by_album">SOW BY ALBUMS</string>
+    <string name="show_by_song">SOW BY SONGS</string>
+    <string name="show_by">SOW BY</string>
 </resources>

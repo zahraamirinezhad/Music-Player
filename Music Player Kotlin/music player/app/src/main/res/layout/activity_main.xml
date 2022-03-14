@@ -52,14 +52,14 @@
                         android:textColor="@color/black" />
 
                     <Button
-                        android:id="@+id/show_by_album_btn"
+                        android:id="@+id/show_by_btn"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:contentDescription="@string/show_by_album"
-                        android:drawableTop="@drawable/show_by_album_icon"
-                        android:text="@string/show_by_album"
+                        android:contentDescription="@string/show_by"
+                        android:drawableTop="@drawable/show_by"
+                        android:text="@string/show_by"
                         android:textAllCaps="false"
                         android:textColor="@color/black" />
 
