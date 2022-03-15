@@ -30,8 +30,7 @@ data class Music(
     val artist: String,
     val duration: Long = 0,
     val path: String,
-    val artUri: String,
-    var isPlayingOrNot: Boolean = false
+    val artUri: String
 )
 
 class myPlaylist {

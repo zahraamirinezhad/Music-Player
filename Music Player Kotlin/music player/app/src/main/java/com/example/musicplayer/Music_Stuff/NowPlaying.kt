@@ -59,15 +59,7 @@ class NowPlaying : Fragment() {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
 
-            MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                false
-            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
-                false
             setSongPosition(prevOrNext)
-            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
-                true
-            MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                true
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -109,6 +101,8 @@ class NowPlaying : Fragment() {
             else Player.musicService!!.showNotification(R.drawable.pause_music)
 
             playMusic()
+            if (ShowByAlbumDetails.isAdapterSHBALInitialized())
+                ShowByAlbumDetails.adapter.update()
         } catch (e: Exception) {
 
         }
@@ -149,6 +143,7 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.start()
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
         Player.musicService!!.showNotification(R.drawable.pause_music)
+        MainActivity.albumAdapter.update()
     }
 
     private fun pauseMusic() {
@@ -156,5 +151,6 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.pause()
         binding.playPauseNP.setIconResource(R.drawable.play_music)
         Player.musicService!!.showNotification(R.drawable.play_music)
+        MainActivity.albumAdapter.update()
     }
 }

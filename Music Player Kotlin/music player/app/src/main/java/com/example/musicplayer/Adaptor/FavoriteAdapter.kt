@@ -95,9 +95,9 @@ class FavoriteAdapter(
             }
         } else if (isFavourite) {
             holder.root.setOnClickListener {
-                MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                    false
-                MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot = true
+//                MainActivity.MusicListMA[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
+//                    false
+//                MainActivity.MusicListMA[findMusicById(musicList[position])].isPlayingOrNot = true
                 MainActivity.musicAdapter.update()
                 sendIntent("FavoriteAdapter", position)
             }

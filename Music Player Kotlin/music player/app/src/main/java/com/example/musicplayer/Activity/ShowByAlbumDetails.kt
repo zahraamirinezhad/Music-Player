@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.R
@@ -13,6 +14,7 @@ import com.example.musicplayer.databinding.ActivityShowByAlbumDetailsBinding
 class ShowByAlbumDetails : AppCompatActivity() {
     companion object {
         var currentAlbum = -1
+        var prevAlbum = -1
 
         @SuppressLint("StaticFieldLeak")
         lateinit var adapter: MusicAdapter
@@ -29,6 +31,16 @@ class ShowByAlbumDetails : AppCompatActivity() {
         setContentView(binding.root)
 
         currentAlbum = intent.extras?.get("index") as Int
+        val isFromPlayBTN = intent.getBooleanExtra("ItsFromPlayBTN", false)
+        if (isFromPlayBTN) {
+            val pos = intent.extras?.get("prevIndex") as Int
+            val intent = Intent(this, Player::class.java)
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "AlbumViewPlay")
+            intent.putExtra("prevAlbumIndex", pos)
+            ContextCompat.startActivity(this, intent, null)
+            prevAlbum = currentAlbum
+        }
         binding.albumMusicRV.setItemViewCacheSize(10)
         binding.albumMusicRV.setHasFixedSize(true)
         binding.albumMusicRV.layoutManager = LinearLayoutManager(this)

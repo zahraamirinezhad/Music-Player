@@ -40,6 +40,7 @@ class NotificationReceiver : BroadcastReceiver() {
             )
         )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
+        MainActivity.albumAdapter.update()
     }
 
     private fun pauseMusic(context: Context) {
@@ -53,6 +54,7 @@ class NotificationReceiver : BroadcastReceiver() {
             )
         )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
+        MainActivity.albumAdapter.update()
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
@@ -61,15 +63,7 @@ class NotificationReceiver : BroadcastReceiver() {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
 
-            MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                false
-            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
-                false
             setSongPosition(increment)
-            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.musicList[Player.songPosition].isPlayingOrNot =
-                true
-            MainActivity.musicAdapter.musicList[findMusicById(Player.musicListPA[Player.songPosition])].isPlayingOrNot =
-                true
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -113,6 +107,8 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
             if (Player.isFavorite) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+            if (ShowByAlbumDetails.isAdapterSHBALInitialized())
+                ShowByAlbumDetails.adapter.update()
         } catch (e: Exception) {
             return
         }

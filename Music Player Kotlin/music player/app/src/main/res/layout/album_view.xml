@@ -24,6 +24,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/curved" />
 
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/glassy_background"
+        android:contentDescription="@string/play_pause"
+        android:padding="7dp"
+        android:src="@drawable/play_music"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
+
     <TextView
         android:id="@+id/albumName"
         android:layout_width="130dp"

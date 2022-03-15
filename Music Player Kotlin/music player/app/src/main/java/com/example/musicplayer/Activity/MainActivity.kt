@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.refreshLayout.setOnRefreshListener {
             MusicListMA = getAllAudio()
-            MusicListMA[Player.songPosition].isPlayingOrNot = true
+//            MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
             binding.refreshLayout.isRefreshing = false
         }
@@ -190,11 +190,11 @@ class MainActivity : AppCompatActivity() {
                                 sortBy = currentSort
                                 if (Player.isMusicListPaInitialized()) {
                                     val music = Player.musicListPA[Player.songPosition]
-                                    MusicListMA[Player.songPosition].isPlayingOrNot = false
+//                                    MusicListMA[Player.songPosition].isPlayingOrNot = false
                                     musicAdapter.update()
                                     MusicListMA = getAllAudio()
                                     Player.songPosition = findMusicById(music)
-                                    MusicListMA[findMusicById(music)].isPlayingOrNot = true
+//                                    MusicListMA[findMusicById(music)].isPlayingOrNot = true
                                     musicAdapter.updateMusicList(MusicListMA)
                                 } else {
                                     MusicListMA = getAllAudio()
@@ -282,7 +282,6 @@ class MainActivity : AppCompatActivity() {
             binding.musicRV.adapter = albumAdapter
         }
         if (Player.musicService != null) {
-            MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
         }
     }
@@ -422,11 +421,9 @@ class MainActivity : AppCompatActivity() {
         if (sortBy != sortValue) {
             if (Player.isMusicListPaInitialized()) {
                 val music = Player.musicListPA[Player.songPosition]
-                MusicListMA[Player.songPosition].isPlayingOrNot = false
                 musicAdapter.update()
                 MusicListMA = getAllAudio()
                 Player.songPosition = findMusicById(music)
-                MusicListMA[findMusicById(music)].isPlayingOrNot = true
                 musicAdapter.updateMusicList(MusicListMA)
             } else {
                 MusicListMA = getAllAudio()

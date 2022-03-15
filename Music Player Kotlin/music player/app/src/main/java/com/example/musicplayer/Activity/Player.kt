@@ -468,6 +468,19 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
 
+            "AlbumViewPlay" -> {
+                isPlayingPlaylist = false
+                val pos = intent.getIntExtra("prevAlbumIndex", 0)
+                initServiceAndPlaylist(
+                    MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                        ShowByAlbumDetails.currentAlbum
+                    )]!!,
+                    shuffle = false,
+                    fromAlbum = true,
+                    prevAlbum = pos
+                )
+            }
+
             "FavoriteAdapter" -> {
                 isPlayingPlaylist = false
                 initServiceAndPlaylist(favourite.favoriteSongs, shuffle = false)
@@ -521,7 +534,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
 
             "RecentMusic" -> {
-                MainActivity.musicAdapter.musicList[songPosition].isPlayingOrNot = true
                 MainActivity.musicAdapter.update()
                 isPlayingPlaylist = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
@@ -533,7 +545,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initServiceAndPlaylist(
         playlist: ArrayList<Music>,
         shuffle: Boolean,
-        playNext: Boolean = false
+        playNext: Boolean = false,
+        fromAlbum: Boolean = false,
+        prevAlbum: Int = 0
     ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
@@ -541,8 +555,10 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicListPA = ArrayList()
         musicListPA.addAll(playlist)
         if (shuffle) musicListPA.shuffle()
-        setLayout()
         if (!playNext) PlayNext.playNextList = ArrayList()
+        if (fromAlbum) MainActivity.albumAdapter.updateItem(prevAlbum)
+        setLayout()
+        MainActivity.musicAdapter.update()
     }
 
     private fun playMusic() {
@@ -562,6 +578,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.resume()
+        MainActivity.albumAdapter.update()
+        if(ShowByAlbumDetails.isAdapterSHBALInitialized())
+            ShowByAlbumDetails.adapter.update()
     }
 
     private fun pauseMusic() {
@@ -581,20 +600,16 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.pause()
+        MainActivity.albumAdapter.update()
     }
 
     private fun backNextMusic(increment: Boolean) {
-        MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
-            false
-        if (isPlayingPlaylist) PlaylistDetails.adapter.musicList[songPosition].isPlayingOrNot =
-            false
         setSongPosition(increment)
-        if (isPlayingPlaylist) PlaylistDetails.adapter.musicList[songPosition].isPlayingOrNot = true
-        MainActivity.musicAdapter.musicList[findMusicById(musicListPA[songPosition])].isPlayingOrNot =
-            false
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
+        if(ShowByAlbumDetails.isAdapterSHBALInitialized())
+            ShowByAlbumDetails.adapter.update()
         mainImageAnimator.end()
         setLayout()
         createMediaPlayer()
