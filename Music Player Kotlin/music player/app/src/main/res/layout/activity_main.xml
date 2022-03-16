@@ -77,6 +77,33 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/showByType"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textSize="9sp"
+                        tools:ignore="SmallSp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="8"
+                        android:background="@drawable/text_line"
+                        android:paddingStart="5dp"
+                        android:textAlignment="center"
+                        tools:ignore="RtlSymmetry" />
+                </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/musicRV"
                     android:layout_width="match_parent"

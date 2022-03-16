@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addSongPLA"
+        android:icon="@drawable/add_playlist"
+        android:title="@string/add_music" />
+
+    <item
+        android:id="@+id/removeAllPLA"
+        android:icon="@drawable/remove"
+        android:title="@string/remove_all_musics_in_playlist" />
+
+</menu>

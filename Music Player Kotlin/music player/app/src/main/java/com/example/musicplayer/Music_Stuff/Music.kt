@@ -195,11 +195,6 @@ fun findMusicById(music: Music): Int {
     return -1
 }
 
-//fun refreshBackground() {
-//    for (x in MainActivity.MusicListMA)
-//        x.isPlayingOrNot = false
-//}
-
 fun getDialogForOnLongClickListener(context: Context, customDialog: View): AlertDialog {
     val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
         .create()

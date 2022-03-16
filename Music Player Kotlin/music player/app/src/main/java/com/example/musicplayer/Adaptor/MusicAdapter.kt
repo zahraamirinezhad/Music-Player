@@ -52,7 +52,7 @@ class MusicAdapter(
         holder.duration.text = formatDuration(musicList[position].duration)
 
         if (!selectionActivity) {
-            if (Player.isMusicListPaInitialized() && musicList[position].id == Player.musicListPA[Player.songPosition].id) {
+            if (Player.isMusicListPaInitialized() && Player.musicListPA.size != 0 && musicList[position].id == Player.musicListPA[Player.songPosition].id) {
                 holder.root.setBackgroundResource(R.drawable.fragment_background)
             } else {
                 holder.root.background = null
@@ -155,30 +155,84 @@ class MusicAdapter(
                 bindingMF.deleteBtn.setOnClickListener {
                     dialog.dismiss()
                     if (playlistDetails) {
-                        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
-                            position
-                        )
-                        Player.songPosition--
-                        Player.musicListPA =
-                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
+                        if (Player.isMusicListPaInitialized() && Player.musicListPA == playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position < Player.songPosition) {
+                            Player.songPosition--
+                            Player.musicListPA.removeAt(position)
+                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                                position
+                            )
+                        } else if (Player.isMusicListPaInitialized() && Player.musicListPA == playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position == Player.songPosition) {
+                            Player.musicListPA.removeAt(position)
+                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                                position
+                            )
+                            next()
+                        } else {
+                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                                position
+                            )
+                        }
+
                         refreshPlaylist()
                     } else {
                         val file = File(musicList[position].path)
                         if (file.exists()) {
-                            if (favourite.favoriteSongs.contains(musicList[position])) {
-                                favourite.favoriteSongs.remove(musicList[position])
+                            val removed = musicList[position]
+
+                            if (favourite.favoriteSongs.contains(removed)) {
+                                favourite.favoriteSongs.remove(removed)
                             }
                             if (playlist.listOfPlaylists.ref.size != 0) {
                                 for (x in playlist.listOfPlaylists.ref) {
-                                    if (x.musics.contains(musicList[position])) {
-                                        x.musics.remove(musicList[position])
+                                    if (x.musics.contains(removed)) {
+                                        x.musics.remove(removed)
                                     }
                                 }
                             }
-                            MainActivity.MusicListMA.remove(musicList[position])
-                            updateMusicList(MainActivity.MusicListMA)
-                            Player.songPosition--
-                            Player.musicListPA = MainActivity.MusicListMA
+                            for (x in MainActivity.songByAlbum.keys) {
+                                if (MainActivity.songByAlbum[x]!![MainActivity.songByAlbum[x]!!.size - 1].id == removed.id) {
+                                    MainActivity.songByAlbum[x]!!.removeLast()
+                                    break
+                                } else {
+                                    for (i in 0 until MainActivity.songByAlbum[x]!!.size) {
+                                        if (MainActivity.songByAlbum[x]!![i].id == removed.id) {
+                                            MainActivity.songByAlbum[x]!!.removeAt(i)
+                                            break
+                                        }
+
+                                    }
+                                }
+                            }
+                            if (Player.isMusicListPaInitialized() && Player.musicListPA[Player.songPosition].id == removed.id) {
+                                Player.musicListPA.removeAt(Player.songPosition)
+                                next()
+                            } else if (Player.isMusicListPaInitialized()) {
+                                for (i in 0 until Player.musicListPA.size) {
+                                    if (Player.musicListPA[i].id == removed.id) {
+                                        if (i < Player.songPosition)
+                                            Player.songPosition--
+                                        Player.musicListPA.removeAt(i)
+                                        break
+                                    }
+                                }
+                            }
+                            MainActivity.MusicListMA.remove(removed)
+                            if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == "class com.example.musicplayer.Adaptor.AlbumViewAdapter"
+                            ) {
+                                musicList = ArrayList()
+                                musicList.addAll(
+                                    MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                                        ShowByAlbumDetails.currentAlbum
+                                    )]!!
+                                )
+                                ShowByAlbumDetails.adapter.update()
+                            } else if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == "class com.example.musicplayer.Adaptor.MusicAdapter"
+                            ) {
+                                musicList = ArrayList()
+                                musicList.addAll(MainActivity.MusicListMA)
+                                MainActivity.musicAdapter.update()
+                            }
+
                             file.delete()
                         }
                     }
@@ -247,10 +301,70 @@ class MusicAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateMusicList(searchList: ArrayList<Music>) {
-        musicList.clear()
-        musicList.addAll(searchList)
+    fun updateMusicList(list: ArrayList<Music>) {
+        musicList = ArrayList()
+        musicList.addAll(list)
         notifyDataSetChanged()
+    }
+
+    fun next() {
+//        if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
+//            MediaPlayer()
+//
+//
+        if (Player.musicListPA.size != 0) {
+            if (Player.songPosition == Player.musicListPA.size) Player.songPosition = 0
+            Player.musicService!!.mediaPlayer!!.reset()
+            Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
+            Player.musicService!!.mediaPlayer!!.prepare()
+
+            val img = getImageArt(
+                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.image_background
+                )
+            )
+            val image = if (img != null) {
+                BitmapFactory.decodeByteArray(img, 0, img.size)
+            } else {
+                BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.image_background
+                )
+            }
+
+            val dr: Drawable = BitmapDrawable(image)
+            NowPlaying.binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
+
+            Player.binding.seekMusic.progress = 0
+            Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
+            Player.binding.seekMusicStart.text =
+                formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
+            Player.binding.seekMusicEnd.text =
+                formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
+
+            NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
+
+            Player.musicService!!.showNotification(R.drawable.play_music)
+
+            playMusic()
+        } else {
+            Player.isPlaying = false
+            Player.musicListPA = ArrayList()
+            Player.songPosition = 0
+            Player.musicService!!.audioManager.abandonAudioFocus(Player.musicService)
+            Player.musicService!!.stopForeground(true)
+            Player.musicService!!.mediaPlayer!!.stop()
+//            Player.musicService = null
+        }
+    }
+
+    private fun playMusic() {
+        Player.isPlaying = true
+        Player.musicService!!.mediaPlayer!!.start()
+        NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
+        Player.musicService!!.showNotification(R.drawable.pause_music)
+        MainActivity.albumAdapter.update()
     }
 
     private fun sendIntent(ref: String, pos: Int) {

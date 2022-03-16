@@ -38,7 +38,9 @@ class AlbumViewAdapter(
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.name.text = listOfAlbums.keys.elementAt(position)
         holder.name.isSelected = true
-        if (Player.isMusicListPaInitialized() && Player.musicListPA[0].id == listOfAlbums[listOfAlbums.keys.elementAt(
+        if (Player.isMusicListPaInitialized() && Player.musicListPA.size != 0 && listOfAlbums[listOfAlbums.keys.elementAt(
+                position
+            )]!!.size != 0 && Player.musicListPA[0].id == listOfAlbums[listOfAlbums.keys.elementAt(
                 position
             )]?.get(0)?.id && Player.isPlaying
         ) {
@@ -156,6 +158,11 @@ class AlbumViewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateItem(pos: Int) {
         notifyItemChanged(pos)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateAll() {
+        notifyDataSetChanged()
     }
 
     private fun playMusic() {

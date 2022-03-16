@@ -110,7 +110,7 @@ class NowPlaying : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (Player.musicService != null) {
+        if (Player.musicService != null && Player.isMusicListPaInitialized() && Player.musicListPA.size != 0) {
             binding.root.visibility = View.VISIBLE
             binding.songNameNP.isSelected = true
 
@@ -135,6 +135,8 @@ class NowPlaying : Fragment() {
 
             val dr: Drawable = BitmapDrawable(image)
             binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
+        } else {
+            binding.root.visibility = View.INVISIBLE
         }
     }
 

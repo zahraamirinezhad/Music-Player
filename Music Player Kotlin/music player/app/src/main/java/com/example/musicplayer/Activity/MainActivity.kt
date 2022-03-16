@@ -156,7 +156,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.refreshLayout.setOnRefreshListener {
             MusicListMA = getAllAudio()
-//            MusicListMA[Player.songPosition].isPlayingOrNot = true
             musicAdapter.updateMusicList(MusicListMA)
             binding.refreshLayout.isRefreshing = false
         }
@@ -190,11 +189,9 @@ class MainActivity : AppCompatActivity() {
                                 sortBy = currentSort
                                 if (Player.isMusicListPaInitialized()) {
                                     val music = Player.musicListPA[Player.songPosition]
-//                                    MusicListMA[Player.songPosition].isPlayingOrNot = false
                                     musicAdapter.update()
                                     MusicListMA = getAllAudio()
                                     Player.songPosition = findMusicById(music)
-//                                    MusicListMA[findMusicById(music)].isPlayingOrNot = true
                                     musicAdapter.updateMusicList(MusicListMA)
                                 } else {
                                     MusicListMA = getAllAudio()
@@ -235,6 +232,7 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
         dialog.findViewById<LinearLayout>(R.id.showByAlbums)?.setOnClickListener {
             if (binding.musicRV.adapter !is AlbumViewAdapter) {
+                binding.showByType.text = "ALBUMS"
                 binding.musicRV.layoutManager = GridLayoutManager(this, 2)
                 binding.musicRV.adapter = albumAdapter
                 val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
@@ -245,6 +243,7 @@ class MainActivity : AppCompatActivity() {
         }
         dialog.findViewById<LinearLayout>(R.id.showBySongs)?.setOnClickListener {
             if (binding.musicRV.adapter !is MusicAdapter) {
+                binding.showByType.text = "SONGS"
                 binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
                 binding.musicRV.adapter = musicAdapter
                 val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
@@ -277,9 +276,11 @@ class MainActivity : AppCompatActivity() {
         if (show.equals("class com.example.musicplayer.Adaptor.MusicAdapter")) {
             binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
             binding.musicRV.adapter = musicAdapter
+            binding.showByType.text = "SONGS"
         } else if (show.equals("class com.example.musicplayer.Adaptor.AlbumViewAdapter")) {
             binding.musicRV.layoutManager = GridLayoutManager(this@MainActivity, 2)
             binding.musicRV.adapter = albumAdapter
+            binding.showByType.text = "ALBUMS"
         }
         if (Player.musicService != null) {
             musicAdapter.updateMusicList(MusicListMA)
@@ -405,7 +406,7 @@ class MainActivity : AppCompatActivity() {
         editor.putString("FavouriteSongs", jsonString)
         val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
-        if (Player.musicService != null) {
+        if (Player.musicService != null && Player.isMusicListPaInitialized() && Player.musicListPA.size != 0) {
             val recentMusic = GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])
             editor.putString("RecentMusic", recentMusic)
             editor.putString(

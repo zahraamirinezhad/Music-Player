@@ -391,6 +391,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     private fun createMediaPlayer() {
         try {
+//            Toast.makeText(this,"bbbbbbbbbbbbbbb",Toast.LENGTH_SHORT).show()
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
@@ -617,6 +618,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
 
     override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+//        Toast.makeText(this,"aaaaaaaaaaaaaaaaaaa",Toast.LENGTH_SHORT).show()
         if (musicService == null) {
             val binder = p1 as MusicService.MyBinder
             musicService = binder.currentService()

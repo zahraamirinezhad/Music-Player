@@ -71,4 +71,12 @@ class ShowByAlbumDetails : AppCompatActivity() {
             binding.shuffleALDT.visibility = View.VISIBLE
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(currentAlbum)]!!.size == 0)
+            MainActivity.songByAlbum.remove(MainActivity.songByAlbum.keys.elementAt(currentAlbum))
+        MainActivity.albumAdapter.updateAll()
+    }
+
 }

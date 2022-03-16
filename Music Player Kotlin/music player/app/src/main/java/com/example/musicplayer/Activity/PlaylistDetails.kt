@@ -10,6 +10,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.checkPlaylist
@@ -29,6 +32,7 @@ class PlaylistDetails : AppCompatActivity() {
 
     lateinit var binding: ActivityPlaylistDetailsBinding
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.blackTheme)
@@ -59,26 +63,40 @@ class PlaylistDetails : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.addSongPLA.setOnClickListener {
-            startActivity(Intent(this, Selection::class.java))
-        }
+        binding.moreBTNPLD.setOnClickListener {
+            val popupMenu = PopupMenu(this, binding.moreBTNPLD)
+            popupMenu.menuInflater.inflate(R.menu.playlist_menu, popupMenu.menu)
+            val menuHelper =
+                MenuPopupHelper(this, popupMenu.menu as MenuBuilder, binding.moreBTNPLD)
+            menuHelper.setForceShowIcon(true)
+            popupMenu.setOnMenuItemClickListener { p0 ->
+                when (p0.itemId) {
+                    R.id.addSongPLA -> {
+                        startActivity(Intent(this, Selection::class.java))
+                    }
 
-        binding.removeAllPLA.setOnClickListener {
-            val builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle("Remove All The Musics")
-                .setMessage("Do You Want to Remove All the Musics in this Playlist ?")
-                .setPositiveButton("YES") { dialog, _ ->
-                    playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
-                    adapter.refreshPlaylist()
-                    dialog.dismiss()
+                    R.id.removeAllPLA -> {
+                        val builder = MaterialAlertDialogBuilder(this)
+                        builder.setTitle("Remove All The Musics")
+                            .setMessage("Do You Want to Remove All the Musics in this Playlist ?")
+                            .setPositiveButton("YES") { dialog, _ ->
+                                playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
+                                adapter.refreshPlaylist()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("NO") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                        val customDialog = builder.create()
+                        customDialog.show()
+                        customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setTextColor(Color.GREEN)
+                        customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+                    }
                 }
-                .setNegativeButton("NO") { dialog, _ ->
-                    dialog.dismiss()
-                }
-            val customDialog = builder.create()
-            customDialog.show()
-            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN)
-            customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+                true
+            }
+            menuHelper.show()
         }
     }
 
