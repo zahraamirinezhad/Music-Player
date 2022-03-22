@@ -19,7 +19,6 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS
 import android.view.*
-import android.view.animation.Animation
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -28,11 +27,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.example.musicplayer.*
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityPlayerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.util.*
 
 
 class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
@@ -128,25 +131,32 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
             canvas.drawBitmap(image, rect, rect, paint)
-            binding.songImgPA.setImageBitmap(output)
+//            binding.songImgPA.setImageBitmap(output)
 
             binding.songNamePA.text = musicListPA[songPosition].title
 
-            mainImageAnimator = ObjectAnimator.ofFloat(
-                binding.songImgPA,
-                "rotation",
-                (Math.toDegrees(2 * Math.PI)).toFloat()
-            )
-            mainImageAnimator.repeatCount = Animation.INFINITE
-            mainImageAnimator.duration = 20000
-            mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    animation.removeListener(this)
-                    animation.duration = 0
-                    (animation as ValueAnimator).reverse()
-                }
-            })
-            mainImageAnimator.start()
+            val wormDotsIndicator = binding.wormDotsIndicator
+            val viewPager = binding.viewPager
+            val adapter = MyAdapter(supportFragmentManager)
+            adapter.addFrag(playing_song_image(), "SONG IMAGE")
+            viewPager.adapter = adapter
+            wormDotsIndicator.setViewPager(viewPager)
+
+//            mainImageAnimator = ObjectAnimator.ofFloat(
+//                binding.songImgPA,
+//                "rotation",
+//                (Math.toDegrees(2 * Math.PI)).toFloat()
+//            )
+//            mainImageAnimator.repeatCount = Animation.INFINITE
+//            mainImageAnimator.duration = 20000
+//            mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+//                override fun onAnimationEnd(animation: Animator) {
+//                    animation.removeListener(this)
+//                    animation.duration = 0
+//                    (animation as ValueAnimator).reverse()
+//                }
+//            })
+//            mainImageAnimator.start()
 
             if (repeat) binding.repeatMusic.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -218,6 +228,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
         }
+
+//        binding.seek.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+ musicListPA[songPosition].title+"+lyrics"))
+//            startActivity(intent)
+//        }
 
         binding.dragDownPL.setOnClickListener {
             finish()
@@ -350,23 +365,23 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         canvas.drawBitmap(image, rect, rect, paint)
 
 
-        binding.songImgPA.setImageBitmap(output)
-
-        mainImageAnimator = ObjectAnimator.ofFloat(
-            binding.songImgPA,
-            "rotation",
-            (Math.toDegrees(2 * Math.PI)).toFloat()
-        )
-        mainImageAnimator.repeatCount = Animation.INFINITE
-        mainImageAnimator.duration = 20000
-        mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                animation.removeListener(this)
-                animation.duration = 0
-                (animation as ValueAnimator).reverse()
-            }
-        })
-        mainImageAnimator.start()
+//        playing_song_image.songImage.setImageBitmap(output)
+//
+//        mainImageAnimator = ObjectAnimator.ofFloat(
+//            binding.songImgPA,
+//            "rotation",
+//            (Math.toDegrees(2 * Math.PI)).toFloat()
+//        )
+//        mainImageAnimator.repeatCount = Animation.INFINITE
+//        mainImageAnimator.duration = 20000
+//        mainImageAnimator.addListener(object : AnimatorListenerAdapter() {
+//            override fun onAnimationEnd(animation: Animator) {
+//                animation.removeListener(this)
+//                animation.duration = 0
+//                (animation as ValueAnimator).reverse()
+//            }
+//        })
+//        mainImageAnimator.start()
 
         binding.songNamePA.text = musicListPA[songPosition].title
 
@@ -387,11 +402,42 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
         }
 
+        val wormDotsIndicator = binding.wormDotsIndicator
+        val viewPager = binding.viewPager
+        val adapter = MyAdapter(supportFragmentManager)
+        adapter.addFrag(playing_song_image(), "SONG IMAGE")
+        adapter.addFrag(playin_song_lyrics(), "SONG LYRICS")
+        viewPager.adapter = adapter
+        wormDotsIndicator.setViewPager(viewPager)
+
+    }
+
+    @Suppress("DEPRECATION")
+    internal class MyAdapter(fm: FragmentManager) :
+        FragmentPagerAdapter(fm) {
+        val mFragmentList = ArrayList<Fragment>()
+        private val mFragmentTitleList = ArrayList<String>()
+
+        override fun getItem(position: Int): Fragment {
+            return mFragmentList[position]
+        }
+
+        fun addFrag(fragment: Fragment, title: String) {
+            mFragmentList.add(fragment)
+            mFragmentTitleList.add(title)
+        }
+
+        override fun getCount(): Int {
+            return mFragmentList.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return mFragmentTitleList[position]
+        }
     }
 
     private fun createMediaPlayer() {
         try {
-//            Toast.makeText(this,"bbbbbbbbbbbbbbb",Toast.LENGTH_SHORT).show()
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
@@ -572,15 +618,15 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPlaying = true
         musicService!!.showNotification(R.drawable.pause_music)
         musicService!!.mediaPlayer!!.start()
-        val isPausedOrNot = binding.pauseOrPlay
+        val isPausedOrNot = playing_song_image.playPause
         val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", 2f)
         imageViewObjectAnimator.duration = 800
         isPausedOrNot.pivotX = isPausedOrNot.drawable.bounds.width().toFloat() - 200f
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.resume()
-        MainActivity.albumAdapter.update()
-        if(ShowByAlbumDetails.isAdapterSHBALInitialized())
+        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
+        if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
     }
 
@@ -594,14 +640,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPlaying = false
         musicService!!.showNotification(R.drawable.play_music)
         musicService!!.mediaPlayer!!.pause()
-        val isPausedOrNot = binding.pauseOrPlay
+        val isPausedOrNot = playing_song_image.playPause
         val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", -5f)
         imageViewObjectAnimator.duration = 800
         isPausedOrNot.pivotX = isPausedOrNot.drawable.bounds.width().toFloat() - 200f
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.pause()
-        MainActivity.albumAdapter.update()
+        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
     }
 
     private fun backNextMusic(increment: Boolean) {
@@ -609,16 +655,15 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
-        if(ShowByAlbumDetails.isAdapterSHBALInitialized())
+        if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
-        mainImageAnimator.end()
+//        mainImageAnimator.end()
         setLayout()
         createMediaPlayer()
     }
 
 
     override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-//        Toast.makeText(this,"aaaaaaaaaaaaaaaaaaa",Toast.LENGTH_SHORT).show()
         if (musicService == null) {
             val binder = p1 as MusicService.MyBinder
             musicService = binder.currentService()
@@ -640,7 +685,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     override fun onCompletion(p0: MediaPlayer?) {
         setSongPosition(true)
         try {
-            mainImageAnimator.end()
+//            mainImageAnimator.end()
             setLayout()
             createMediaPlayer()
         } catch (e: Exception) {

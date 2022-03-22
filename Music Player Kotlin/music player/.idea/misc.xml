@@ -17,6 +17,7 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/glassy_background.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/line.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/line_drawable.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/lyrics.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/more.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/music_icon.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/name_background.xml" value="0.2046875" />
@@ -32,9 +33,11 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/repeat_loop.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/repeat_music.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/ringtone.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/save.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/scroll_bar.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/search.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/selected_timer.xml" value="0.2203125" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/settings.xml" value="0.1671875" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/share.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/show_by.xml" value="0.2203125" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/drawable/show_by_album_icon.xml" value="0.2203125" />
@@ -69,11 +72,14 @@
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/details_view.xml" value="0.14" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/favorite_view.xml" value="0.21" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/fragment_now_playing.xml" value="0.21" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/fragment_playin_song_lyrics.xml" value="0.22" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/fragment_playing_song_image.xml" value="0.18854166666666666" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/more_feature.xml" value="0.25" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/music_view.xml" value="0.22" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/player_menu.xml" value="0.18" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/layout/playlist_view.xml" value="0.21" />
+        <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/lyrics_menu.xml" value="0.25" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/main_menu.xml" value="0.22" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/nav_menu.xml" value="0.25" />
         <entry key="..\:/science/mb computer/Android Code/MusicPlayerProject/Music Player Kotlin/music player/app/src/main/res/menu/player_menu.xml" value="0.22" />

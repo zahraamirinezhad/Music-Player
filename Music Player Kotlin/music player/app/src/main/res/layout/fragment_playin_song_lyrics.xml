@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/player_background"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/lyrics"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:padding="20dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        tools:context=".Music_Stuff.playin_song_lyrics"
+        tools:ignore="Autofill" />
+
+    <ImageButton
+        android:id="@+id/lyrics_options"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:background="@drawable/more"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/more" />
+
+
+</LinearLayout>

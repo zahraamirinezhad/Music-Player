@@ -52,11 +52,16 @@ class MainActivity : AppCompatActivity() {
         var search: Boolean = false
         var sortBy = 0
         lateinit var songByAlbum: LinkedHashMap<String, ArrayList<Music>>
+        lateinit var allMusicsLyrics: LinkedHashMap<String, String>
         val sortingList = arrayOf(
             MediaStore.Audio.Media.DATE_ADDED + " DESC",
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.SIZE + " DESC"
         )
+
+        fun isAlbumAdapterInitialized(): Boolean {
+            return this::albumAdapter.isInitialized
+        }
     }
 
     @SuppressLint("RestrictedApi", "DiscouragedPrivateApi")
@@ -290,6 +295,14 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getAllAudio(): ArrayList<Music> {
+        allMusicsLyrics = LinkedHashMap()
+        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
+        val jsonString = editor.getString("AllMusicsLyrics", null)
+        val typeToken = object : TypeToken<LinkedHashMap<String, String>>() {}.type
+        if (jsonString != null) {
+            allMusicsLyrics = GsonBuilder().create().fromJson(jsonString, typeToken)
+
+        }
         songByAlbum = LinkedHashMap()
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
@@ -329,6 +342,8 @@ class MainActivity : AppCompatActivity() {
                             .toString()
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+                    val lyricsC: String? =
+                        if (allMusicsLyrics.containsKey(idC)) allMusicsLyrics[idC] else null
                     val music = Music(
                         id = idC,
                         title = titleC,
@@ -336,7 +351,8 @@ class MainActivity : AppCompatActivity() {
                         artist = artistC,
                         path = pathC,
                         duration = durationC,
-                        artUri = artUriC
+                        artUri = artUriC,
+                        lyrics = lyricsC
                     )
                     val file = File(music.path)
                     if (file.exists()) {
@@ -415,6 +431,14 @@ class MainActivity : AppCompatActivity() {
             )
             editor.putString("RecentMusicIsPlaying", Player.isPlaying.toString())
         }
+        for (music in MusicListMA) {
+            if (music.lyrics != null && music.lyrics != "") allMusicsLyrics.put(
+                music.id,
+                music.lyrics!!
+            )
+        }
+        val lyricsJsonString = GsonBuilder().create().toJson(allMusicsLyrics)
+        editor.putString("AllMusicsLyrics", lyricsJsonString)
         editor.apply()
 
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)

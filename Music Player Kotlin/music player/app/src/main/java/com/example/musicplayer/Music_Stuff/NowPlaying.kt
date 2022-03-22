@@ -22,6 +22,9 @@ import com.example.musicplayer.databinding.FragmentNowPlayingBinding
 class NowPlaying : Fragment() {
     companion object {
         lateinit var binding: FragmentNowPlayingBinding
+        fun isBindingNPInitialized(): Boolean {
+            return this::binding.isInitialized
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/player_background"
-    android:orientation="vertical"
     tools:context=".Activity.Player">
 
     <LinearLayout
@@ -67,41 +66,30 @@
             tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/imageContainer"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.41000003">
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-        <ImageView
-            android:id="@+id/songImgPA"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/song_image"
-            android:scaleType="centerCrop"
-            android:src="@drawable/image_background"
-            app:layout_constraintBottom_toBottomOf="@+id/imageContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageContainer"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/pauseOrPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/song_image"
-            android:src="@drawable/gramophone"
-            app:layout_constraintBottom_toBottomOf="@+id/songImgPA"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/songImgPA" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+        android:id="@+id/worm_dots_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        app:dotsColor="@color/dark_pink"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="16dp"
+        app:dotsSpacing="4dp"
+        app:dotsStrokeColor="@color/dark_pink"
+        app:dotsStrokeWidth="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <LinearLayout

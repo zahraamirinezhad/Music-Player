@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/seek_for_lyrics"
+        android:icon="@drawable/lyrics"
+        android:title="@string/seek_for_lyrics" />
+
+    <item
+        android:id="@+id/save_lyrics"
+        android:icon="@drawable/save"
+        android:title="@string/save_lyrics" />
+</menu>
