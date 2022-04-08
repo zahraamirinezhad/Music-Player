@@ -122,7 +122,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 if (b) {
                     musicService!!.mediaPlayer!!.seekTo(i)
-                    musicService!!.showNotification(if (isPlaying) R.drawable.pause_music else R.drawable.play_music)
+                    musicService!!.showNotification(
+                        playingState(),
+                        favouriteState(),
+                        musicState()
+                    )
                     mainImageAnimator.duration =
                         musicService!!.mediaPlayer!!.duration.toLong() - i + 10000
                     mainImageAnimator.setFloatValues(
@@ -558,7 +562,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
         )
         isPlaying = true
-        musicService!!.showNotification(R.drawable.pause_music)
+        musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         musicService!!.mediaPlayer!!.start()
         val isPausedOrNot = playing_song_image.playPause
         val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", 2f)
@@ -580,7 +588,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
         )
         isPlaying = false
-        musicService!!.showNotification(R.drawable.play_music)
+        musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         musicService!!.mediaPlayer!!.pause()
         val isPausedOrNot = playing_song_image.playPause
         val imageViewObjectAnimator = ObjectAnimator.ofFloat(isPausedOrNot, "rotation", -5f)

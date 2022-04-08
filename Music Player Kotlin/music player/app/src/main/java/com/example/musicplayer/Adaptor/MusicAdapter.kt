@@ -346,7 +346,11 @@ class MusicAdapter(
 
             NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
-            Player.musicService!!.showNotification(R.drawable.play_music)
+            Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
 
             playMusic()
         } else {
@@ -356,7 +360,6 @@ class MusicAdapter(
             Player.musicService!!.audioManager.abandonAudioFocus(Player.musicService)
             Player.musicService!!.stopForeground(true)
             Player.musicService!!.mediaPlayer!!.stop()
-//            Player.musicService = null
         }
     }
 
@@ -364,7 +367,11 @@ class MusicAdapter(
         Player.isPlaying = true
         Player.musicService!!.mediaPlayer!!.start()
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
-        Player.musicService!!.showNotification(R.drawable.pause_music)
+        Player.musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         MainActivity.albumAdapter.update()
     }
 

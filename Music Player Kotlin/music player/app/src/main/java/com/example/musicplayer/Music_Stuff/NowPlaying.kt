@@ -101,8 +101,16 @@ class NowPlaying : Fragment() {
 
 
             if (!prevOrNext)
-                Player.musicService!!.showNotification(R.drawable.play_music)
-            else Player.musicService!!.showNotification(R.drawable.pause_music)
+                Player.musicService!!.showNotification(
+                    playingState(),
+                    favouriteState(),
+                    musicState()
+                )
+            else Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
 
             playMusic()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized())
@@ -147,7 +155,11 @@ class NowPlaying : Fragment() {
         Player.isPlaying = true
         Player.musicService!!.mediaPlayer!!.start()
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
-        Player.musicService!!.showNotification(R.drawable.pause_music)
+        Player.musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         MainActivity.albumAdapter.update()
     }
 
@@ -155,7 +167,11 @@ class NowPlaying : Fragment() {
         Player.isPlaying = false
         Player.musicService!!.mediaPlayer!!.pause()
         binding.playPauseNP.setIconResource(R.drawable.play_music)
-        Player.musicService!!.showNotification(R.drawable.play_music)
+        Player.musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         MainActivity.albumAdapter.update()
     }
 }

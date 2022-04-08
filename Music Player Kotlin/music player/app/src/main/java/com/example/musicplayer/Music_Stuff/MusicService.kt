@@ -37,7 +37,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    fun showNotification(playPause: Int) {
+    fun showNotification(playPause: Int, favourite: Int, repeat: Int) {
         val intent = Intent(baseContext, MainActivity::class.java)
         intent.putExtra("index", Player.songPosition)
         intent.putExtra("class", "NowPlaying")
@@ -72,12 +72,33 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val favouriteIntent =
+            Intent(
+                baseContext,
+                NotificationReceiver::class.java
+            ).setAction(ApplicationClass.FAVOURITE)
+        val favouritePendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            favouriteIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val playIntent =
             Intent(baseContext, NotificationReceiver::class.java).setAction(ApplicationClass.PLAY)
         val playPendingIntent = PendingIntent.getBroadcast(
             baseContext,
             0,
             playIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val repeatIntent =
+            Intent(baseContext, NotificationReceiver::class.java).setAction(ApplicationClass.REPEAT)
+        val repeatPendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            repeatIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -109,9 +130,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
+            .addAction(repeat, "Repeat", repeatPendingIntent)
             .addAction(R.drawable.previous_music, "Previous", prevPendingIntent)
             .addAction(playPause, "Play", playPendingIntent)
             .addAction(R.drawable.next_music, "Next", nextPendingIntent)
+            .addAction(favourite, "Favourite", favouritePendingIntent)
             .addAction(R.drawable.exit, "Exit", exitPendingIntent)
             .build()
 
@@ -163,7 +186,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 )
             )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
-            showNotification(R.drawable.play_music)
+            showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
             Player.isPlaying = false
             mediaPlayer!!.pause()
         } else {
@@ -174,7 +201,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 )
             )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
-            showNotification(R.drawable.pause_music)
+            showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
             Player.isPlaying = true
             mediaPlayer!!.start()
         }

@@ -7,11 +7,9 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import android.view.View
 import androidx.core.content.ContextCompat
-import com.example.musicplayer.Activity.MainActivity
-import com.example.musicplayer.Activity.Player
-import com.example.musicplayer.Activity.PlaylistDetails
-import com.example.musicplayer.Activity.ShowByAlbumDetails
+import com.example.musicplayer.Activity.*
 import com.example.musicplayer.R
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -22,16 +20,100 @@ class NotificationReceiver : BroadcastReceiver() {
             )
             ApplicationClass.PREVIOUS -> prevNextSong(increment = false, context = p0!!)
             ApplicationClass.NEXT -> prevNextSong(increment = true, context = p0!!)
+            ApplicationClass.FAVOURITE -> {
+                setFavourite()
+            }
+            ApplicationClass.REPEAT -> {
+                repeatState()
+            }
             ApplicationClass.EXIT -> {
                 exitApplication()
             }
         }
     }
 
+    private fun repeatState() {
+        if (Player.state == 2)
+            Player.state = 0
+        else Player.state++
+
+        when (Player.state) {
+            0 -> {
+                if (Player.isShuffle) {
+                    Player.isShuffle = false
+                }
+                Player.repeat = false
+                Player.binding.repeatMusic.setImageDrawable(
+                    Player.stateArray[Player.state]
+                )
+                Player.musicService!!.showNotification(
+                    playingState(),
+                    favouriteState(),
+                    musicState()
+                )
+            }
+
+            1 -> {
+                Player.repeat = true
+                Player.binding.repeatMusic.setImageDrawable(
+                    Player.stateArray[Player.state]
+                )
+                Player.musicService!!.showNotification(
+                    playingState(),
+                    favouriteState(),
+                    musicState()
+                )
+            }
+
+            2 -> {
+                Player.repeat = false
+                Player.isShuffle = true
+                Player.binding.repeatMusic.setImageDrawable(
+                    Player.stateArray[Player.state]
+                )
+                Player.musicService!!.showNotification(
+                    playingState(),
+                    favouriteState(),
+                    musicState()
+                )
+            }
+        }
+    }
+
+    private fun setFavourite() {
+        if (Player.isFavorite) {
+            Player.isFavorite = false
+            Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+            Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
+            favourite.favoriteSongs.removeAt(Player.fIndex)
+            if (favourite.favoriteSongs.isEmpty()) {
+                favourite.binding.instructionFV.visibility = View.VISIBLE
+            }
+        } else {
+            Player.isFavorite = true
+            Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+            Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
+            favourite.favoriteSongs.add(Player.musicListPA[Player.songPosition])
+        }
+        favourite.favouritesChanged = true
+    }
+
     private fun playMusic(context: Context) {
         Player.isPlaying = true
         Player.musicService!!.mediaPlayer!!.start()
-        Player.musicService!!.showNotification(R.drawable.pause_music)
+        Player.musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         Player.binding.playPauseBTN.setImageDrawable(
             ContextCompat.getDrawable(
                 context,
@@ -45,7 +127,11 @@ class NotificationReceiver : BroadcastReceiver() {
     private fun pauseMusic(context: Context) {
         Player.isPlaying = false
         Player.musicService!!.mediaPlayer!!.pause()
-        Player.musicService!!.showNotification(R.drawable.play_music)
+        Player.musicService!!.showNotification(
+            playingState(),
+            favouriteState(),
+            musicState()
+        )
         Player.binding.playPauseBTN.setImageDrawable(
             ContextCompat.getDrawable(
                 context,

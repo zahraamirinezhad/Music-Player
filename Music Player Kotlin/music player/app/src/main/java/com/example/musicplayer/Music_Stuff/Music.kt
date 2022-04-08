@@ -16,6 +16,7 @@ import androidx.core.text.bold
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Activity.favourite
+import com.example.musicplayer.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -80,6 +81,38 @@ fun setSongPosition(increment: Boolean) {
                 Player.songPosition = Player.musicListPA.size - 1
             else
                 --Player.songPosition
+        }
+    }
+}
+
+fun playingState(): Int {
+    if (Player.isPlaying)
+        return R.drawable.pause_music
+    return R.drawable.play_music
+}
+
+fun favouriteState(): Int {
+    if (Player.isFavorite)
+        return R.drawable.favorite_full_icon
+    return R.drawable.favorite_empty_icon
+}
+
+fun musicState(): Int {
+    when (Player.state) {
+        0 -> {
+            return R.drawable.repeat_music
+        }
+
+        1 -> {
+            return R.drawable.repeat_loop
+        }
+
+        2 -> {
+            return R.drawable.shuffle_icon
+        }
+
+        else -> {
+            return 0
         }
     }
 }

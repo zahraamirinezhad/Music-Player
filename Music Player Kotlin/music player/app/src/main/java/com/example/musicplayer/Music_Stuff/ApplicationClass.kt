@@ -12,6 +12,8 @@ class ApplicationClass : Application() {
         const val NEXT = "next"
         const val PREVIOUS = "previous"
         const val EXIT = "exit"
+        const val FAVOURITE = "favourite"
+        const val REPEAT = "repeat"
     }
 
     override fun onCreate() {

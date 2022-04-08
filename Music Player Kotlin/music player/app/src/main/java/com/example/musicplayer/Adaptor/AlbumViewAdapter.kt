@@ -12,9 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Activity.ShowByAlbumDetails
-import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.Music_Stuff.NowPlaying
-import com.example.musicplayer.Music_Stuff.getImageArt
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.AlbumViewBinding
 
@@ -169,7 +167,11 @@ class AlbumViewAdapter(
         Player.isPlaying = true
         if (Player.musicService != null) {
             Player.musicService!!.mediaPlayer!!.start()
-            Player.musicService!!.showNotification(R.drawable.pause_music)
+            Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
         }
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
     }
@@ -178,7 +180,11 @@ class AlbumViewAdapter(
         Player.isPlaying = false
         if (Player.musicService != null) {
             Player.musicService!!.mediaPlayer!!.pause()
-            Player.musicService!!.showNotification(R.drawable.play_music)
+            Player.musicService!!.showNotification(
+                playingState(),
+                favouriteState(),
+                musicState()
+            )
         }
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
 
