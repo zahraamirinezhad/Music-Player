@@ -69,7 +69,7 @@ fun getImageArt(path: String, dr: Bitmap): ByteArray? {
 }
 
 fun setSongPosition(increment: Boolean) {
-    if (!Player.repeat) {
+    if (!Player.repeat && !Player.isShuffle) {
         if (increment) {
             if (Player.songPosition == Player.musicListPA.size - 1)
                 Player.songPosition = 0
@@ -81,6 +81,12 @@ fun setSongPosition(increment: Boolean) {
             else
                 --Player.songPosition
         }
+    }
+}
+
+fun setSongPositionShuffle() {
+    if (!Player.repeat && Player.isShuffle) {
+        Player.songPosition = (0..Player.musicListPA.size).random()
     }
 }
 

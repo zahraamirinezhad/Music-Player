@@ -278,7 +278,7 @@ class MainActivity : AppCompatActivity() {
         albumAdapter = AlbumViewAdapter(this, songByAlbum)
         val editor = getSharedPreferences("ShowBy", MODE_PRIVATE)
         val show = editor.getString("SHOW BY", "")
-        if (show.equals("class com.example.musicplayer.Adaptor.MusicAdapter")) {
+        if (show.equals("class com.example.musicplayer.Adaptor.MusicAdapter") || show.equals("") || show == null) {
             binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
             binding.musicRV.adapter = musicAdapter
             binding.showByType.text = "SONGS"

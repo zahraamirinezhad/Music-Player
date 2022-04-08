@@ -79,7 +79,7 @@ class playing_song_image : Fragment() {
         }
 
         val dr: Drawable = BitmapDrawable(image)
-        if(NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.background = dr
+        if (NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.background = dr
 
         val output = Bitmap.createBitmap(
             image.width,
@@ -102,21 +102,5 @@ class playing_song_image : Fragment() {
         canvas.drawBitmap(image, rect, rect, paint)
 
         songImage.setImageBitmap(output)
-
-//        if (Player.isPlaying) {
-//            val imageViewObjectAnimator = ObjectAnimator.ofFloat(playPause, "rotation", 2f)
-//            imageViewObjectAnimator.duration = 800
-//            playPause.pivotX = playPause.drawable.bounds.width().toFloat() - 200f
-//            playPause.pivotY = 100f
-//            imageViewObjectAnimator.start()
-//            Player.mainImageAnimator.resume()
-//        } else {
-//            val imageViewObjectAnimator = ObjectAnimator.ofFloat(playPause, "rotation", -5f)
-//            imageViewObjectAnimator.duration = 800
-//            playPause.pivotX = playPause.drawable.bounds.width().toFloat() - 200f
-//            playPause.pivotY = 100f
-//            imageViewObjectAnimator.start()
-//            Player.mainImageAnimator.pause()
-//        }
     }
 }

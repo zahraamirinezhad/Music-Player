@@ -3,7 +3,6 @@ package com.example.musicplayer.Music_Stuff
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -63,7 +62,10 @@ class NotificationReceiver : BroadcastReceiver() {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
 
-            setSongPosition(increment)
+            if (Player.isShuffle)
+                setSongPositionShuffle()
+            else setSongPosition(increment)
+
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -86,13 +88,11 @@ class NotificationReceiver : BroadcastReceiver() {
                 )
             }
 
-            val dr: Drawable = BitmapDrawable(image)
-            val icon: Bitmap = (dr as BitmapDrawable).bitmap
-            val final_Bitmap = returnBlurredBackground(icon, context)
+            val final_Bitmap = returnBlurredBackground(image, context)
             val newdr: Drawable = BitmapDrawable(final_Bitmap)
             Player.binding.musicContainer.background = newdr
 
-            NowPlaying.binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
+            NowPlaying.binding.songImgNP.setImageBitmap(image)
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration

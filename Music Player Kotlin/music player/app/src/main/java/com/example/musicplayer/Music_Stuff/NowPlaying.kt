@@ -62,7 +62,9 @@ class NowPlaying : Fragment() {
             if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
                 MediaPlayer()
 
-            setSongPosition(prevOrNext)
+            if (Player.isShuffle)
+                setSongPositionShuffle()
+            else setSongPosition(prevOrNext)
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -86,8 +88,7 @@ class NowPlaying : Fragment() {
                 )
             }
 
-            val dr: Drawable = BitmapDrawable(image)
-            binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
+            binding.songImgNP.setImageBitmap(image)
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -136,8 +137,7 @@ class NowPlaying : Fragment() {
                 )
             }
 
-            val dr: Drawable = BitmapDrawable(image)
-            binding.songImgNP.setImageBitmap((dr as BitmapDrawable).bitmap)
+            binding.songImgNP.setImageBitmap(image)
         } else {
             binding.root.visibility = View.INVISIBLE
         }
