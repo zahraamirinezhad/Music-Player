@@ -160,7 +160,6 @@ class NowPlaying : Fragment() {
             favouriteState(),
             musicState()
         )
-        MainActivity.albumAdapter.update()
     }
 
     private fun pauseMusic() {
@@ -172,6 +171,5 @@ class NowPlaying : Fragment() {
             favouriteState(),
             musicState()
         )
-        MainActivity.albumAdapter.update()
     }
 }

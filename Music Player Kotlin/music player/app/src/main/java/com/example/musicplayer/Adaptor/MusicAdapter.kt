@@ -308,10 +308,6 @@ class MusicAdapter(
     }
 
     fun next() {
-//        if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
-//            MediaPlayer()
-//
-//
         if (Player.musicListPA.size != 0) {
             if (Player.songPosition == Player.musicListPA.size) Player.songPosition = 0
             Player.musicService!!.mediaPlayer!!.reset()
@@ -371,7 +367,6 @@ class MusicAdapter(
             favouriteState(),
             musicState()
         )
-        MainActivity.albumAdapter.update()
     }
 
     private fun sendIntent(ref: String, pos: Int) {

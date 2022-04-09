@@ -82,7 +82,7 @@ class playlist : AppCompatActivity() {
             tempPlaylist.createdBy = username
             tempPlaylist.musics = ArrayList()
             val calender = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("dd mm yyyy", Locale.ENGLISH)
+            val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.US)
             tempPlaylist.createdOn = sdf.format(calender)
             listOfPlaylists.ref.add(tempPlaylist)
             adapter.refresh()

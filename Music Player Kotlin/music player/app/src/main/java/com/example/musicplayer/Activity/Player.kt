@@ -467,14 +467,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             "AlbumViewPlay" -> {
                 isPlayingPlaylist = false
-                val pos = intent.getIntExtra("prevAlbumIndex", 0)
                 initServiceAndPlaylist(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                         ShowByAlbumDetails.currentAlbum
                     )]!!,
                     shuffle = false,
-                    fromAlbum = true,
-                    prevAlbum = pos
                 )
             }
 
@@ -543,8 +540,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         playlist: ArrayList<Music>,
         shuffle: Boolean,
         playNext: Boolean = false,
-        fromAlbum: Boolean = false,
-        prevAlbum: Int = 0
     ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
@@ -553,7 +548,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicListPA.addAll(playlist)
         if (shuffle) isShuffle = true
         if (!playNext) PlayNext.playNextList = ArrayList()
-        if (fromAlbum) MainActivity.albumAdapter.updateItem(prevAlbum)
         setLayout()
         MainActivity.musicAdapter.update()
     }
@@ -579,7 +573,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.resume()
-        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
+//        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
     }
@@ -605,7 +599,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         isPausedOrNot.pivotY = 100f
         imageViewObjectAnimator.start()
         mainImageAnimator.pause()
-        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
+//        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
     }
 
     private fun backNextMusic(increment: Boolean) {

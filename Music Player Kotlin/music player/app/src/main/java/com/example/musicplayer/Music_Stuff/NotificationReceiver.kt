@@ -121,7 +121,6 @@ class NotificationReceiver : BroadcastReceiver() {
             )
         )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
-        MainActivity.albumAdapter.update()
     }
 
     private fun pauseMusic(context: Context) {
@@ -139,7 +138,6 @@ class NotificationReceiver : BroadcastReceiver() {
             )
         )
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
-        MainActivity.albumAdapter.update()
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {

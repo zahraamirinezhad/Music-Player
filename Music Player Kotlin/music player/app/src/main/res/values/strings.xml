@@ -11,6 +11,7 @@
     <string name="timer">TIMER</string>
     <string name="share">SHARE</string>
     <string name="repeat">REPEAT</string>
+    <string name="create_playlist">CREATE PLAYLIST</string>
     <string name="equalizer">EQUALIZER</string>
     <string name="playlist">PLAYLIST</string>
     <string name="open">Open</string>
@@ -48,10 +49,12 @@
     <string name="next_music">Next Music</string>
     <string name="previous_music">Previous Music</string>
     <string name="play_pause">Play Pause</string>
+    <string name="play">Play</string>
     <string name="delete_music">Delete Music</string>
     <string name="more">More Items</string>
     <string name="set_as_ringtone">Set As Ringtone</string>
     <string name="set_as_alarm_ringtone">Set As Alarm Ringtone</string>
+    <string name="add_to_play_list">Add to Playlist</string>
     <string name="album_name">ALBUM NAME</string>
     <string name="album_image">ALBUM IMAGE</string>
     <string name="show_by_album">SHOW BY ALBUMS</string>

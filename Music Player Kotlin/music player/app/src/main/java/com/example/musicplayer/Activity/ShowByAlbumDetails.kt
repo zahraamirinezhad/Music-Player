@@ -14,7 +14,6 @@ import com.example.musicplayer.databinding.ActivityShowByAlbumDetailsBinding
 class ShowByAlbumDetails : AppCompatActivity() {
     companion object {
         var currentAlbum = -1
-        var prevAlbum = -1
 
         @SuppressLint("StaticFieldLeak")
         lateinit var adapter: MusicAdapter
@@ -33,13 +32,10 @@ class ShowByAlbumDetails : AppCompatActivity() {
         currentAlbum = intent.extras?.get("index") as Int
         val isFromPlayBTN = intent.getBooleanExtra("ItsFromPlayBTN", false)
         if (isFromPlayBTN) {
-            val pos = intent.extras?.get("prevIndex") as Int
             val intent = Intent(this, Player::class.java)
             intent.putExtra("index", 0)
             intent.putExtra("class", "AlbumViewPlay")
-            intent.putExtra("prevAlbumIndex", pos)
             ContextCompat.startActivity(this, intent, null)
-            prevAlbum = currentAlbum
         }
         binding.albumMusicRV.setItemViewCacheSize(10)
         binding.albumMusicRV.setHasFixedSize(true)

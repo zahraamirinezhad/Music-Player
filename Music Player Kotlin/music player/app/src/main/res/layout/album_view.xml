@@ -4,11 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="5dp"
+    android:layout_margin="5dp"
     android:background="@color/black"
-    android:backgroundTint="@android:color/transparent"
-    android:elevation="0dp"
-    app:cardCornerRadius="10dp">
+    android:elevation="0dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/albumImage"
@@ -18,47 +16,49 @@
         android:background="@color/black"
         android:backgroundTint="@color/black"
         android:contentDescription="@string/album_image"
-        android:src="@mipmap/music_player_icon_round"
+        android:src="@drawable/image_background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/curved" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/glassy_background"
-        android:contentDescription="@string/play_pause"
-        android:padding="7dp"
-        android:src="@drawable/play_music"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/albumName"
-        android:layout_width="130dp"
+    <LinearLayout
+        android:layout_width="190dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/album_name"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
-        android:shadowColor="@android:color/black"
-        android:shadowDx="10"
-        android:shadowDy="10"
-        android:shadowRadius="10"
-        android:singleLine="true"
-        android:text="@string/album_name"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/albumImage"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:background="@drawable/glassy_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/albumName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:contentDescription="@string/album_name"
+            android:gravity="start|center"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="10"
+            android:singleLine="true"
+            android:text="@string/album_name"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/moreOptionsAlbumView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/more"
+            android:src="@drawable/more"
+            app:tint="@color/white"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

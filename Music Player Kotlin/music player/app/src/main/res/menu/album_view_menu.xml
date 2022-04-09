@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/play_album_view"
+        android:icon="@drawable/play_music"
+        android:title="@string/play" />
+
+    <item
+        android:id="@+id/add_to_playlist_album_view"
+        android:icon="@drawable/add_to_playlist"
+        android:title="@string/add_to_play_list" />
+</menu>
