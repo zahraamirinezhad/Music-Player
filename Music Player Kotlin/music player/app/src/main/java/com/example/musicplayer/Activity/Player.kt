@@ -40,6 +40,7 @@ import kotlin.collections.ArrayList
 class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
     companion object {
+        var isContent = false
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
         var isPlaying: Boolean = true
@@ -71,6 +72,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         setContentView(binding.root)
 
         if (intent.data?.scheme.contentEquals("content")) {
+            isContent = true
             val intentService = Intent(this, MusicService::class.java)
             bindService(intentService, this, BIND_AUTO_CREATE)
             startService(intentService)
@@ -92,6 +94,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             binding.back.visibility = View.GONE
             binding.next.isEnabled = false
             binding.next.visibility = View.GONE
+            binding.dragDownPL.isEnabled = false
+            binding.dragDownPL.visibility = View.GONE
 
             binding.songNamePA.text = musicListPA[songPosition].title
 
