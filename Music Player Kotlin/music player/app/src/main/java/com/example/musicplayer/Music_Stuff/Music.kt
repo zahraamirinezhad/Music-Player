@@ -92,7 +92,8 @@ fun playingState(): Int {
 }
 
 fun favouriteState(): Int {
-    if (Player.isFavorite)
+    Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
+    if (Player.fIndex != -1)
         return R.drawable.favorite_full_icon
     return R.drawable.favorite_empty_icon
 }
@@ -155,10 +156,8 @@ fun returnBlurredBackground(input: Bitmap, context: Context): Bitmap? {
 }
 
 fun favoriteChecker(id: String): Int {
-    Player.isFavorite = false
     favourite.favoriteSongs.forEachIndexed { index, music ->
         if (id == music.id) {
-            Player.isFavorite = true
             return index
         }
     }

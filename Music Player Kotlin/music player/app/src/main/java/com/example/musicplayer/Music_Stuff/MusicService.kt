@@ -155,7 +155,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 .addAction(playPause, "Play", playPendingIntent)
                 .addAction(R.drawable.next_music, "Next", nextPendingIntent)
                 .addAction(favourite, "Favourite", favouritePendingIntent)
-                .addAction(R.drawable.exit, "Exit", exitPendingIntent)
+//                .addAction(R.drawable.exit, "Exit", exitPendingIntent)
                 .build()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

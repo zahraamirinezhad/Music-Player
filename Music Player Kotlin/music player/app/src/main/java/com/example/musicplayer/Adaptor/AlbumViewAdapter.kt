@@ -26,6 +26,7 @@ import com.example.musicplayer.R
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
 import com.example.musicplayer.databinding.AlbumViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -115,6 +116,24 @@ class AlbumViewAdapter(
                             (context as FragmentActivity).supportFragmentManager
                         menu = SelectPlayList()
                         menu.show(ft, "SELECT PLAYLIST")
+                    }
+                    R.id.add_to_play_next_album_view -> {
+                        try {
+                            if (PlayNext.playNextList.isEmpty()) {
+                                PlayNext.playNextList.add(Player.musicListPA[Player.songPosition])
+                                Player.songPosition = 0
+                            }
+
+                            PlayNext.playNextList.addAll(
+                                MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                                    currentAlbum
+                                )]!!
+                            )
+                            Player.musicListPA = ArrayList()
+                            Player.musicListPA.addAll(PlayNext.playNextList)
+                        } catch (e: Exception) {
+                            Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
+                        }
                     }
                 }
                 true

@@ -69,11 +69,10 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator

@@ -81,8 +81,8 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     private fun setFavourite() {
-        if (Player.isFavorite) {
-            Player.isFavorite = false
+        Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
+        if (Player.fIndex != -1) {
             Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
             Player.musicService!!.showNotification(
                 playingState(),
@@ -94,7 +94,6 @@ class NotificationReceiver : BroadcastReceiver() {
                 favourite.binding.instructionFV.visibility = View.VISIBLE
             }
         } else {
-            Player.isFavorite = true
             Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             Player.musicService!!.showNotification(
                 playingState(),
@@ -189,7 +188,7 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
             playMusic(context)
             Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
-            if (Player.isFavorite) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+            if (Player.fIndex!=-1) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
             if (ShowByAlbumDetails.isAdapterSHBALInitialized())
                 ShowByAlbumDetails.adapter.update()

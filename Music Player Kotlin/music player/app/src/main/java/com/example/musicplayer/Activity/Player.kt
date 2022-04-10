@@ -51,7 +51,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         var min30: Boolean = false
         var min60: Boolean = false
         var nowPlayingID: String = ""
-        var isFavorite: Boolean = false
         var fIndex: Int = -1
         var isShuffle = false
         var state: Int = 0
@@ -236,15 +235,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         binding.favoritesBTN.setOnClickListener {
-            if (isFavorite) {
-                isFavorite = false
+            fIndex = favoriteChecker(musicListPA[songPosition].id)
+            if (fIndex != -1) {
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
                 favourite.favoriteSongs.removeAt(fIndex)
                 if (favourite.favoriteSongs.isEmpty()) {
                     favourite.binding.instructionFV.visibility = View.VISIBLE
                 }
             } else {
-                isFavorite = true
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
                 favourite.favoriteSongs.add(musicListPA[songPosition])
             }
@@ -315,8 +313,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         canvas.drawARGB(0, 0, 0, 0)
         paint.color = color
         canvas.drawCircle(
-            (image.width / 2).toFloat(), (image.height / 2).toFloat(),
-            (image.width / 3).toFloat(), paint
+            (image.width / 1.5).toFloat(), (image.height / 1.5).toFloat(),
+            (image.width / 2).toFloat(), paint
         )
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(image, rect, rect, paint)
