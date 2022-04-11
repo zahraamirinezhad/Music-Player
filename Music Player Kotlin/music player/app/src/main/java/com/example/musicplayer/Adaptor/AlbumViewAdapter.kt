@@ -172,7 +172,7 @@ class AlbumViewAdapter(
             rootView.findViewById<RecyclerView>(R.id.selectPlaylist).setHasFixedSize(true)
             rootView.findViewById<RecyclerView>(R.id.selectPlaylist).setItemViewCacheSize(5)
             val adapter =
-                SelectPlaylistAdapter(context as Activity, playlist.listOfPlaylists.ref)
+                SelectPlaylistAdapter(context as Activity, Playlist.listOfPlaylists.ref)
             rootView.findViewById<RecyclerView>(R.id.selectPlaylist).layoutManager =
                 LinearLayoutManager(context)
             rootView.findViewById<RecyclerView>(R.id.selectPlaylist).adapter = adapter
@@ -210,7 +210,7 @@ class AlbumViewAdapter(
 
         private fun addPlaylist(name: String, username: String) {
             var playlistExist = false
-            for (i in playlist.listOfPlaylists.ref) {
+            for (i in Playlist.listOfPlaylists.ref) {
                 if (i.name == name) {
                     playlistExist = true
                     break
@@ -232,7 +232,7 @@ class AlbumViewAdapter(
                         currentAlbum
                     )]!!
                 )
-                playlist.listOfPlaylists.ref.add(tempPlaylist)
+                Playlist.listOfPlaylists.ref.add(tempPlaylist)
             }
         }
     }

@@ -39,15 +39,15 @@ class PlaylistDetails : AppCompatActivity() {
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         currentPlaylist = intent.extras?.get("index") as Int
-        playlist.listOfPlaylists.ref[currentPlaylist].musics =
-            checkPlaylist(playlist.listOfPlaylists.ref[currentPlaylist].musics)
+        Playlist.listOfPlaylists.ref[currentPlaylist].musics =
+            checkPlaylist(Playlist.listOfPlaylists.ref[currentPlaylist].musics)
 
         binding.playlistPLDRV.setItemViewCacheSize(10)
         binding.playlistPLDRV.setHasFixedSize(true)
         binding.playlistPLDRV.layoutManager = LinearLayoutManager(this)
         adapter = MusicAdapter(
             this,
-            playlist.listOfPlaylists.ref[currentPlaylist].musics,
+            Playlist.listOfPlaylists.ref[currentPlaylist].musics,
             playlistDetails = true
         )
         binding.playlistPLDRV.adapter = adapter
@@ -80,7 +80,7 @@ class PlaylistDetails : AppCompatActivity() {
                         builder.setTitle("Remove All The Musics")
                             .setMessage("Do You Want to Remove All the Musics in this Playlist ?")
                             .setPositiveButton("YES") { dialog, _ ->
-                                playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
+                                Playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
                                 adapter.refreshPlaylist()
                                 dialog.dismiss()
                             }
@@ -103,12 +103,12 @@ class PlaylistDetails : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        binding.playlistNamePLD.text = playlist.listOfPlaylists.ref[currentPlaylist].name
+        binding.playlistNamePLD.text = Playlist.listOfPlaylists.ref[currentPlaylist].name
         binding.moreInfoPLD.text =
-            "Created On \n" + playlist.listOfPlaylists.ref[currentPlaylist].createdOn + "\n By \n" + playlist.listOfPlaylists.ref[currentPlaylist].createdBy
+            "Created On \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdOn + "\n By \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdBy
         if (adapter.itemCount > 0) {
             val img = getImageArt(
-                playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path,
+                Playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path,
                 BitmapFactory.decodeResource(
                     this.resources,
                     R.drawable.music_player_icon_slash_screen
@@ -131,7 +131,7 @@ class PlaylistDetails : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
+        val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
         editor.apply()
     }

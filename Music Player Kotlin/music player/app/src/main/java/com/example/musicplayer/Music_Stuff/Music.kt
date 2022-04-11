@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
-import com.example.musicplayer.Activity.favourite
+import com.example.musicplayer.Activity.Favourite
 import com.example.musicplayer.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.ByteArrayOutputStream
@@ -156,7 +156,7 @@ fun returnBlurredBackground(input: Bitmap, context: Context): Bitmap? {
 }
 
 fun favoriteChecker(id: String): Int {
-    favourite.favoriteSongs.forEachIndexed { index, music ->
+    Favourite.favoriteSongs.forEachIndexed { index, music ->
         if (id == music.id) {
             return index
         }

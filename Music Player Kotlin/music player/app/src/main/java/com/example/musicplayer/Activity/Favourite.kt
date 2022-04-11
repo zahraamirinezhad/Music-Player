@@ -5,21 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.musicplayer.Adaptor.FavoriteAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.checkPlaylist
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityFavouriteBinding
 
-class favourite : AppCompatActivity() {
+class Favourite : AppCompatActivity() {
     companion object {
         var favoriteSongs: ArrayList<Music> = ArrayList()
         lateinit var binding: ActivityFavouriteBinding
-        var favouritesChanged: Boolean = false
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: FavoriteAdapter
+        lateinit var adapter: MusicAdapter
         fun isAdapterInitialized(): Boolean {
             return this::adapter.isInitialized
         }
@@ -36,10 +35,9 @@ class favourite : AppCompatActivity() {
 
         binding.favoriteRV.setHasFixedSize(true)
         binding.favoriteRV.setItemViewCacheSize(13)
-        binding.favoriteRV.layoutManager = GridLayoutManager(this, 3)
-        adapter = FavoriteAdapter(this, favoriteSongs, isFavourite = true)
+        binding.favoriteRV.layoutManager = LinearLayoutManager(this)
+        adapter = MusicAdapter(this, favoriteSongs, favourites = true)
         binding.favoriteRV.adapter = adapter
-        favouritesChanged = false
         if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
         else binding.shuffleFav.visibility = View.VISIBLE
 
@@ -49,7 +47,7 @@ class favourite : AppCompatActivity() {
 
         binding.shuffleFav.setOnClickListener {
             if (favoriteSongs.isNotEmpty()) {
-                val intent = Intent(this@favourite, Player::class.java)
+                val intent = Intent(this@Favourite, Player::class.java)
                 intent.putExtra("index", 0)
                 intent.putExtra("class", "FavouritesShuffle")
                 startActivity(intent)
@@ -59,14 +57,6 @@ class favourite : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (favouritesChanged) {
-            adapter.update(favoriteSongs)
-            favouritesChanged = false
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        adapter.isFavourite = false
+        adapter.update()
     }
 }

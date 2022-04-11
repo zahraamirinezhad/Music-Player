@@ -13,10 +13,8 @@ import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.R
 
@@ -154,9 +152,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 .addAction(R.drawable.previous_music, "Previous", prevPendingIntent)
                 .addAction(playPause, "Play", playPendingIntent)
                 .addAction(R.drawable.next_music, "Next", nextPendingIntent)
-                .addAction(favourite, "Favourite", favouritePendingIntent)
-//                .addAction(R.drawable.exit, "Exit", exitPendingIntent)
+//                .addAction(favourite, "Favourite", favouritePendingIntent)
+                .addAction(R.drawable.exit, "Exit", exitPendingIntent)
                 .build()
+
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val playbackSpeed = if (Player.isPlaying) 1F else 0F

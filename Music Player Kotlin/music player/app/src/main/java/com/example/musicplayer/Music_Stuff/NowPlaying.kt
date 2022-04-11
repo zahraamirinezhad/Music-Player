@@ -3,8 +3,6 @@ package com.example.musicplayer.Music_Stuff
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.musicplayer.Activity.MainActivity
-import com.example.musicplayer.Activity.Player
-import com.example.musicplayer.Activity.PlaylistDetails
-import com.example.musicplayer.Activity.ShowByAlbumDetails
+import com.example.musicplayer.Activity.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentNowPlayingBinding
 
@@ -68,6 +63,7 @@ class NowPlaying : Fragment() {
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
+            if (Player.isPlayingFavourites) Favourite.adapter.update()
 
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)

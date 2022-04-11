@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
-import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.Activity.*
 import com.example.musicplayer.R
@@ -83,26 +82,22 @@ class NotificationReceiver : BroadcastReceiver() {
     private fun setFavourite() {
         Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
         if (Player.fIndex != -1) {
-            Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
-            Player.musicService!!.showNotification(
-                playingState(),
-                favouriteState(),
-                musicState()
-            )
-            favourite.favoriteSongs.removeAt(Player.fIndex)
-            if (favourite.favoriteSongs.isEmpty()) {
-                favourite.binding.instructionFV.visibility = View.VISIBLE
-            }
-        } else {
             Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             Player.musicService!!.showNotification(
                 playingState(),
-                favouriteState(),
+                R.drawable.favorite_full_icon,
                 musicState()
             )
-            favourite.favoriteSongs.add(Player.musicListPA[Player.songPosition])
+            Favourite.favoriteSongs.removeAt(Player.fIndex)
+        } else {
+            Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
+            Player.musicService!!.showNotification(
+                playingState(),
+                R.drawable.favorite_empty_icon,
+                musicState()
+            )
+            Favourite.favoriteSongs.add(Player.musicListPA[Player.songPosition])
         }
-        favourite.favouritesChanged = true
     }
 
     private fun playMusic(context: Context) {
@@ -152,6 +147,8 @@ class NotificationReceiver : BroadcastReceiver() {
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
+            if (Player.isPlayingFavourites) Favourite.adapter.update()
+
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
@@ -188,7 +185,7 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
             playMusic(context)
             Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
-            if (Player.fIndex!=-1) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
+            if (Player.fIndex != -1) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
             if (ShowByAlbumDetails.isAdapterSHBALInitialized())
                 ShowByAlbumDetails.adapter.update()

@@ -82,23 +82,23 @@ class MainActivity : AppCompatActivity() {
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) {
             initializeLayout()
-            favourite.favoriteSongs = ArrayList()
+            Favourite.favoriteSongs = ArrayList()
             val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
             val jsonString = editor.getString("FavouriteSongs", null)
             val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
             if (jsonString != null) {
                 val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
-                favourite.favoriteSongs.addAll(data)
+                Favourite.favoriteSongs.addAll(data)
             }
 
-            playlist.listOfPlaylists = ListOfPlaylists()
+            Playlist.listOfPlaylists = ListOfPlaylists()
             val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
             val jsonStringPlaylist = editorPlaylist.getString("Playlists", null)
             val typeTokenPlaylist = object : TypeToken<ListOfPlaylists>() {}.type
             if (jsonStringPlaylist != null) {
                 val data: ListOfPlaylists =
                     GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
-                playlist.listOfPlaylists = data
+                Playlist.listOfPlaylists = data
             }
 
             val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
@@ -124,11 +124,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.favoritesBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, favourite::class.java)
+            val intent = Intent(this@MainActivity, Favourite::class.java)
             startActivity(intent)
         }
         binding.playlistBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, playlist::class.java)
+            val intent = Intent(this@MainActivity, Playlist::class.java)
             startActivity(intent)
 
         }
@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                                 editor.putInt("SORT ORDER", currentSort)
                                 editor.apply()
 
-                                if (!musicAdapter.selectionActivity && !musicAdapter.playlistDetails && (!favourite.isAdapterInitialized() || !favourite.adapter.isFavourite) && PlayNext.playNextList.size == 0) {
+                                if (!musicAdapter.selectionActivity && !musicAdapter.playlistDetails && (!Favourite.isAdapterInitialized()) && PlayNext.playNextList.size == 0) {
                                     Player.musicListPA = MusicListMA
                                 }
                             }
@@ -418,9 +418,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
-        val jsonString = GsonBuilder().create().toJson(favourite.favoriteSongs)
+        val jsonString = GsonBuilder().create().toJson(Favourite.favoriteSongs)
         editor.putString("FavouriteSongs", jsonString)
-        val jsonStringPlaylist = GsonBuilder().create().toJson(playlist.listOfPlaylists)
+        val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
         if (Player.musicService != null && Player.isMusicListPaInitialized() && Player.musicListPA.size != 0) {
             val recentMusic = GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])

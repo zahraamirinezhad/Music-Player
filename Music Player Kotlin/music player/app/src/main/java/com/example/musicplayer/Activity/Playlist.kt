@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.musicplayer.Music_Stuff.ListOfPlaylists
 import com.example.musicplayer.Adaptor.PlaylistViewAdapter
 import com.example.musicplayer.R
+import com.example.musicplayer.Music_Stuff.myPlaylist
 import com.example.musicplayer.databinding.ActivityPlaylistBinding
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
-import com.example.musicplayer.Music_Stuff.myPlaylist
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class playlist : AppCompatActivity() {
+class Playlist : AppCompatActivity() {
     companion object {
         var listOfPlaylists: ListOfPlaylists = ListOfPlaylists()
         lateinit var binding: ActivityPlaylistBinding
@@ -33,8 +33,8 @@ class playlist : AppCompatActivity() {
 
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
-        binding.playlistRV.layoutManager = GridLayoutManager(this@playlist, 2)
-        adapter = PlaylistViewAdapter(this@playlist, listOfPlaylists.ref)
+        binding.playlistRV.layoutManager = GridLayoutManager(this@Playlist, 2)
+        adapter = PlaylistViewAdapter(this@Playlist, listOfPlaylists.ref)
         binding.playlistRV.adapter = adapter
 
         if (listOfPlaylists.ref.isNotEmpty()) binding.instructionPA.visibility = View.GONE
@@ -50,7 +50,7 @@ class playlist : AppCompatActivity() {
 
 
     private fun customAlertDialog() {
-        val dialog = LayoutInflater.from(this@playlist)
+        val dialog = LayoutInflater.from(this@Playlist)
             .inflate(R.layout.add_playlist_dialog, binding.root, false)
         val binder = AddPlaylistDialogBinding.bind(dialog)
         val builder = MaterialAlertDialogBuilder(this)

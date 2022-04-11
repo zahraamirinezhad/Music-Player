@@ -24,6 +24,7 @@ class MusicAdapter(
     private val context: Context,
     var musicList: ArrayList<Music>,
     val playlistDetails: Boolean = false,
+    var favourites: Boolean = false,
     val selectionActivity: Boolean = false,
     val album: Boolean = false,
     var selectAll: Boolean = false
@@ -60,7 +61,7 @@ class MusicAdapter(
         } else {
             if (!selectAll) {
                 var exist = false
-                for (song in playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
+                for (song in Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics) {
                     if (musicList[position].id == song.id) {
                         exist = true
                     }
@@ -112,8 +113,7 @@ class MusicAdapter(
             )
         }
 
-        val dr: Drawable = BitmapDrawable(myImage)
-        holder.image.setImageBitmap((dr as BitmapDrawable).bitmap)
+        holder.image.setImageBitmap(myImage)
 
         if (!selectionActivity)
             holder.root.setOnLongClickListener {
@@ -155,20 +155,20 @@ class MusicAdapter(
                 bindingMF.deleteBtn.setOnClickListener {
                     dialog.dismiss()
                     if (playlistDetails) {
-                        if (Player.isMusicListPaInitialized() && Player.musicListPA == playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position < Player.songPosition) {
+                        if (Player.isMusicListPaInitialized() && Player.musicListPA == Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position < Player.songPosition) {
                             Player.songPosition--
                             Player.musicListPA.removeAt(position)
-                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                            Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
                                 position
                             )
-                        } else if (Player.isMusicListPaInitialized() && Player.musicListPA == playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position == Player.songPosition) {
+                        } else if (Player.isMusicListPaInitialized() && Player.musicListPA == Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics && position == Player.songPosition) {
                             Player.musicListPA.removeAt(position)
-                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                            Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
                                 position
                             )
                             next()
                         } else {
-                            playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
+                            Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(
                                 position
                             )
                         }
@@ -179,11 +179,11 @@ class MusicAdapter(
                         if (file.exists()) {
                             val removed = musicList[position]
 
-                            if (favourite.favoriteSongs.contains(removed)) {
-                                favourite.favoriteSongs.remove(removed)
+                            if (Favourite.favoriteSongs.contains(removed)) {
+                                Favourite.favoriteSongs.remove(removed)
                             }
-                            if (playlist.listOfPlaylists.ref.size != 0) {
-                                for (x in playlist.listOfPlaylists.ref) {
+                            if (Playlist.listOfPlaylists.ref.size != 0) {
+                                for (x in Playlist.listOfPlaylists.ref) {
                                     if (x.musics.contains(removed)) {
                                         x.musics.remove(removed)
                                     }
@@ -245,6 +245,12 @@ class MusicAdapter(
             playlistDetails -> {
                 holder.root.setOnClickListener {
                     sendIntent("PlaylistDetailsAdapter", position)
+                }
+            }
+
+            favourites -> {
+                holder.root.setOnClickListener {
+                    sendIntent("FavoriteAdapter", position)
                 }
             }
 
@@ -377,20 +383,20 @@ class MusicAdapter(
     }
 
     private fun addSong(song: Music): Boolean {
-        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
+        Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
             if (song.id == music.id) {
-                playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(index)
+                Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.removeAt(index)
                 return false
             }
         }
-        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(song)
+        Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(song)
         return true
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshPlaylist() {
         musicList = ArrayList()
-        musicList = playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
+        musicList = Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
         notifyDataSetChanged()
     }
 }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.MainActivity
-import com.example.musicplayer.Activity.playlist
+import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.getImageArt
 import com.example.musicplayer.Music_Stuff.getReflectionBackground
 import com.example.musicplayer.Music_Stuff.myPlaylist
@@ -38,10 +38,10 @@ class SelectPlaylistAdapter(
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        if (playlist.listOfPlaylists.ref[position].musics.size > 0) {
+        if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
             try {
                 val img = getImageArt(
-                    playlist.listOfPlaylists.ref[position].musics.get(0).path,
+                    Playlist.listOfPlaylists.ref[position].musics.get(0).path,
                     BitmapFactory.decodeResource(
                         context.resources,
                         R.drawable.image_background

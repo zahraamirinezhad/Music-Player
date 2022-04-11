@@ -57,6 +57,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         lateinit var stateArray: Array<Drawable?>
         lateinit var mainImageAnimator: ObjectAnimator
         var isPlayingPlaylist: Boolean = false
+        var isPlayingFavourites: Boolean = false
         fun isMusicListPaInitialized(): Boolean {
             return this::musicListPA.isInitialized
         }
@@ -238,15 +239,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             fIndex = favoriteChecker(musicListPA[songPosition].id)
             if (fIndex != -1) {
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
-                favourite.favoriteSongs.removeAt(fIndex)
-                if (favourite.favoriteSongs.isEmpty()) {
-                    favourite.binding.instructionFV.visibility = View.VISIBLE
+                Favourite.favoriteSongs.removeAt(fIndex)
+                if (Favourite.favoriteSongs.isEmpty()) {
+                    Favourite.binding.instructionFV.visibility = View.VISIBLE
                 }
             } else {
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
-                favourite.favoriteSongs.add(musicListPA[songPosition])
+                Favourite.favoriteSongs.add(musicListPA[songPosition])
             }
-            favourite.favouritesChanged = true
         }
 
         binding.moreOptions.setOnClickListener {
@@ -429,14 +429,16 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         when (intent.getStringExtra("class")) {
             "PlaylistDetailsShuffle" -> {
                 isPlayingPlaylist = true
+                isPlayingFavourites = false
                 initServiceAndPlaylist(
-                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
+                    Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
                     shuffle = true
                 )
             }
 
             "AlbumDetailsShuffle" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                         ShowByAlbumDetails.currentAlbum
@@ -447,14 +449,16 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             "PlaylistDetailsAdapter" -> {
                 isPlayingPlaylist = true
+                isPlayingFavourites = false
                 initServiceAndPlaylist(
-                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
+                    Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics,
                     shuffle = false
                 )
             }
 
             "AlbumDetailsAdapter" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                         ShowByAlbumDetails.currentAlbum
@@ -465,6 +469,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             "AlbumViewPlay" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                         ShowByAlbumDetails.currentAlbum
@@ -475,7 +480,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             "FavoriteAdapter" -> {
                 isPlayingPlaylist = false
-                initServiceAndPlaylist(favourite.favoriteSongs, shuffle = false)
+                isPlayingFavourites = true
+                initServiceAndPlaylist(Favourite.favoriteSongs, shuffle = false)
             }
 
             "NowPlaying" -> {
@@ -502,32 +508,32 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             "MusicAdapterSearch" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(MainActivity.MusicListSearch, shuffle = false)
             }
 
             "MusicAdapter" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
 
             "MainActivity" -> {
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = true)
             }
 
             "FavouritesShuffle" -> {
                 isPlayingPlaylist = false
-                initServiceAndPlaylist(favourite.favoriteSongs, shuffle = true)
-            }
-
-            "PlayNext" -> {
-                isPlayingPlaylist = false
-                initServiceAndPlaylist(PlayNext.playNextList, shuffle = false, playNext = true)
+                isPlayingFavourites = false
+                initServiceAndPlaylist(Favourite.favoriteSongs, shuffle = true)
             }
 
             "RecentMusic" -> {
                 MainActivity.musicAdapter.update()
                 isPlayingPlaylist = false
+                isPlayingFavourites = false
                 initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
             }
         }
@@ -537,7 +543,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
     private fun initServiceAndPlaylist(
         playlist: ArrayList<Music>,
         shuffle: Boolean,
-        playNext: Boolean = false,
     ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
@@ -545,7 +550,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         musicListPA = ArrayList()
         musicListPA.addAll(playlist)
         if (shuffle) isShuffle = true
-        if (!playNext) PlayNext.playNextList = ArrayList()
         setLayout()
         MainActivity.musicAdapter.update()
     }
@@ -607,6 +611,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
+        if (isPlayingFavourites) Favourite.adapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
         setLayout()
@@ -639,7 +644,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         else setSongPosition(true)
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
-        if (isPlayingPlaylist) PlaylistDetails.adapter.update()
+        if (isPlayingFavourites) Favourite.adapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
         try {

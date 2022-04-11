@@ -6,26 +6,26 @@
     app:cardBackgroundColor="@android:color/transparent">
 
     <ImageView
-        android:id="@+id/songImgFA"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/songImgPLN"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:contentDescription="@string/song_name"
         android:src="@drawable/image_background" />
 
     <TextView
-        android:id="@+id/songNameFA"
-        android:layout_width="100dp"
+        android:id="@+id/songNamePLN"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:background="@drawable/glassy_background"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="center_horizontal|center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
+        android:paddingVertical="5dp"
         android:scrollHorizontally="true"
         android:shadowColor="@android:color/black"
         android:shadowDx="10"

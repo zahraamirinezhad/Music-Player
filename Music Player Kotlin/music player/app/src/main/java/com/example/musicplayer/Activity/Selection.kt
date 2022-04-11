@@ -35,13 +35,13 @@ class Selection : AppCompatActivity() {
 
                 for (song in MainActivity.MusicListMA) {
                     var exist = false
-                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
+                    Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.forEachIndexed { index, music ->
                         if (song.id == music.id) {
                             exist = true
                         }
                     }
                     if (!exist) {
-                        playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(
+                        Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.add(
                             song
                         )
                     }
@@ -55,7 +55,7 @@ class Selection : AppCompatActivity() {
                         )
                     )
                 for (song in MainActivity.MusicListMA) {
-                    playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.clear()
+                    Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics.clear()
                 }
             }
             adapter.selectAll = binding.selectAll.isChecked

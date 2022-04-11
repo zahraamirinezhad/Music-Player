@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.PlaylistDetails
-import com.example.musicplayer.Activity.playlist
+import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.getImageArt
 import com.example.musicplayer.Music_Stuff.getReflectionBackground
 import com.example.musicplayer.Music_Stuff.myPlaylist
@@ -46,7 +46,7 @@ class PlaylistViewAdapter(
             builder.setTitle(playlistList[position].name)
                 .setMessage("Do you want to delete this playlist ?")
                 .setPositiveButton("YES") { dialog, _ ->
-                    playlist.listOfPlaylists.ref.removeAt(position)
+                    Playlist.listOfPlaylists.ref.removeAt(position)
                     refresh()
                     dialog.dismiss()
                 }
@@ -65,10 +65,10 @@ class PlaylistViewAdapter(
             ContextCompat.startActivity(context, intent, null)
         }
 
-        if (playlist.listOfPlaylists.ref[position].musics.size > 0) {
+        if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
             try {
                 val img = getImageArt(
-                    playlist.listOfPlaylists.ref[position].musics.get(0).path,
+                    Playlist.listOfPlaylists.ref[position].musics.get(0).path,
                     BitmapFactory.decodeResource(
                         context.resources,
                         R.drawable.image_background
@@ -119,8 +119,8 @@ class PlaylistViewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun refresh() {
         playlistList = ArrayList()
-        playlistList.addAll(playlist.listOfPlaylists.ref)
-        if (!playlist.listOfPlaylists.ref.isNotEmpty()) playlist.binding.instructionPA.visibility =
+        playlistList.addAll(Playlist.listOfPlaylists.ref)
+        if (!Playlist.listOfPlaylists.ref.isNotEmpty()) Playlist.binding.instructionPA.visibility =
             View.VISIBLE
         notifyDataSetChanged()
     }
