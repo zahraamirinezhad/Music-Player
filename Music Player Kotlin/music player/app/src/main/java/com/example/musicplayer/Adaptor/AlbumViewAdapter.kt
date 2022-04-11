@@ -7,7 +7,10 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -29,7 +32,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 
 
@@ -124,16 +126,27 @@ class AlbumViewAdapter(
                                 Player.songPosition = 0
                             }
 
-                            PlayNext.playNextList.addAll(
-                                MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
-                                    currentAlbum
-                                )]!!
-                            )
+                            for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                                currentAlbum
+                            )]!!) {
+                                if (!doesListContainsThisMusic(PlayNext.playNextList, music.id))
+                                    PlayNext.playNextList.add(music)
+                            }
                             Player.musicListPA = ArrayList()
                             Player.musicListPA.addAll(PlayNext.playNextList)
                         } catch (e: Exception) {
                             Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
                         }
+                    }
+                    R.id.add_to_favourites -> {
+                        for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                            currentAlbum
+                        )]!!) {
+                            if (!doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
+                                Favourite.favoriteSongs.add(music)
+                        }
+                        Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 true
@@ -156,6 +169,15 @@ class AlbumViewAdapter(
     fun updateAll() {
         notifyDataSetChanged()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateForSort(newList: LinkedHashMap<String, ArrayList<Music>>) {
+        listOfAlbums = LinkedHashMap()
+        for (x in newList.keys)
+            listOfAlbums[x] = newList[x]!!
+        notifyDataSetChanged()
+    }
+
 
     class SelectPlayList : DialogFragment() {
         var root: View? = null
@@ -198,10 +220,11 @@ class AlbumViewAdapter(
                     val username = binder.userNamePL.text
                     if (name != null && username != null && name.isNotEmpty() && username.isNotEmpty()) {
                         addPlaylist(name.toString(), username.toString())
+                        Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                            .show()
+                        dialog.dismiss()
+                        menu.dismiss()
                     }
-                    Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                    menu.dismiss()
                 }
             val customDialog = builder.create()
             customDialog.show()
@@ -221,17 +244,17 @@ class AlbumViewAdapter(
                 .show()
             else {
                 val tempPlaylist = myPlaylist()
-                tempPlaylist.name = name
-                tempPlaylist.createdBy = username
                 tempPlaylist.musics = ArrayList()
-                val calender = Calendar.getInstance().time
-                val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.US)
-                tempPlaylist.createdOn = sdf.format(calender)
                 tempPlaylist.musics.addAll(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                         currentAlbum
                     )]!!
                 )
+                tempPlaylist.name = name
+                tempPlaylist.createdBy = username
+                val calender = Calendar.getInstance().time
+                val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.US)
+                tempPlaylist.createdOn = sdf.format(calender)
                 Playlist.listOfPlaylists.ref.add(tempPlaylist)
             }
         }

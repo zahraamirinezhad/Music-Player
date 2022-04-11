@@ -13,14 +13,16 @@ import android.text.format.DateUtils
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
+import com.example.musicplayer.Activity.Favourite
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
-import com.example.musicplayer.Activity.Favourite
 import com.example.musicplayer.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 
@@ -56,16 +58,16 @@ fun formatDuration(duration: Long): String {
 }
 
 fun getImageArt(path: String, dr: Bitmap): ByteArray? {
-    try {
+    return try {
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(path)
-        return retriever.embeddedPicture
+        retriever.embeddedPicture
     } catch (e: Exception) {
         val bitmap = dr
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         val bitmapdata = stream.toByteArray()
-        return bitmapdata
+        bitmapdata
     }
 }
 
@@ -96,6 +98,14 @@ fun favouriteState(): Int {
     if (Player.fIndex != -1)
         return R.drawable.favorite_full_icon
     return R.drawable.favorite_empty_icon
+}
+
+fun doesListContainsThisMusic(list: ArrayList<Music>, ID: String): Boolean {
+    for (music in list) {
+        if (music.id == ID)
+            return true
+    }
+    return false
 }
 
 fun musicState(): Int {
@@ -261,5 +271,71 @@ fun getDetails(music: Music): SpannableStringBuilder {
         .append(DateUtils.formatElapsedTime(music.duration / 1000))
         .bold { append("\n\nLocation: ") }.append(music.path)
     return str
+}
+
+fun sortByMusicAmount(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
+//    val list = ArrayList<Map.Entry<String, ArrayList<Music>>>()
+//    list.addAll(listOfAlbums.entries)
+//
+//    list.sortWith(Comparator { p0, p1 -> p0!!.value.size - p1!!.value.size })
+//
+//    return listOfAlbums
+
+    val companyFounderSet: ArrayList<Map.Entry<String, ArrayList<Music>>> = ArrayList()
+    companyFounderSet.addAll(listOfAlbums.entries)
+
+    val companyFounderListEntry: List<Map.Entry<String, ArrayList<Music>>> = ArrayList(
+        companyFounderSet
+    )
+    Collections.sort(
+        companyFounderListEntry
+    ) { p0, p1 -> p1!!.value.size.compareTo(p0!!.value.size) }
+
+    listOfAlbums.clear()
+
+    for ((key, value) in companyFounderListEntry) {
+        listOfAlbums[key] = value
+    }
+
+    return listOfAlbums
+}
+
+fun sortByAlbumName(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
+    val names: ArrayList<String> = ArrayList()
+    names.addAll(listOfAlbums.keys)
+    quickSort(names, 0, names.size - 1)
+    val newList: LinkedHashMap<String, ArrayList<Music>> = LinkedHashMap()
+    for (x in names) {
+        newList[x] = listOfAlbums.getValue(x)
+    }
+    return newList
+
+}
+
+private fun swap(arr: ArrayList<String>, i: Int, j: Int) {
+    val temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+}
+
+private fun partition(arr: ArrayList<String>, low: Int, high: Int): Int {
+    val pivot = arr[high]
+    var i = low - 1
+    for (j in low until high) {
+        if (arr[j].lowercase() < pivot.lowercase()) {
+            i++
+            swap(arr, i, j)
+        }
+    }
+    swap(arr, i + 1, high)
+    return i + 1
+}
+
+private fun quickSort(arr: ArrayList<String>, low: Int, high: Int) {
+    if (low < high) {
+        val pi = partition(arr, low, high)
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
+    }
 }
 

@@ -14,4 +14,9 @@
         android:id="@+id/add_to_play_next_album_view"
         android:icon="@drawable/add_to_play_next"
         android:title="@string/add_to_play_next" />
+
+    <item
+        android:id="@+id/add_to_favourites"
+        android:icon="@drawable/favorite_full_icon"
+        android:title="@string/add_to_favourites" />
 </menu>

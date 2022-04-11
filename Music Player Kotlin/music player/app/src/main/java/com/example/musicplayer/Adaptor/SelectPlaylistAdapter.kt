@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Playlist
+import com.example.musicplayer.Music_Stuff.doesListContainsThisMusic
 import com.example.musicplayer.Music_Stuff.getImageArt
 import com.example.musicplayer.Music_Stuff.getReflectionBackground
 import com.example.musicplayer.Music_Stuff.myPlaylist
@@ -86,11 +87,13 @@ class SelectPlaylistAdapter(
         holder.createdOn.text = playlistList[position].createdOn
 
         holder.root.setOnClickListener {
-            playlistList[position].musics.addAll(
-                MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
-                    AlbumViewAdapter.currentAlbum
-                )]!!
-            )
+            for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                AlbumViewAdapter.currentAlbum
+            )]!!) {
+                if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
+                    playlistList[position].musics.add(music)
+                }
+            }
             Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
             AlbumViewAdapter.menu.dismiss()
         }

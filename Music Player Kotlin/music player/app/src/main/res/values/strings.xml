@@ -56,6 +56,7 @@
     <string name="set_as_alarm_ringtone">Set As Alarm Ringtone</string>
     <string name="add_to_play_list">Add to Playlist</string>
     <string name="add_to_play_next">Add to Play Next</string>
+    <string name="add_to_favourites">Add to Favourites</string>
     <string name="album_name">ALBUM NAME</string>
     <string name="album_image">ALBUM IMAGE</string>
     <string name="show_by_album">SHOW BY ALBUMS</string>
