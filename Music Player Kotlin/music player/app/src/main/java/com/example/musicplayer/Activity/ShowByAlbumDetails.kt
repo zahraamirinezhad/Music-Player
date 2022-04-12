@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.R
@@ -30,13 +29,6 @@ class ShowByAlbumDetails : AppCompatActivity() {
         setContentView(binding.root)
 
         currentAlbum = intent.extras?.get("index") as Int
-        val isFromPlayBTN = intent.getBooleanExtra("ItsFromPlayBTN", false)
-        if (isFromPlayBTN) {
-            val intent = Intent(this, Player::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "AlbumViewPlay")
-            ContextCompat.startActivity(this, intent, null)
-        }
         binding.albumMusicRV.setItemViewCacheSize(10)
         binding.albumMusicRV.setHasFixedSize(true)
         binding.albumMusicRV.layoutManager = LinearLayoutManager(this)

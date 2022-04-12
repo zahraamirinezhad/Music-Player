@@ -467,6 +467,17 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 )
             }
 
+            "ArtistDetailsAdapter" -> {
+                isPlayingPlaylist = false
+                isPlayingFavourites = false
+                initServiceAndPlaylist(
+                    MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                        ShowByArtistDetails.currentArtist
+                    )]!!,
+                    shuffle = false
+                )
+            }
+
             "AlbumViewPlay" -> {
                 isPlayingPlaylist = false
                 isPlayingFavourites = false

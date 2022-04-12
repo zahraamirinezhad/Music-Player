@@ -20,38 +20,34 @@
         android:textSize="30sp"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <TextView
         android:id="@+id/showBySongs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:text="@string/show_by_song"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:text="@string/show_by_song"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/showByAlbums"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:text="@string/show_by_album"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:text="@string/show_by_album"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/showByArtist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:text="@string/show_by_artist"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -27,6 +27,7 @@ class MusicAdapter(
     var favourites: Boolean = false,
     val selectionActivity: Boolean = false,
     val album: Boolean = false,
+    val artist: Boolean = false,
     var selectAll: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
@@ -257,6 +258,12 @@ class MusicAdapter(
             album -> {
                 holder.root.setOnClickListener {
                     sendIntent("AlbumDetailsAdapter", position)
+                }
+            }
+
+            artist -> {
+                holder.root.setOnClickListener {
+                    sendIntent("ArtistDetailsAdapter", position)
                 }
             }
 

@@ -59,9 +59,12 @@
     <string name="add_to_favourites">Add to Favourites</string>
     <string name="album_name">ALBUM NAME</string>
     <string name="album_image">ALBUM IMAGE</string>
-    <string name="show_by_album">SHOW BY ALBUMS</string>
-    <string name="show_by_song">SHOW BY SONGS</string>
+    <string name="show_by_album">SHOW BY ALBUM</string>
+    <string name="show_by_artist">SHOW BY ARTIST</string>
+    <string name="show_by_song">SHOW BY SONG</string>
     <string name="show_by">SHOW BY</string>
     <string name="seek_for_lyrics">SEEK FOR LYRICS</string>
     <string name="save_lyrics">SAVE LYRICS</string>
+    <string name="artist_img">ARTIST IMAGE</string>
+    <string name="artist_name">ARTIST NAME</string>
 </resources>

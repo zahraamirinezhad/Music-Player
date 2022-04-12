@@ -17,6 +17,6 @@
 
     <item
         android:id="@+id/add_to_favourites"
-        android:icon="@drawable/favorite_full_icon"
+        android:icon="@drawable/add_to_favourites"
         android:title="@string/add_to_favourites" />
 </menu>

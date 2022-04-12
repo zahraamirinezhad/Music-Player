@@ -90,16 +90,14 @@ class PlaylistViewAdapter(
                     )
                 }
 
-                val dr: Drawable = BitmapDrawable(image)
-                holder.image.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
+                holder.image.setImageBitmap(getReflectionBackground(image))
             } catch (e: Exception) {
                 val image = BitmapFactory.decodeResource(
                     context.resources,
                     R.drawable.image_background
                 )
 
-                val dr: Drawable = BitmapDrawable(image)
-                holder.image.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
+                holder.image.setImageBitmap(getReflectionBackground(image))
             }
         } else {
             val image = BitmapFactory.decodeResource(
@@ -107,8 +105,7 @@ class PlaylistViewAdapter(
                 R.drawable.image_background
             )
 
-            val dr: Drawable = BitmapDrawable(image)
-            holder.image.setImageBitmap(getReflectionBackground((dr as BitmapDrawable).bitmap))
+            holder.image.setImageBitmap(getReflectionBackground(image))
         }
     }
 

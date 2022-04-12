@@ -11,7 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.*
 import com.example.musicplayer.Adaptor.AlbumViewAdapter
+import com.example.musicplayer.Adaptor.ArtistViewAdapter
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityMainBinding
@@ -37,15 +38,14 @@ import com.google.gson.reflect.TypeToken
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
-    //Creating Binding Object
     private lateinit var toggle: ActionBarDrawerToggle
-
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var musicAdapter: MusicAdapter
-
         @SuppressLint("StaticFieldLeak")
         lateinit var albumAdapter: AlbumViewAdapter
+        @SuppressLint("StaticFieldLeak")
+        lateinit var artistAdapter: ArtistViewAdapter
         lateinit var binding: ActivityMainBinding
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListSearch: ArrayList<Music>
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         var sortBy = 0
         var albumSortBy = 0
         lateinit var songByAlbum: LinkedHashMap<String, ArrayList<Music>>
+        lateinit var songByArtist: LinkedHashMap<String, ArrayList<Music>>
         lateinit var allMusicsLyrics: LinkedHashMap<String, String>
         val sortingList = arrayOf(
             MediaStore.Audio.Media.DATE_ADDED + " DESC",
@@ -273,9 +274,9 @@ class MainActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this@MainActivity)
         dialog.setContentView(R.layout.bottom_sheet_dialog_show_by)
         dialog.show()
-        dialog.findViewById<LinearLayout>(R.id.showByAlbums)?.setOnClickListener {
+        dialog.findViewById<TextView>(R.id.showByAlbums)?.setOnClickListener {
             if (binding.musicRV.adapter !is AlbumViewAdapter) {
-                binding.showByType.text = "ALBUMS"
+                binding.showByType.text = "ALBUM"
                 binding.musicRV.layoutManager = GridLayoutManager(this, 2)
                 binding.musicRV.adapter = albumAdapter
                 val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
@@ -284,11 +285,22 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.dismiss()
         }
-        dialog.findViewById<LinearLayout>(R.id.showBySongs)?.setOnClickListener {
+        dialog.findViewById<TextView>(R.id.showBySongs)?.setOnClickListener {
             if (binding.musicRV.adapter !is MusicAdapter) {
-                binding.showByType.text = "SONGS"
+                binding.showByType.text = "SONG"
                 binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
                 binding.musicRV.adapter = musicAdapter
+                val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
+                editor.putString("SHOW BY", (binding.musicRV.adapter as Any).javaClass.toString())
+                editor.apply()
+            }
+            dialog.dismiss()
+        }
+        dialog.findViewById<TextView>(R.id.showByArtist)?.setOnClickListener {
+            if (binding.musicRV.adapter !is ArtistViewAdapter) {
+                binding.showByType.text = "ARTIST"
+                binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+                binding.musicRV.adapter = artistAdapter
                 val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
                 editor.putString("SHOW BY", (binding.musicRV.adapter as Any).javaClass.toString())
                 editor.apply()
@@ -329,16 +341,22 @@ class MainActivity : AppCompatActivity() {
             songByAlbum = newList
         }
         albumAdapter = AlbumViewAdapter(this, songByAlbum)
+        artistAdapter = ArtistViewAdapter(this, songByArtist)
         val editor = getSharedPreferences("ShowBy", MODE_PRIVATE)
         val show = editor.getString("SHOW BY", "")
         if (show.equals("class com.example.musicplayer.Adaptor.MusicAdapter") || show.equals("") || show == null) {
             binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
             binding.musicRV.adapter = musicAdapter
-            binding.showByType.text = "SONGS"
-        } else if (show.equals("class com.example.musicplayer.Adaptor.AlbumViewAdapter")) {
+            binding.showByType.text = "SONG"
+        } else if (show == "class com.example.musicplayer.Adaptor.AlbumViewAdapter") {
             binding.musicRV.layoutManager = GridLayoutManager(this@MainActivity, 2)
             binding.musicRV.adapter = albumAdapter
-            binding.showByType.text = "ALBUMS"
+            binding.showByType.text = "ALBUM"
+        }
+        else if (show == "class com.example.musicplayer.Adaptor.ArtistViewAdapter") {
+            binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+            binding.musicRV.adapter = artistAdapter
+            binding.showByType.text = "ARTIST"
         }
         if (Player.musicService != null) {
             musicAdapter.updateMusicList(MusicListMA)
@@ -357,6 +375,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         songByAlbum = LinkedHashMap()
+        songByArtist = LinkedHashMap()
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
@@ -411,10 +430,17 @@ class MainActivity : AppCompatActivity() {
                     if (file.exists()) {
                         tempList.add(music)
                         if (songByAlbum.containsKey(music.album)) {
-                            songByAlbum.get(music.album)?.add(music)
+                            songByAlbum[music.album]?.add(music)
                         } else {
-                            songByAlbum.put(music.album, ArrayList())
-                            songByAlbum.get(music.album)?.add(music)
+                            songByAlbum[music.album] = ArrayList()
+                            songByAlbum[music.album]?.add(music)
+                        }
+
+                        if (songByArtist.containsKey(music.artist)) {
+                            songByArtist[music.artist]?.add(music)
+                        } else {
+                            songByArtist[music.artist] = ArrayList()
+                            songByArtist[music.artist]?.add(music)
                         }
                     }
                 } while (cursor.moveToNext())

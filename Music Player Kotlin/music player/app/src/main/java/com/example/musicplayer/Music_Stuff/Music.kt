@@ -184,7 +184,7 @@ fun getReflectionBackground(image: Bitmap): Bitmap? {
 
     // This will not scale but will flip on the Y axis
     val matrix = Matrix()
-    matrix.preScale(1F, -1F)
+    matrix.preScale(-1F, 1F)
 
     // Create a Bitmap with the flip matix applied to it.
     // We only want the bottom half of the image
