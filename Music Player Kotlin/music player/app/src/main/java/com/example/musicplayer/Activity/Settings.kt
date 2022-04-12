@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayer.Adaptor.AlbumViewAdapter
+import com.example.musicplayer.Adaptor.ArtistViewAdapter
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivitySettingsBinding
@@ -27,10 +28,16 @@ class Settings : AppCompatActivity() {
     }
 
     private fun sort() {
-        if (MainActivity.binding.musicRV.adapter is MusicAdapter) {
-            sortByMusic()
-        } else if (MainActivity.binding.musicRV.adapter is AlbumViewAdapter) {
-            sortByAlbum()
+        when (MainActivity.binding.musicRV.adapter) {
+            is MusicAdapter -> {
+                sortByMusic()
+            }
+            is AlbumViewAdapter -> {
+                sortByAlbum()
+            }
+            is ArtistViewAdapter -> {
+                sortByArtist()
+            }
         }
     }
 
@@ -43,6 +50,27 @@ class Settings : AppCompatActivity() {
                 val editor =
                     getSharedPreferences("SORTING_ALBUM", MODE_PRIVATE).edit()
                 editor.putInt("SORT ORDER FOR ALBUM", currentSort)
+                editor.apply()
+            }
+
+        }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
+            currentSort = wich
+        }
+        val customDialog = build.create()
+        customDialog.show()
+        customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(Color.GREEN)
+    }
+
+    private fun sortByArtist() {
+        val menuList = arrayOf("Artist Name", "Song Amount")
+        var currentSort = MainActivity.artistSortBy
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+            if (MainActivity.artistSortBy != currentSort) {
+                val editor =
+                    getSharedPreferences("SORTING_ARTIST", MODE_PRIVATE).edit()
+                editor.putInt("SORT ORDER FOR ARTIST", currentSort)
                 editor.apply()
             }
 

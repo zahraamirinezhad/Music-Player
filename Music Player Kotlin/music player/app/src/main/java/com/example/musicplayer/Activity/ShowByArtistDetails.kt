@@ -1,22 +1,14 @@
-package com.example.musicplayer
+package com.example.musicplayer.Activity
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicplayer.Activity.MainActivity
-import com.example.musicplayer.Activity.Player
-import com.example.musicplayer.Activity.Playlist
-import com.example.musicplayer.Activity.ShowByAlbumDetails
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.getImageArt
 import com.example.musicplayer.Music_Stuff.getReflectionBackground
+import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityShowByArtistDetailsBinding
 
 class ShowByArtistDetails : AppCompatActivity() {

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.getImageArt
 import com.example.musicplayer.R
-import com.example.musicplayer.ShowByArtistDetails
+import com.example.musicplayer.Activity.ShowByArtistDetails
 import com.example.musicplayer.databinding.ArtistViewBinding
 
 
@@ -82,5 +82,18 @@ class ArtistViewAdapter(
 
     override fun getItemCount(): Int {
         return listOfArtists.size
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateAll() {
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateForSort(newList: LinkedHashMap<String, ArrayList<Music>>) {
+        listOfArtists = LinkedHashMap()
+        for (x in newList.keys)
+            listOfArtists[x] = newList[x]!!
+        notifyDataSetChanged()
     }
 }

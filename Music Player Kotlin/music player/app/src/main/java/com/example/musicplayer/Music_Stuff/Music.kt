@@ -274,13 +274,6 @@ fun getDetails(music: Music): SpannableStringBuilder {
 }
 
 fun sortByMusicAmount(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
-//    val list = ArrayList<Map.Entry<String, ArrayList<Music>>>()
-//    list.addAll(listOfAlbums.entries)
-//
-//    list.sortWith(Comparator { p0, p1 -> p0!!.value.size - p1!!.value.size })
-//
-//    return listOfAlbums
-
     val companyFounderSet: ArrayList<Map.Entry<String, ArrayList<Music>>> = ArrayList()
     companyFounderSet.addAll(listOfAlbums.entries)
 
@@ -300,7 +293,7 @@ fun sortByMusicAmount(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): Li
     return listOfAlbums
 }
 
-fun sortByAlbumName(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
+fun sortByName(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
     val names: ArrayList<String> = ArrayList()
     names.addAll(listOfAlbums.keys)
     quickSort(names, 0, names.size - 1)
@@ -309,7 +302,6 @@ fun sortByAlbumName(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): Link
         newList[x] = listOfAlbums.getValue(x)
     }
     return newList
-
 }
 
 private fun swap(arr: ArrayList<String>, i: Int, j: Int) {

@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/slash_screen">
         <activity
-            android:name=".ShowByArtistDetails"
+            android:name=".Activity.ShowByArtistDetails"
             android:exported="false" />
         <activity
             android:name=".Activity.ShowByAlbumDetails"
