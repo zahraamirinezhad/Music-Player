@@ -1,9 +1,11 @@
 package com.example.musicplayer.Activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.getImageArt
@@ -30,6 +32,13 @@ class ShowByArtistDetails : AppCompatActivity() {
         setContentView(binding.root)
 
         currentArtist = intent.extras?.get("index") as Int
+        val isFromPlay = intent.extras!!.getBoolean("ItsFromPlayBTN",false)
+        if(isFromPlay){
+            val intent = Intent(this, Player::class.java)
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "ArtistDetailsAdapter")
+            ContextCompat.startActivity(this, intent, null)
+        }
         binding.musicRVSBAD.setItemViewCacheSize(10)
         binding.musicRVSBAD.setHasFixedSize(true)
         binding.musicRVSBAD.layoutManager = LinearLayoutManager(this)

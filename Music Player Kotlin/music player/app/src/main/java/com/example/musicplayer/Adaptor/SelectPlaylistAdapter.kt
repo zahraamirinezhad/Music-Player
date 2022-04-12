@@ -87,15 +87,27 @@ class SelectPlaylistAdapter(
         holder.createdOn.text = playlistList[position].createdOn
 
         holder.root.setOnClickListener {
-            for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
-                AlbumViewAdapter.currentAlbum
-            )]!!) {
-                if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
-                    playlistList[position].musics.add(music)
+            if (MainActivity.binding.musicRV.adapter is AlbumViewAdapter) {
+                for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                    AlbumViewAdapter.currentAlbum
+                )]!!) {
+                    if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
+                        playlistList[position].musics.add(music)
+                    }
                 }
+                Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
+                AlbumViewAdapter.menu.dismiss()
+            } else if (MainActivity.binding.musicRV.adapter is ArtistViewAdapter) {
+                for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                    ArtistViewAdapter.currentArtist
+                )]!!) {
+                    if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
+                        playlistList[position].musics.add(music)
+                    }
+                }
+                Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
+                ArtistViewAdapter.menu.dismiss()
             }
-            Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
-            AlbumViewAdapter.menu.dismiss()
         }
 
     }

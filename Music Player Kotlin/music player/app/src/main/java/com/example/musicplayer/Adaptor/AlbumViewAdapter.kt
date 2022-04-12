@@ -134,6 +134,8 @@ class AlbumViewAdapter(
                             }
                             Player.musicListPA = ArrayList()
                             Player.musicListPA.addAll(PlayNext.playNextList)
+                            Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                                .show()
                         } catch (e: Exception) {
                             Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
                         }
