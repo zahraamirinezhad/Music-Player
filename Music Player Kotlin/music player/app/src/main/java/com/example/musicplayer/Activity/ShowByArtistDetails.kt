@@ -32,8 +32,8 @@ class ShowByArtistDetails : AppCompatActivity() {
         setContentView(binding.root)
 
         currentArtist = intent.extras?.get("index") as Int
-        val isFromPlay = intent.extras!!.getBoolean("ItsFromPlayBTN",false)
-        if(isFromPlay){
+        val isFromPlay = intent.extras!!.getBoolean("ItsFromPlayBTN", false)
+        if (isFromPlay) {
             val intent = Intent(this, Player::class.java)
             intent.putExtra("index", 0)
             intent.putExtra("class", "ArtistDetailsAdapter")
@@ -85,5 +85,16 @@ class ShowByArtistDetails : AppCompatActivity() {
 
             binding.showByArtistDTBG.setImageBitmap(getReflectionBackground(image))
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!!.size == 0)
+            MainActivity.songByArtist.remove(
+                MainActivity.songByArtist.keys.elementAt(
+                    currentArtist
+                )
+            )
+        MainActivity.artistAdapter.updateAll()
     }
 }

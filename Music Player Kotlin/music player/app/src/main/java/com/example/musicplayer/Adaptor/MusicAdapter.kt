@@ -204,6 +204,20 @@ class MusicAdapter(
                                     }
                                 }
                             }
+                            for (x in MainActivity.songByArtist.keys) {
+                                if (MainActivity.songByArtist[x]!![MainActivity.songByArtist[x]!!.size - 1].id == removed.id) {
+                                    MainActivity.songByArtist[x]!!.removeLast()
+                                    break
+                                } else {
+                                    for (i in 0 until MainActivity.songByArtist[x]!!.size) {
+                                        if (MainActivity.songByArtist[x]!![i].id == removed.id) {
+                                            MainActivity.songByArtist[x]!!.removeAt(i)
+                                            break
+                                        }
+
+                                    }
+                                }
+                            }
                             if (Player.isMusicListPaInitialized() && Player.musicListPA[Player.songPosition].id == removed.id) {
                                 Player.musicListPA.removeAt(Player.songPosition)
                                 next()
@@ -218,7 +232,9 @@ class MusicAdapter(
                                 }
                             }
                             MainActivity.MusicListMA.remove(removed)
-                            if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == "class com.example.musicplayer.Adaptor.AlbumViewAdapter"
+                            if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == context.getString(
+                                    R.string.album_adapter_class
+                                )
                             ) {
                                 musicList = ArrayList()
                                 musicList.addAll(
@@ -227,14 +243,27 @@ class MusicAdapter(
                                     )]!!
                                 )
                                 ShowByAlbumDetails.adapter.update()
-                            } else if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == "class com.example.musicplayer.Adaptor.MusicAdapter"
+                            } else if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == context.getString(
+                                    R.string.artist_adapter_class
+                                )
+                            ) {
+                                musicList = ArrayList()
+                                musicList.addAll(
+                                    MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                                        ShowByArtistDetails.currentArtist
+                                    )]!!
+                                )
+                                ShowByArtistDetails.adapter.update()
+                            } else if (MainActivity.binding.musicRV.adapter!!.javaClass.toString() == context.getString(
+                                    R.string.music_adapter_class
+                                )
                             ) {
                                 musicList = ArrayList()
                                 musicList.addAll(MainActivity.MusicListMA)
                                 MainActivity.musicAdapter.update()
                             }
 
-                            file.delete()
+//                            file.delete()
                         }
                     }
                 }
