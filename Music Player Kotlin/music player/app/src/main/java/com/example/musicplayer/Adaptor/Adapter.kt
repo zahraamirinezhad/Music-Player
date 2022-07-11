@@ -15,6 +15,7 @@ import com.example.musicplayer.Music_Stuff.NowPlaying
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.MusicViewBinding
+import java.io.File
 
 open class Adapter(
     val context: Context,
@@ -167,5 +168,91 @@ open class Adapter(
         musicList = ArrayList()
         musicList = Playlist.listOfPlaylists.ref[PlaylistDetails.currentPlaylist].musics
         notifyDataSetChanged()
+    }
+
+    fun deleteMusic(pos: Int) {
+        val file = File(musicList[pos].path)
+        if (file.exists()) {
+            val removed = musicList[pos]
+
+            if (Favourite.favoriteSongs.contains(removed)) {
+                Favourite.favoriteSongs.remove(removed)
+            }
+            if (Playlist.listOfPlaylists.ref.size != 0) {
+                for (x in Playlist.listOfPlaylists.ref) {
+                    if (x.musics.contains(removed)) {
+                        x.musics.remove(removed)
+                    }
+                }
+            }
+            for (x in MainActivity.songByAlbum.keys) {
+                if (MainActivity.songByAlbum[x]!![MainActivity.songByAlbum[x]!!.size - 1].id == removed.id) {
+                    MainActivity.songByAlbum[x]!!.removeLast()
+                    break
+                } else {
+                    for (i in 0 until MainActivity.songByAlbum[x]!!.size) {
+                        if (MainActivity.songByAlbum[x]!![i].id == removed.id) {
+                            MainActivity.songByAlbum[x]!!.removeAt(i)
+                            break
+                        }
+
+                    }
+                }
+            }
+            for (x in MainActivity.songByArtist.keys) {
+                if (MainActivity.songByArtist[x]!![MainActivity.songByArtist[x]!!.size - 1].id == removed.id) {
+                    MainActivity.songByArtist[x]!!.removeLast()
+                    break
+                } else {
+                    for (i in 0 until MainActivity.songByArtist[x]!!.size) {
+                        if (MainActivity.songByArtist[x]!![i].id == removed.id) {
+                            MainActivity.songByArtist[x]!!.removeAt(i)
+                            break
+                        }
+
+                    }
+                }
+            }
+            if (Player.isMusicListPaInitialized() && Player.musicListPA[Player.songPosition].id == removed.id) {
+                Player.musicListPA.removeAt(Player.songPosition)
+                next()
+            } else if (Player.isMusicListPaInitialized()) {
+                for (i in 0 until Player.musicListPA.size) {
+                    if (Player.musicListPA[i].id == removed.id) {
+                        if (i < Player.songPosition)
+                            Player.songPosition--
+                        Player.musicListPA.removeAt(i)
+                        break
+                    }
+                }
+            }
+            MainActivity.MusicListMA.remove(removed)
+            if (MainActivity.binding.musicArtistAlbum.currentItem == 1
+            ) {
+                musicList = ArrayList()
+                musicList.addAll(
+                    MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
+                        ShowByAlbumDetails.currentAlbum
+                    )]!!
+                )
+                ShowByAlbumDetails.adapter.update()
+            } else if (MainActivity.binding.musicArtistAlbum.currentItem == 0
+            ) {
+                musicList = ArrayList()
+                musicList.addAll(
+                    MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                        ShowByArtistDetails.currentArtist
+                    )]!!
+                )
+                ShowByArtistDetails.adapter.update()
+            } else if (MainActivity.binding.musicArtistAlbum.currentItem == 2
+            ) {
+                musicList = ArrayList()
+                musicList.addAll(MainActivity.MusicListMA)
+                MainActivity.musicAdapter.update()
+            }
+
+//                            file.delete()
+        }
     }
 }

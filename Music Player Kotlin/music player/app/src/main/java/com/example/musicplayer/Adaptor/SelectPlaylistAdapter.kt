@@ -84,7 +84,7 @@ class SelectPlaylistAdapter(
         holder.createdOn.text = playlistList[position].createdOn
 
         holder.root.setOnClickListener {
-            if (MainActivity.binding.musicRV.adapter is AlbumViewAdapter) {
+            if (MainActivity.binding.musicArtistAlbum.currentItem == 1) {
                 for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                     AlbumViewAdapter.currentAlbum
                 )]!!) {
@@ -94,7 +94,7 @@ class SelectPlaylistAdapter(
                 }
                 Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
                 AlbumViewAdapter.menu.dismiss()
-            } else if (MainActivity.binding.musicRV.adapter is ArtistViewAdapter) {
+            } else if (MainActivity.binding.musicArtistAlbum.currentItem == 0) {
                 for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
                     ArtistViewAdapter.currentArtist
                 )]!!) {

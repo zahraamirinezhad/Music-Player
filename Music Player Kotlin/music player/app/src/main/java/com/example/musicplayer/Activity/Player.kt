@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.musicplayer.*
+import com.example.musicplayer.Fragment.PlayerViewPagerAdapter
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.databinding.ActivityPlayerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -101,7 +102,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
             val wormDotsIndicator = binding.wormDotsIndicator
             val viewPager = binding.viewPager
-            val adapter = MyAdapter(supportFragmentManager)
+            val adapter = PlayerViewPagerAdapter(supportFragmentManager)
             adapter.addFrag(playing_song_image(), "SONG IMAGE")
             viewPager.adapter = adapter
             wormDotsIndicator.setViewPager(viewPager)
@@ -357,35 +358,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
         val wormDotsIndicator = binding.wormDotsIndicator
         val viewPager = binding.viewPager
-        val adapter = MyAdapter(supportFragmentManager)
+        val adapter = PlayerViewPagerAdapter(supportFragmentManager)
         adapter.addFrag(playing_song_image(), "SONG IMAGE")
         adapter.addFrag(playin_song_lyrics(), "SONG LYRICS")
         viewPager.adapter = adapter
         wormDotsIndicator.setViewPager(viewPager)
-    }
-
-    @Suppress("DEPRECATION")
-    internal class MyAdapter(fm: FragmentManager) :
-        FragmentPagerAdapter(fm) {
-        val mFragmentList = ArrayList<Fragment>()
-        private val mFragmentTitleList = ArrayList<String>()
-
-        override fun getItem(position: Int): Fragment {
-            return mFragmentList[position]
-        }
-
-        fun addFrag(fragment: Fragment, title: String) {
-            mFragmentList.add(fragment)
-            mFragmentTitleList.add(title)
-        }
-
-        override fun getCount(): Int {
-            return mFragmentList.size
-        }
-
-        override fun getPageTitle(position: Int): CharSequence {
-            return mFragmentTitleList[position]
-        }
     }
 
     private fun createMediaPlayer() {

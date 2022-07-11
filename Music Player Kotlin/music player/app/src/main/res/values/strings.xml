@@ -67,9 +67,6 @@
     <string name="save_lyrics">SAVE LYRICS</string>
     <string name="artist_img">ARTIST IMAGE</string>
     <string name="artist_name">ARTIST NAME</string>
-    <string name="music_adapter_class">class com.example.musicplayer.Adaptor.MusicAdapter</string>
-    <string name="album_adapter_class">class com.example.musicplayer.Adaptor.AlbumViewAdapter</string>
-    <string name="artist_adapter_class">class com.example.musicplayer.Adaptor.ArtistViewAdapter</string>
     <string name="song">SONG</string>
     <string name="album">ALBUM</string>
     <string name="artist">ARTIST</string>

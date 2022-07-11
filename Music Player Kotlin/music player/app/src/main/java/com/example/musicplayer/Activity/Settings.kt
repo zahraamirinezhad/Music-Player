@@ -28,14 +28,14 @@ class Settings : AppCompatActivity() {
     }
 
     private fun sort() {
-        when (MainActivity.binding.musicRV.adapter) {
-            is MusicAdapter -> {
+        when (MainActivity.binding.musicArtistAlbum.currentItem) {
+            2 -> {
                 sortByMusic()
             }
-            is AlbumViewAdapter -> {
+            1 -> {
                 sortByAlbum()
             }
-            is ArtistViewAdapter -> {
+            0 -> {
                 sortByArtist()
             }
         }
