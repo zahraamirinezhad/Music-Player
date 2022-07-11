@@ -3,14 +3,11 @@ package com.example.musicplayer.Adaptor
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.*
 import com.example.musicplayer.Activity.PlayNext
@@ -38,7 +35,7 @@ class PlayNextAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: MyHolder, @SuppressLint("RecyclerView") position: Int) {
-        val img = getImageArt(
+        val img = Stuff.getImageArt(
             musicList[position].path, BitmapFactory.decodeResource(
                 context.resources,
                 R.drawable.music_player_icon_slash_screen
@@ -70,7 +67,7 @@ class PlayNextAdapter(
                 LayoutInflater.from(context)
                     .inflate(R.layout.more_feature, holder.root, false)
             val bindingMF = MoreFeatureBinding.bind(customDialog)
-            val dialog = getDialogForOnLongClickListener(context, customDialog)
+            val dialog = CustomDialog.getDialogForOnLongClickListener(context, customDialog)
             bindingMF.AddToPNBtn.text = "Remove"
             bindingMF.deleteBtn.visibility = View.GONE
             bindingMF.AddToPNBtn.setOnClickListener {
@@ -94,8 +91,8 @@ class PlayNextAdapter(
                 val binder = DetailsViewBinding.bind(detailsDialog)
                 binder.detailsTV.setTextColor(Color.WHITE)
                 binder.root.setBackgroundColor(Color.TRANSPARENT)
-                getInfoDialog(context, detailsDialog)
-                val str = getDetails(music = musicList[position])
+                CustomDialog.getInfoDialog(context, detailsDialog)
+                val str = Stuff.getDetails(music = musicList[position])
                 binder.detailsTV.text = str
             }
             return@setOnLongClickListener true

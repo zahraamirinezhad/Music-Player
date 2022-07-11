@@ -4,16 +4,18 @@ import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import com.example.musicplayer.Activity.*
-import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.CustomDialog
+import com.example.musicplayer.Music_Stuff.Music
+import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
-class MusicAdapter(
+class AlbumAdapter(
     context: Context,
-    musicList: ArrayList<Music>
+    musicList: ArrayList<Music>,
 ) : Adapter(context, musicList) {
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -162,16 +164,7 @@ class MusicAdapter(
         }
 
         holder.root.setOnClickListener {
-            when {
-                MainActivity.search -> sendIntent("MusicAdapterSearch", position)
-                musicList[position].id == Player.nowPlayingID -> sendIntent(
-                    "NowPlaying",
-                    position
-                )
-                else -> {
-                    sendIntent("MusicAdapter", position)
-                }
-            }
+            sendIntent("AlbumDetailsAdapter", position)
         }
     }
 }

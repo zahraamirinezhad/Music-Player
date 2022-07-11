@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicplayer.Adaptor.MusicAdapter
+import com.example.musicplayer.Adaptor.SelectionAdapter
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivitySelectionBinding
 
 class Selection : AppCompatActivity() {
     lateinit var binding: ActivitySelectionBinding
-    lateinit var adapter: MusicAdapter
+    lateinit var adapter: SelectionAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.blackTheme)
@@ -20,7 +20,7 @@ class Selection : AppCompatActivity() {
         binding.selectionRV.setItemViewCacheSize(10)
         binding.selectionRV.setHasFixedSize(true)
         binding.selectionRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, MainActivity.MusicListMA, selectionActivity = true)
+        adapter = SelectionAdapter(this, MainActivity.MusicListMA)
         binding.selectionRV.adapter = adapter
 
         binding.selectAll.setOnClickListener {

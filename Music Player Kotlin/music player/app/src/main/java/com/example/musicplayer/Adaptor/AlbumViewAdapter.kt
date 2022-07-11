@@ -62,7 +62,7 @@ class AlbumViewAdapter(
 
         if (listOfAlbums[listOfAlbums.keys.elementAt(position)]?.size != 0) {
             try {
-                val img = getImageArt(
+                val img = Stuff.getImageArt(
                     listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
                         0
                     )!!.path,
@@ -129,7 +129,7 @@ class AlbumViewAdapter(
                             for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                                 currentAlbum
                             )]!!) {
-                                if (!doesListContainsThisMusic(PlayNext.playNextList, music.id))
+                                if (!Stuff.doesListContainsThisMusic(PlayNext.playNextList, music.id))
                                     PlayNext.playNextList.add(music)
                             }
                             Player.musicListPA = ArrayList()
@@ -144,7 +144,7 @@ class AlbumViewAdapter(
                         for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                             currentAlbum
                         )]!!) {
-                            if (!doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
+                            if (!Stuff.doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
                                 Favourite.favoriteSongs.add(music)
                         }
                         Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
@@ -245,7 +245,7 @@ class AlbumViewAdapter(
             if (playlistExist) Toast.makeText(context, "Playlist Exist !!", Toast.LENGTH_SHORT)
                 .show()
             else {
-                val tempPlaylist = myPlaylist()
+                val tempPlaylist = MyPlaylist()
                 tempPlaylist.musics = ArrayList()
                 tempPlaylist.musics.addAll(
                     MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(

@@ -15,8 +15,8 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
-import com.example.musicplayer.Music_Stuff.checkPlaylist
-import com.example.musicplayer.Music_Stuff.getImageArt
+import com.example.musicplayer.Adaptor.PlaylistDetailsAdapter
+import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,7 +27,7 @@ class PlaylistDetails : AppCompatActivity() {
         var currentPlaylist = -1
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: PlaylistDetailsAdapter
     }
 
     lateinit var binding: ActivityPlaylistDetailsBinding
@@ -40,15 +40,14 @@ class PlaylistDetails : AppCompatActivity() {
         setContentView(binding.root)
         currentPlaylist = intent.extras?.get("index") as Int
         Playlist.listOfPlaylists.ref[currentPlaylist].musics =
-            checkPlaylist(Playlist.listOfPlaylists.ref[currentPlaylist].musics)
+            Stuff.checkPlaylist(Playlist.listOfPlaylists.ref[currentPlaylist].musics)
 
         binding.playlistPLDRV.setItemViewCacheSize(10)
         binding.playlistPLDRV.setHasFixedSize(true)
         binding.playlistPLDRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(
+        adapter = PlaylistDetailsAdapter(
             this,
             Playlist.listOfPlaylists.ref[currentPlaylist].musics,
-            playlistDetails = true
         )
         binding.playlistPLDRV.adapter = adapter
 
@@ -107,7 +106,7 @@ class PlaylistDetails : AppCompatActivity() {
         binding.moreInfoPLD.text =
             "Created On \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdOn + "\n By \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdBy
         if (adapter.itemCount > 0) {
-            val img = getImageArt(
+            val img = Stuff.getImageArt(
                 Playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path,
                 BitmapFactory.decodeResource(
                     this.resources,

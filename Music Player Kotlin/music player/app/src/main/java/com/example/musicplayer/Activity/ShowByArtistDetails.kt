@@ -8,8 +8,9 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.MusicAdapter
-import com.example.musicplayer.Music_Stuff.getImageArt
-import com.example.musicplayer.Music_Stuff.getReflectionBackground
+import com.example.musicplayer.Adaptor.ShowByArtistAdapter
+import com.example.musicplayer.Music_Stuff.ImageFormatter
+import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityShowByArtistDetailsBinding
 
@@ -18,7 +19,7 @@ class ShowByArtistDetails : AppCompatActivity() {
         var currentArtist = -1
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: ShowByArtistAdapter
         fun isAdapterSHBALInitialized(): Boolean {
             return this::adapter.isInitialized
         }
@@ -42,10 +43,9 @@ class ShowByArtistDetails : AppCompatActivity() {
         binding.musicRVSBAD.setItemViewCacheSize(10)
         binding.musicRVSBAD.setHasFixedSize(true)
         binding.musicRVSBAD.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(
+        adapter = ShowByArtistAdapter(
             this,
             MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!!,
-            artist = true
         )
         binding.musicRVSBAD.adapter = adapter
     }
@@ -53,7 +53,7 @@ class ShowByArtistDetails : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         try {
-            val img = getImageArt(
+            val img = Stuff.getImageArt(
                 MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].path,
                 BitmapFactory.decodeResource(
                     resources,
@@ -76,14 +76,14 @@ class ShowByArtistDetails : AppCompatActivity() {
                 )
             }
 
-            binding.showByArtistDTBG.setImageBitmap(getReflectionBackground(image))
+            binding.showByArtistDTBG.setImageBitmap(ImageFormatter.getReflectionBackground(image))
         } catch (e: Exception) {
             val image = BitmapFactory.decodeResource(
                 resources,
                 R.drawable.music_bg
             )
 
-            binding.showByArtistDTBG.setImageBitmap(getReflectionBackground(image))
+            binding.showByArtistDTBG.setImageBitmap(ImageFormatter.getReflectionBackground(image))
         }
     }
 

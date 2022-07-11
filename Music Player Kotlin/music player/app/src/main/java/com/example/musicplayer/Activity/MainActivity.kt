@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 if (jsonStringRecentMusic != null) {
                     val music: Music =
                         GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
-                    val pos = findMusicById(music)
+                    val pos = Stuff.findMusicById(music)
                     if (pos != -1) {
                         val intent = Intent(this, Player::class.java)
                         intent.putExtra("index", pos)
@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                                         when (albumSortBy) {
                                             0 -> {
                                                 val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                                    sortByName(
+                                                    Stuff.sortByName(
                                                         songByAlbum
                                                     )
                                                 songByAlbum = LinkedHashMap()
@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity() {
                                                 albumAdapter.updateForSort(songByAlbum)
                                             }
                                             1 -> {
-                                                val list = sortByMusicAmount(songByAlbum)
+                                                val list = Stuff.sortByMusicAmount(songByAlbum)
                                                 songByAlbum = LinkedHashMap()
                                                 for (x in list) {
                                                     songByAlbum[x.key] = x.value
@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                                         when (artistSortBy) {
                                             0 -> {
                                                 val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                                    sortByName(
+                                                    Stuff.sortByName(
                                                         songByArtist
                                                     )
                                                 songByArtist = LinkedHashMap()
@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity() {
                                                 artistAdapter.updateForSort(songByArtist)
                                             }
                                             1 -> {
-                                                val list = sortByMusicAmount(songByArtist)
+                                                val list = Stuff.sortByMusicAmount(songByArtist)
                                                 songByArtist = LinkedHashMap()
                                                 for (x in list) {
                                                     songByArtist[x.key] = x.value
@@ -369,13 +369,13 @@ class MainActivity : AppCompatActivity() {
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
 
         if (albumSortBy == 1) {
-            val list = sortByMusicAmount(songByAlbum)
+            val list = Stuff.sortByMusicAmount(songByAlbum)
             songByAlbum = LinkedHashMap()
             for (x in list) {
                 songByAlbum[x.key] = x.value
             }
         } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
+            val newList: LinkedHashMap<String, ArrayList<Music>> = Stuff.sortByName(
                 songByAlbum
             )
             songByAlbum = LinkedHashMap()
@@ -384,13 +384,13 @@ class MainActivity : AppCompatActivity() {
         albumAdapter = AlbumViewAdapter(this, songByAlbum)
 
         if (artistSortBy == 1) {
-            val list = sortByMusicAmount(songByArtist)
+            val list = Stuff.sortByMusicAmount(songByArtist)
             songByArtist = LinkedHashMap()
             for (x in list) {
                 songByArtist[x.key] = x.value
             }
         } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
+            val newList: LinkedHashMap<String, ArrayList<Music>> = Stuff.sortByName(
                 songByArtist
             )
             songByArtist = LinkedHashMap()
@@ -544,7 +544,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!Player.isPlaying && Player.musicService != null) {
-            exitApplication()
+            Stuff.exitApplication()
         }
     }
 
@@ -583,7 +583,7 @@ class MainActivity : AppCompatActivity() {
                     val music = Player.musicListPA[Player.songPosition]
                     musicAdapter.update()
                     MusicListMA = getAllAudio()
-                    Player.songPosition = findMusicById(music)
+                    Player.songPosition = Stuff.findMusicById(music)
                     musicAdapter.updateMusicList(MusicListMA)
                 } else {
                     MusicListMA = getAllAudio()
@@ -598,7 +598,7 @@ class MainActivity : AppCompatActivity() {
                 when (albumSortBy) {
                     0 -> {
                         val newList: LinkedHashMap<String, ArrayList<Music>> =
-                            sortByName(
+                            Stuff.sortByName(
                                 songByAlbum
                             )
                         songByAlbum = LinkedHashMap()
@@ -606,7 +606,7 @@ class MainActivity : AppCompatActivity() {
                         albumAdapter.updateForSort(songByAlbum)
                     }
                     1 -> {
-                        val list = sortByMusicAmount(songByAlbum)
+                        val list = Stuff.sortByMusicAmount(songByAlbum)
                         songByAlbum = LinkedHashMap()
                         for (x in list) {
                             songByAlbum[x.key] = x.value
@@ -623,7 +623,7 @@ class MainActivity : AppCompatActivity() {
                 when (artistSortBy) {
                     0 -> {
                         val newList: LinkedHashMap<String, ArrayList<Music>> =
-                            sortByName(
+                            Stuff.sortByName(
                                 songByArtist
                             )
                         songByArtist = LinkedHashMap()
@@ -631,7 +631,7 @@ class MainActivity : AppCompatActivity() {
                         artistAdapter.updateForSort(songByArtist)
                     }
                     1 -> {
-                        val list = sortByMusicAmount(songByArtist)
+                        val list = Stuff.sortByMusicAmount(songByArtist)
                         songByArtist = LinkedHashMap()
                         for (x in list) {
                             songByArtist[x.key] = x.value

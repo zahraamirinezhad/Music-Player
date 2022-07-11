@@ -58,8 +58,8 @@ class NowPlaying : Fragment() {
                 MediaPlayer()
 
             if (Player.isShuffle)
-                setSongPositionShuffle()
-            else setSongPosition(prevOrNext)
+                Stuff.setSongPositionShuffle()
+            else Stuff.setSongPosition(prevOrNext)
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -69,7 +69,7 @@ class NowPlaying : Fragment() {
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
 
-            val img = getImageArt(
+            val img = Stuff.getImageArt(
                 Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                     this.resources,
                     R.drawable.image_background
@@ -89,23 +89,23 @@ class NowPlaying : Fragment() {
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
             Player.binding.seekMusicStart.text =
-                formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
+                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
             Player.binding.seekMusicEnd.text =
-                formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
+                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
             binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
 
 
             if (!prevOrNext)
                 Player.musicService!!.showNotification(
-                    playingState(),
-                    favouriteState(),
-                    musicState()
+                    Stuff.playingState(),
+                    Stuff.favouriteState(),
+                    Stuff.musicState()
                 )
             else Player.musicService!!.showNotification(
-                playingState(),
-                favouriteState(),
-                musicState()
+                Stuff.playingState(),
+                Stuff.favouriteState(),
+                Stuff.musicState()
             )
 
             playMusic()
@@ -126,7 +126,7 @@ class NowPlaying : Fragment() {
             if (Player.isPlaying) binding.playPauseNP.setIconResource(R.drawable.pause_music)
             else binding.playPauseNP.setIconResource(R.drawable.play_music)
 
-            val img = getImageArt(
+            val img = Stuff.getImageArt(
                 Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                     this.resources,
                     R.drawable.image_background
@@ -152,9 +152,9 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.start()
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
         Player.musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
     }
 
@@ -163,9 +163,9 @@ class NowPlaying : Fragment() {
         Player.musicService!!.mediaPlayer!!.pause()
         binding.playPauseNP.setIconResource(R.drawable.play_music)
         Player.musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
     }
 }

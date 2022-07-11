@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.Adaptor.AlbumAdapter
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityShowByAlbumDetailsBinding
@@ -16,7 +17,7 @@ class ShowByAlbumDetails : AppCompatActivity() {
         var currentAlbum = -1
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: AlbumAdapter
         fun isAdapterSHBALInitialized(): Boolean {
             return this::adapter.isInitialized
         }
@@ -40,10 +41,9 @@ class ShowByAlbumDetails : AppCompatActivity() {
         binding.albumMusicRV.setItemViewCacheSize(10)
         binding.albumMusicRV.setHasFixedSize(true)
         binding.albumMusicRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(
+        adapter = AlbumAdapter(
             this,
             MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(currentAlbum)]!!,
-            album = true
         )
         binding.albumMusicRV.adapter = adapter
 

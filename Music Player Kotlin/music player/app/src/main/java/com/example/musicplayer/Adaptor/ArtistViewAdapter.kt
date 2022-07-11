@@ -24,10 +24,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.*
-import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.Music_Stuff.doesListContainsThisMusic
-import com.example.musicplayer.Music_Stuff.getImageArt
-import com.example.musicplayer.Music_Stuff.myPlaylist
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
 import com.example.musicplayer.databinding.ArtistViewBinding
@@ -67,7 +64,7 @@ class ArtistViewAdapter(
 
         if (listOfArtists[listOfArtists.keys.elementAt(position)]?.size != 0) {
             try {
-                val img = getImageArt(
+                val img = Stuff.getImageArt(
                     listOfArtists[listOfArtists.keys.elementAt(position)]?.get(
                         0
                     )!!.path,
@@ -134,7 +131,7 @@ class ArtistViewAdapter(
                             for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
                                 currentArtist
                             )]!!) {
-                                if (!doesListContainsThisMusic(PlayNext.playNextList, music.id))
+                                if (!Stuff.doesListContainsThisMusic(PlayNext.playNextList, music.id))
                                     PlayNext.playNextList.add(music)
                             }
                             Player.musicListPA = java.util.ArrayList()
@@ -149,7 +146,7 @@ class ArtistViewAdapter(
                         for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
                             currentArtist
                         )]!!) {
-                            if (!doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
+                            if (!Stuff.doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
                                 Favourite.favoriteSongs.add(music)
                         }
                         Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
@@ -249,7 +246,7 @@ class ArtistViewAdapter(
             if (playlistExist) Toast.makeText(context, "Playlist Exist !!", Toast.LENGTH_SHORT)
                 .show()
             else {
-                val tempPlaylist = myPlaylist()
+                val tempPlaylist = MyPlaylist()
                 tempPlaylist.musics = java.util.ArrayList()
                 tempPlaylist.musics.addAll(
                     MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(

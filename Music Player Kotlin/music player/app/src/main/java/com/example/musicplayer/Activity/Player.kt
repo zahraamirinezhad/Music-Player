@@ -127,9 +127,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 if (b) {
                     musicService!!.mediaPlayer!!.seekTo(i)
                     musicService!!.showNotification(
-                        playingState(),
-                        favouriteState(),
-                        musicState()
+                        Stuff.playingState(),
+                        Stuff.favouriteState(),
+                        Stuff.musicState()
                     )
                     mainImageAnimator.duration =
                         musicService!!.mediaPlayer!!.duration.toLong() - i + 10000
@@ -183,19 +183,23 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         binding.equalizer.setOnClickListener {
-            try {
-                val EqIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
-                EqIntent.putExtra(
-                    AudioEffect.EXTRA_AUDIO_SESSION,
-                    musicService!!.mediaPlayer!!.audioSessionId
-                )
-                EqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
-                EqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                startActivityForResult(EqIntent, 13)
-            } catch (e: Exception) {
-                Toast.makeText(this, "Equalizer Feature Doesn't Support .", Toast.LENGTH_SHORT)
-                    .show()
-            }
+//            try {
+//                val EqIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+//                EqIntent.putExtra(
+//                    AudioEffect.EXTRA_AUDIO_SESSION,
+//                    musicService!!.mediaPlayer!!.audioSessionId
+//                )
+//                EqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
+//                EqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+//                startActivityForResult(EqIntent, 13)
+//            } catch (e: Exception) {
+//                Toast.makeText(this, "Equalizer Feature Doesn't Support .", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+
+            val intent = Intent(this, MyEqualizer::class.java)
+            startActivity(intent)
+
         }
 
         binding.timer.setOnClickListener {
@@ -236,7 +240,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         binding.favoritesBTN.setOnClickListener {
-            fIndex = favoriteChecker(musicListPA[songPosition].id)
+            fIndex = Stuff.favoriteChecker(musicListPA[songPosition].id)
             if (fIndex != -1) {
                 binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
                 Favourite.favoriteSongs.removeAt(fIndex)
@@ -270,12 +274,12 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             )
         )
 
-        fIndex = favoriteChecker(musicListPA[songPosition].id)
+        fIndex = Stuff.favoriteChecker(musicListPA[songPosition].id)
         if (fIndex != -1) binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
         else binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
         binding.songNamePA.isSelected = true
 
-        val img = getImageArt(
+        val img = Stuff.getImageArt(
             musicListPA[songPosition].path, BitmapFactory.decodeResource(
                 this.resources,
                 R.drawable.image_background
@@ -392,9 +396,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             musicService!!.mediaPlayer!!.prepare()
             playMusic()
             binding.seekMusicStart.text =
-                formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                Stuff.formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
             binding.seekMusicEnd.text =
-                formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                Stuff.formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
             binding.seekMusic.progress = 0
             binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
@@ -498,9 +502,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             "NowPlaying" -> {
                 setLayout()
                 binding.seekMusicStart.text =
-                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                    Stuff.formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
                 binding.seekMusicEnd.text =
-                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                    Stuff.formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekMusic.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekMusic.max = musicService!!.mediaPlayer!!.duration
                 if (isPlaying) binding.playPauseBTN.setImageDrawable(
@@ -574,9 +578,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         )
         isPlaying = true
         musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
         musicService!!.mediaPlayer!!.start()
         val isPausedOrNot = playing_song_image.playPause
@@ -600,9 +604,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         )
         isPlaying = false
         musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
         musicService!!.mediaPlayer!!.pause()
         val isPausedOrNot = playing_song_image.playPause
@@ -617,8 +621,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     private fun backNextMusic(increment: Boolean) {
         if (isShuffle)
-            setSongPositionShuffle()
-        else setSongPosition(increment)
+            Stuff.setSongPositionShuffle()
+        else Stuff.setSongPosition(increment)
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
@@ -651,8 +655,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     override fun onCompletion(p0: MediaPlayer?) {
         if (isShuffle)
-            setSongPositionShuffle()
-        else setSongPosition(true)
+            Stuff.setSongPositionShuffle()
+        else Stuff.setSongPosition(true)
         MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingFavourites) Favourite.adapter.update()
@@ -687,7 +691,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             min15 = true
             Thread {
                 Thread.sleep((15 * 60000).toLong())
-                if (min15) exitApplication()
+                if (min15) Stuff.exitApplication()
             }.start()
             dialog.dismiss()
         }
@@ -701,7 +705,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             min30 = true
             Thread {
                 Thread.sleep((30 * 60000).toLong())
-                if (min30) exitApplication()
+                if (min30) Stuff.exitApplication()
             }.start()
             dialog.dismiss()
         }
@@ -715,7 +719,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             min60 = true
             Thread {
                 Thread.sleep((60 * 60000).toLong())
-                if (min60) exitApplication()
+                if (min60) Stuff.exitApplication()
             }.start()
             dialog.dismiss()
         }
@@ -752,7 +756,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 
     override fun onDestroy() {
         super.onDestroy()
-        if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
+        if (musicListPA[songPosition].id == "Unknown" && !isPlaying) Stuff.exitApplication()
     }
 }
 

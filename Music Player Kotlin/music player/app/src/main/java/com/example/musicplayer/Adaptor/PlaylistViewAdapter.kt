@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +13,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Activity.Playlist
-import com.example.musicplayer.Music_Stuff.getImageArt
-import com.example.musicplayer.Music_Stuff.getReflectionBackground
-import com.example.musicplayer.Music_Stuff.myPlaylist
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PlaylistViewAdapter(
     private val context: Context,
-    private var playlistList: ArrayList<myPlaylist>
+    private var playlistList: ArrayList<MyPlaylist>
 ) :
     RecyclerView.Adapter<PlaylistViewAdapter.MyHolder>() {
     class MyHolder(binding: PlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -67,7 +63,7 @@ class PlaylistViewAdapter(
 
         if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
             try {
-                val img = getImageArt(
+                val img = Stuff.getImageArt(
                     Playlist.listOfPlaylists.ref[position].musics.get(0).path,
                     BitmapFactory.decodeResource(
                         context.resources,
@@ -90,14 +86,14 @@ class PlaylistViewAdapter(
                     )
                 }
 
-                holder.image.setImageBitmap(getReflectionBackground(image))
+                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
             } catch (e: Exception) {
                 val image = BitmapFactory.decodeResource(
                     context.resources,
                     R.drawable.image_background
                 )
 
-                holder.image.setImageBitmap(getReflectionBackground(image))
+                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
             }
         } else {
             val image = BitmapFactory.decodeResource(
@@ -105,7 +101,7 @@ class PlaylistViewAdapter(
                 R.drawable.image_background
             )
 
-            holder.image.setImageBitmap(getReflectionBackground(image))
+            holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
         }
     }
 

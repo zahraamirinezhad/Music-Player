@@ -26,7 +26,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 repeatState()
             }
             ApplicationClass.EXIT -> {
-                exitApplication()
+                Stuff.exitApplication()
             }
         }
     }
@@ -46,9 +46,9 @@ class NotificationReceiver : BroadcastReceiver() {
                     Player.stateArray[Player.state]
                 )
                 Player.musicService!!.showNotification(
-                    playingState(),
-                    favouriteState(),
-                    musicState()
+                    Stuff.playingState(),
+                    Stuff.favouriteState(),
+                    Stuff.musicState()
                 )
             }
 
@@ -58,9 +58,9 @@ class NotificationReceiver : BroadcastReceiver() {
                     Player.stateArray[Player.state]
                 )
                 Player.musicService!!.showNotification(
-                    playingState(),
-                    favouriteState(),
-                    musicState()
+                    Stuff.playingState(),
+                    Stuff.favouriteState(),
+                    Stuff.musicState()
                 )
             }
 
@@ -71,30 +71,30 @@ class NotificationReceiver : BroadcastReceiver() {
                     Player.stateArray[Player.state]
                 )
                 Player.musicService!!.showNotification(
-                    playingState(),
-                    favouriteState(),
-                    musicState()
+                    Stuff.playingState(),
+                    Stuff.favouriteState(),
+                    Stuff.musicState()
                 )
             }
         }
     }
 
     private fun setFavourite() {
-        Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
+        Player.fIndex = Stuff.favoriteChecker(Player.musicListPA[Player.songPosition].id)
         if (Player.fIndex != -1) {
             Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             Player.musicService!!.showNotification(
-                playingState(),
+                Stuff.playingState(),
                 R.drawable.favorite_full_icon,
-                musicState()
+                Stuff.musicState()
             )
             Favourite.favoriteSongs.removeAt(Player.fIndex)
         } else {
             Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
             Player.musicService!!.showNotification(
-                playingState(),
+                Stuff.playingState(),
                 R.drawable.favorite_empty_icon,
-                musicState()
+                Stuff.musicState()
             )
             Favourite.favoriteSongs.add(Player.musicListPA[Player.songPosition])
         }
@@ -104,9 +104,9 @@ class NotificationReceiver : BroadcastReceiver() {
         Player.isPlaying = true
         Player.musicService!!.mediaPlayer!!.start()
         Player.musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
         Player.binding.playPauseBTN.setImageDrawable(
             ContextCompat.getDrawable(
@@ -121,9 +121,9 @@ class NotificationReceiver : BroadcastReceiver() {
         Player.isPlaying = false
         Player.musicService!!.mediaPlayer!!.pause()
         Player.musicService!!.showNotification(
-            playingState(),
-            favouriteState(),
-            musicState()
+            Stuff.playingState(),
+            Stuff.favouriteState(),
+            Stuff.musicState()
         )
         Player.binding.playPauseBTN.setImageDrawable(
             ContextCompat.getDrawable(
@@ -141,8 +141,8 @@ class NotificationReceiver : BroadcastReceiver() {
                 MediaPlayer()
 
             if (Player.isShuffle)
-                setSongPositionShuffle()
-            else setSongPosition(increment)
+                Stuff.setSongPositionShuffle()
+            else Stuff.setSongPosition(increment)
 
             MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
@@ -153,7 +153,7 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
 
-            val img = getImageArt(
+            val img = Stuff.getImageArt(
                 Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                     context.resources,
                     R.drawable.music_player_icon_slash_screen
@@ -168,7 +168,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 )
             }
 
-            val final_Bitmap = returnBlurredBackground(image, context)
+            val final_Bitmap = ImageFormatter.returnBlurredBackground(image, context)
             val newdr: Drawable = BitmapDrawable(final_Bitmap)
             Player.binding.musicContainer.background = newdr
 
@@ -177,14 +177,14 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
             Player.binding.seekMusicStart.text =
-                formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
+                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
             Player.binding.seekMusicEnd.text =
-                formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
+                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
 
             NowPlaying.binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
             Player.nowPlayingID = Player.musicListPA[Player.songPosition].id
             playMusic(context)
-            Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
+            Player.fIndex = Stuff.favoriteChecker(Player.musicListPA[Player.songPosition].id)
             if (Player.fIndex != -1) Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_full_icon)
             else Player.binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
             if (ShowByAlbumDetails.isAdapterSHBALInitialized())

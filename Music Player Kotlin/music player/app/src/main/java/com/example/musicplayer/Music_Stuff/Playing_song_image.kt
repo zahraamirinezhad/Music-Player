@@ -57,7 +57,7 @@ class playing_song_image : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val img = getImageArt(
+        val img = Stuff.getImageArt(
             Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                 this.resources,
                 R.drawable.image_background

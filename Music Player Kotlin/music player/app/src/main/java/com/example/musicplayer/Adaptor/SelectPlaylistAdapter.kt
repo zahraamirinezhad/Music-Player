@@ -8,16 +8,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Playlist
-import com.example.musicplayer.Music_Stuff.doesListContainsThisMusic
-import com.example.musicplayer.Music_Stuff.getImageArt
-import com.example.musicplayer.Music_Stuff.getReflectionBackground
-import com.example.musicplayer.Music_Stuff.myPlaylist
+import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.SelectPlaylistViewBinding
 
 class SelectPlaylistAdapter(
     private val context: Context,
-    private var playlistList: ArrayList<myPlaylist>
+    private var playlistList: ArrayList<MyPlaylist>
 ) :
     RecyclerView.Adapter<SelectPlaylistAdapter.MyHolder>() {
     class MyHolder(binding: SelectPlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -41,7 +38,7 @@ class SelectPlaylistAdapter(
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
             try {
-                val img = getImageArt(
+                val img = Stuff.getImageArt(
                     Playlist.listOfPlaylists.ref[position].musics.get(0).path,
                     BitmapFactory.decodeResource(
                         context.resources,
@@ -64,14 +61,14 @@ class SelectPlaylistAdapter(
                     )
                 }
 
-                holder.image.setImageBitmap(getReflectionBackground(image))
+                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
             } catch (e: Exception) {
                 val image = BitmapFactory.decodeResource(
                     context.resources,
                     R.drawable.image_background
                 )
 
-                holder.image.setImageBitmap(getReflectionBackground(image))
+                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
             }
         } else {
             val image = BitmapFactory.decodeResource(
@@ -79,7 +76,7 @@ class SelectPlaylistAdapter(
                 R.drawable.image_background
             )
 
-            holder.image.setImageBitmap(getReflectionBackground(image))
+            holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
         }
         holder.name.text = playlistList[position].name
         holder.name.isSelected = true
@@ -91,7 +88,7 @@ class SelectPlaylistAdapter(
                 for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                     AlbumViewAdapter.currentAlbum
                 )]!!) {
-                    if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
+                    if (!Stuff.doesListContainsThisMusic(playlistList[position].musics, music.id)) {
                         playlistList[position].musics.add(music)
                     }
                 }
@@ -101,7 +98,7 @@ class SelectPlaylistAdapter(
                 for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
                     ArtistViewAdapter.currentArtist
                 )]!!) {
-                    if (!doesListContainsThisMusic(playlistList[position].musics, music.id)) {
+                    if (!Stuff.doesListContainsThisMusic(playlistList[position].musics, music.id)) {
                         playlistList[position].musics.add(music)
                     }
                 }

@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.Adaptor.FavouritesAdapter
 import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.Music_Stuff.checkPlaylist
+import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityFavouriteBinding
 
@@ -18,7 +19,7 @@ class Favourite : AppCompatActivity() {
         lateinit var binding: ActivityFavouriteBinding
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: FavouritesAdapter
         fun isAdapterInitialized(): Boolean {
             return this::adapter.isInitialized
         }
@@ -29,14 +30,14 @@ class Favourite : AppCompatActivity() {
         setTheme(R.style.blackTheme)
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        favoriteSongs = checkPlaylist(favoriteSongs)
+        favoriteSongs = Stuff.checkPlaylist(favoriteSongs)
 
         if (favoriteSongs.isNotEmpty()) binding.instructionFV.visibility = View.GONE
 
         binding.favoriteRV.setHasFixedSize(true)
         binding.favoriteRV.setItemViewCacheSize(13)
         binding.favoriteRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, favoriteSongs, favourites = true)
+        adapter = FavouritesAdapter(this, favoriteSongs)
         binding.favoriteRV.adapter = adapter
         if (favoriteSongs.size == 1) binding.shuffleFav.visibility = View.INVISIBLE
         else binding.shuffleFav.visibility = View.VISIBLE

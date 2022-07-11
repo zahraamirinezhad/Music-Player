@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.musicplayer.Music_Stuff.ListOfPlaylists
 import com.example.musicplayer.Adaptor.PlaylistViewAdapter
 import com.example.musicplayer.R
-import com.example.musicplayer.Music_Stuff.myPlaylist
+import com.example.musicplayer.Music_Stuff.MyPlaylist
 import com.example.musicplayer.databinding.ActivityPlaylistBinding
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -77,7 +77,7 @@ class Playlist : AppCompatActivity() {
 
         if (playlistExist) Toast.makeText(this, "Playlist Exist !!", Toast.LENGTH_SHORT).show()
         else {
-            val tempPlaylist = myPlaylist()
+            val tempPlaylist = MyPlaylist()
             tempPlaylist.name = name
             tempPlaylist.createdBy = username
             tempPlaylist.musics = ArrayList()

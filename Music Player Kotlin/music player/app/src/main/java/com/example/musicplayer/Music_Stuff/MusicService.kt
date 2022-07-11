@@ -98,7 +98,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val img = getImageArt(
+        val img = Stuff.getImageArt(
             Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
                 this.resources,
                 R.drawable.image_background
@@ -206,9 +206,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.play_music)
             showNotification(
-                playingState(),
-                favouriteState(),
-                musicState()
+                Stuff.playingState(),
+                Stuff.favouriteState(),
+                Stuff.musicState()
             )
             Player.isPlaying = false
             mediaPlayer!!.pause()
@@ -221,9 +221,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             )
             NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
             showNotification(
-                playingState(),
-                favouriteState(),
-                musicState()
+                Stuff.playingState(),
+                Stuff.favouriteState(),
+                Stuff.musicState()
             )
             Player.isPlaying = true
             mediaPlayer!!.start()
@@ -233,7 +233,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     fun seekBarSetup() {
         runnable = Runnable {
             Player.binding.seekMusicStart.text =
-                formatDuration(mediaPlayer!!.currentPosition.toLong())
+                Stuff.formatDuration(mediaPlayer!!.currentPosition.toLong())
             Player.binding.seekMusic.progress = mediaPlayer!!.currentPosition
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
