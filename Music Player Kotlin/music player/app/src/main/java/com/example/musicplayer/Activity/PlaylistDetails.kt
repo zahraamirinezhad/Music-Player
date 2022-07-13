@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -14,7 +12,7 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicplayer.Adaptor.MusicAdapter
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Adaptor.PlaylistDetailsAdapter
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
@@ -106,24 +104,32 @@ class PlaylistDetails : AppCompatActivity() {
         binding.moreInfoPLD.text =
             "Created On \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdOn + "\n By \n" + Playlist.listOfPlaylists.ref[currentPlaylist].createdBy
         if (adapter.itemCount > 0) {
-            val img = Stuff.getImageArt(
-                Playlist.listOfPlaylists.ref[currentPlaylist].musics.get(0).path,
-                BitmapFactory.decodeResource(
-                    this.resources,
-                    R.drawable.music_player_icon_slash_screen
-                )
-            )
-            val image = if (img != null) {
-                BitmapFactory.decodeByteArray(img, 0, img.size)
+            if (Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image == null) {
+                try {
+                    val img =
+                        Stuff.getImageArt(Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].path)
+                    val image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            resources,
+                            R.drawable.image_background
+                        )
+                    }
+                    Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image = image
+                    binding.playlistImagePLD.setImageBitmap(Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image)
+                } catch (e: Exception) {
+                    Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image =
+                        BitmapFactory.decodeResource(
+                            resources,
+                            R.drawable.image_background
+                        )
+                    binding.playlistImagePLD.setImageBitmap(Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image)
+                }
             } else {
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.music_player_icon_slash_screen
-                )
+                binding.playlistImagePLD.setImageBitmap(Playlist.listOfPlaylists.ref[currentPlaylist].musics[0].image)
             }
 
-            val dr: Drawable = BitmapDrawable(image)
-            binding.playlistImagePLD.background = dr
             binding.shufflePLD.visibility = View.VISIBLE
             binding.playlistNamePLD.isSelected = true
         }

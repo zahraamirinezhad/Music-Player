@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentNowPlayingBinding
@@ -69,22 +70,14 @@ class NowPlaying : Fragment() {
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
 
-            val img = Stuff.getImageArt(
-                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
-                    this.resources,
+            Glide.with(binding.root).asBitmap().load(
+                if (Stuff.getImageArt(Player.musicListPA[Player.songPosition].path) == null) BitmapFactory.decodeResource(
+                    binding.root.resources,
                     R.drawable.image_background
+                ) else Stuff.getImageArt(
+                    Player.musicListPA[Player.songPosition].path
                 )
-            )
-            val image = if (img != null) {
-                BitmapFactory.decodeByteArray(img, 0, img.size)
-            } else {
-                BitmapFactory.decodeResource(
-                    this.resources,
-                    R.drawable.image_background
-                )
-            }
-
-            binding.songImgNP.setImageBitmap(image)
+            ).into(binding.songImgNP)
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -126,22 +119,40 @@ class NowPlaying : Fragment() {
             if (Player.isPlaying) binding.playPauseNP.setIconResource(R.drawable.pause_music)
             else binding.playPauseNP.setIconResource(R.drawable.play_music)
 
-            val img = Stuff.getImageArt(
-                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
-                    this.resources,
+            Glide.with(binding.root).asBitmap().load(
+                if (Stuff.getImageArt(Player.musicListPA[Player.songPosition].path) == null) BitmapFactory.decodeResource(
+                    binding.root.resources,
                     R.drawable.image_background
+                ) else Stuff.getImageArt(
+                    Player.musicListPA[Player.songPosition].path
                 )
-            )
-            val image = if (img != null) {
-                BitmapFactory.decodeByteArray(img, 0, img.size)
+            ).into(binding.songImgNP)
+
+            if (Player.musicListPA[Player.songPosition].image == null) {
+                try {
+                    val img = Stuff.getImageArt(Player.musicListPA[Player.songPosition].path)
+                    val image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context?.resources,
+                            R.drawable.image_background
+                        )
+                    }
+                    Player.musicListPA[Player.songPosition].image = image
+                    binding.songImgNP.setImageBitmap(Player.musicListPA[Player.songPosition].image)
+                } catch (e: Exception) {
+                    Player.musicListPA[Player.songPosition].image = BitmapFactory.decodeResource(
+                        context?.resources,
+                        R.drawable.image_background
+                    )
+                    binding.songImgNP.setImageBitmap(Player.musicListPA[Player.songPosition].image)
+                }
             } else {
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.image_background
-                )
+                binding.songImgNP.setImageBitmap(Player.musicListPA[Player.songPosition].image)
             }
 
-            binding.songImgNP.setImageBitmap(image)
+
         } else {
             binding.root.visibility = View.INVISIBLE
         }

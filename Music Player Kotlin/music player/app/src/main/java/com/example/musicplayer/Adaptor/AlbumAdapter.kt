@@ -1,12 +1,16 @@
 package com.example.musicplayer.Adaptor
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
 import com.example.musicplayer.Music_Stuff.CustomDialog
 import com.example.musicplayer.Music_Stuff.Music
+import com.example.musicplayer.Music_Stuff.NowPlaying
 import com.example.musicplayer.Music_Stuff.Stuff
+import com.example.musicplayer.Music_Stuff.Stuff.Companion.getImageArt
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
@@ -24,7 +28,7 @@ class AlbumAdapter(
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = Stuff.formatDuration(musicList[position].duration)
-        holder.image.setImageBitmap(getSongImage(position))
+        setImage(musicList[position].path,holder.image, musicList[position])
 
         if (Player.isMusicListPaInitialized() && Player.musicListPA.size != 0 && musicList[position].id == Player.musicListPA[Player.songPosition].id) {
             holder.root.setBackgroundResource(R.drawable.fragment_background)

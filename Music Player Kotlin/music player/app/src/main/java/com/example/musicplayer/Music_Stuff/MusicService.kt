@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
@@ -16,6 +17,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Music_Stuff.playing_song_image.Companion.playPause
 import com.example.musicplayer.R
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
@@ -98,19 +100,29 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val img = Stuff.getImageArt(
-            Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
-                this.resources,
-                R.drawable.image_background
-            )
-        )
-        val image = if (img != null) {
-            BitmapFactory.decodeByteArray(img, 0, img.size)
+        var image: Bitmap?
+        if (Player.musicListPA[Player.songPosition].image == null) {
+            try {
+                val img = Stuff.getImageArt(
+                    Player.musicListPA[Player.songPosition].path
+                )
+                image = if (img != null) {
+                    BitmapFactory.decodeByteArray(img, 0, img.size)
+                } else {
+                    BitmapFactory.decodeResource(
+                        resources,
+                        R.drawable.image_background
+                    )
+                }
+            } catch (e: Exception) {
+                image = BitmapFactory.decodeResource(
+                    resources,
+                    R.drawable.image_background
+                )
+            }
+
         } else {
-            BitmapFactory.decodeResource(
-                resources,
-                R.drawable.image_background
-            )
+            image = Player.musicListPA[Player.songPosition].image
         }
 
         if (Player.isContent) {

@@ -6,8 +6,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,32 +55,35 @@ class playing_song_image : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val img = Stuff.getImageArt(
-            Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
-                this.resources,
-                R.drawable.image_background
-            )
-        )
-        var image = if (img != null) {
-            BitmapFactory.decodeByteArray(img, 0, img.size)
+        var image: Bitmap?
+        if (Player.musicListPA[Player.songPosition].image == null) {
+            try {
+                val img = Stuff.getImageArt(
+                    Player.musicListPA[Player.songPosition].path
+                )
+                image = if (img != null) {
+                    BitmapFactory.decodeByteArray(img, 0, img.size)
+                } else {
+                    BitmapFactory.decodeResource(
+                        resources,
+                        R.drawable.image_background
+                    )
+                }
+            } catch (e: Exception) {
+                image = BitmapFactory.decodeResource(
+                    resources,
+                    R.drawable.image_background
+                )
+            }
+
         } else {
-            BitmapFactory.decodeResource(
-                resources,
-                R.drawable.image_background
-            )
-        }
-        if (image == null) {
-            image = BitmapFactory.decodeResource(
-                resources,
-                R.drawable.image_background
-            )
+            image = Player.musicListPA[Player.songPosition].image
         }
 
-        val dr: Drawable = BitmapDrawable(image)
-        if (NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.background = dr
+        if (NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.setImageBitmap(image)
 
         val output = Bitmap.createBitmap(
-            image.width,
+            image!!.width,
             image.height, Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(output)

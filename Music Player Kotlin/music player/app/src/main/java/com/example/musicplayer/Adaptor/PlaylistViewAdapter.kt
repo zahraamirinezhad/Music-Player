@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.*
@@ -62,38 +63,48 @@ class PlaylistViewAdapter(
         }
 
         if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
-            try {
-                val img = Stuff.getImageArt(
-                    Playlist.listOfPlaylists.ref[position].musics.get(0).path,
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
+            if (Playlist.listOfPlaylists.ref[position].musics.get(0).image == null) {
+                try {
+                    val img =
+                        Stuff.getImageArt(Playlist.listOfPlaylists.ref[position].musics.get(0).path)
+                    val image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    }
+                    Playlist.listOfPlaylists.ref[position].musics.get(0).image = image
+                    holder.image.setImageBitmap(
+                        ImageFormatter.getReflectionBackground(
+                            Playlist.listOfPlaylists.ref[position].musics.get(
+                                0
+                            ).image!!
+                        )
                     )
-                )
-                var image = if (img != null) {
-                    BitmapFactory.decodeByteArray(img, 0, img.size)
-                } else {
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
+                } catch (e: Exception) {
+                    Playlist.listOfPlaylists.ref[position].musics.get(0).image =
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    holder.image.setImageBitmap(
+                        ImageFormatter.getReflectionBackground(
+                            Playlist.listOfPlaylists.ref[position].musics.get(
+                                0
+                            ).image!!
+                        )
                     )
                 }
-
-                if (image == null) {
-                    image = BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
+            } else {
+                holder.image.setImageBitmap(
+                    ImageFormatter.getReflectionBackground(
+                        Playlist.listOfPlaylists.ref[position].musics.get(
+                            0
+                        ).image!!
                     )
-                }
-
-                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
-            } catch (e: Exception) {
-                val image = BitmapFactory.decodeResource(
-                    context.resources,
-                    R.drawable.image_background
                 )
-
-                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
             }
         } else {
             val image = BitmapFactory.decodeResource(

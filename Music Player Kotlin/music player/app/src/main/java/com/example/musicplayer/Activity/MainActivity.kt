@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.VOLUME_EXTERNAL
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.database.getStringOrNull
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.example.musicplayer.*
 import com.example.musicplayer.Adaptor.AlbumViewAdapter
@@ -32,10 +34,22 @@ import com.example.musicplayer.Fragment.ShowByArtist
 import com.example.musicplayer.Fragment.ShowByMusic
 import com.example.musicplayer.Fragment.ViewPagerAdapter
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbum
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbumName
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbumSongAmount
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtist
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtistName
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtistSonAmount
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByMusic
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByMusicAmount
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByName
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import org.oxycblt.auxio.music.id3GenreName
+import org.oxycblt.auxio.music.queryCursor
+import org.oxycblt.auxio.music.useQuery
 import java.io.File
 
 
@@ -86,45 +100,7 @@ class MainActivity : AppCompatActivity() {
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) {
             initializeLayout()
-            Favourite.favoriteSongs = ArrayList()
-            val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
-            val jsonString = editor.getString("FavouriteSongs", null)
-            val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
-            if (jsonString != null) {
-                val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
-                Favourite.favoriteSongs.addAll(data)
-            }
-
-            Playlist.listOfPlaylists = ListOfPlaylists()
-            val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
-            val jsonStringPlaylist = editorPlaylist.getString("Playlists", null)
-            val typeTokenPlaylist = object : TypeToken<ListOfPlaylists>() {}.type
-            if (jsonStringPlaylist != null) {
-                val data: ListOfPlaylists =
-                    GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
-                Playlist.listOfPlaylists = data
-            }
-
-            val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
-            if (!recentMusicIsPlaying.toBoolean()) {
-                val editorRecentMusic = getSharedPreferences("savedInfo", MODE_PRIVATE)
-                val jsonStringRecentMusic = editorRecentMusic.getString("RecentMusic", null)
-                val typeTokenRecentMusic = object : TypeToken<Music>() {}.type
-                if (jsonStringRecentMusic != null) {
-                    val music: Music =
-                        GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
-                    val pos = Stuff.findMusicById(music)
-                    if (pos != -1) {
-                        val intent = Intent(this, Player::class.java)
-                        intent.putExtra("index", pos)
-                        intent.putExtra("class", "RecentMusic")
-                        val currentPosition = editor.getString("RecentMusicCurrentPosition", "")
-                        intent.putExtra("recentMusicCurrentPosition", currentPosition?.toInt())
-                        intent.putExtra("RecentMusicIsPlaying", recentMusicIsPlaying?.toBoolean())
-                        ContextCompat.startActivity(this, intent, null)
-                    }
-                }
-            }
+            getSavedInfo()
         }
 
         binding.favoritesBtn.setOnClickListener {
@@ -190,115 +166,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.sort_by_menu -> {
-                        when (binding.musicArtistAlbum.currentItem) {
-                            2 -> {
-                                val menuList = arrayOf("Recently Added", "Song Title", "File Size")
-                                var currentSort = sortBy
-                                val build = MaterialAlertDialogBuilder(this)
-                                build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
-                                    if (sortBy != currentSort) {
-                                        sortBy = currentSort
-                                        MusicListMA = getAllAudio()
-                                        musicAdapter.updateMusicList(MusicListMA)
-                                        val editor =
-                                            getSharedPreferences("SORTING", MODE_PRIVATE).edit()
-                                        editor.putInt("SORT ORDER", currentSort)
-                                        editor.apply()
-                                    }
-
-                                }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
-                                    currentSort = wich
-                                }
-                                val customDialog = build.create()
-                                customDialog.show()
-                                customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(Color.GREEN)
-                            }
-                            1 -> {
-                                val menuList = arrayOf("Album Name", "Song Amount")
-                                var currentSort = albumSortBy
-                                val build = MaterialAlertDialogBuilder(this)
-                                build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
-                                    if (albumSortBy != currentSort) {
-                                        albumSortBy = currentSort
-                                        when (albumSortBy) {
-                                            0 -> {
-                                                val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                                    Stuff.sortByName(
-                                                        songByAlbum
-                                                    )
-                                                songByAlbum = LinkedHashMap()
-                                                songByAlbum = newList
-                                                albumAdapter.updateForSort(songByAlbum)
-                                            }
-                                            1 -> {
-                                                val list = Stuff.sortByMusicAmount(songByAlbum)
-                                                songByAlbum = LinkedHashMap()
-                                                for (x in list) {
-                                                    songByAlbum[x.key] = x.value
-                                                }
-                                                albumAdapter.updateForSort(songByAlbum)
-                                            }
-                                        }
-                                        val editor =
-                                            getSharedPreferences(
-                                                "SORTING_ALBUM",
-                                                MODE_PRIVATE
-                                            ).edit()
-                                        editor.putInt("SORT ORDER FOR ALBUM", albumSortBy)
-                                        editor.apply()
-                                    }
-                                }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
-                                    currentSort = wich
-                                }
-                                val customDialog = build.create()
-                                customDialog.show()
-                                customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(Color.GREEN)
-                            }
-                            0 -> {
-                                val menuList = arrayOf("Artist Name", "Song Amount")
-                                var currentSort = artistSortBy
-                                val build = MaterialAlertDialogBuilder(this)
-                                build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
-                                    if (artistSortBy != currentSort) {
-                                        artistSortBy = currentSort
-                                        when (artistSortBy) {
-                                            0 -> {
-                                                val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                                    Stuff.sortByName(
-                                                        songByArtist
-                                                    )
-                                                songByArtist = LinkedHashMap()
-                                                songByArtist = newList
-                                                artistAdapter.updateForSort(songByArtist)
-                                            }
-                                            1 -> {
-                                                val list = Stuff.sortByMusicAmount(songByArtist)
-                                                songByArtist = LinkedHashMap()
-                                                for (x in list) {
-                                                    songByArtist[x.key] = x.value
-                                                }
-                                                artistAdapter.updateForSort(songByArtist)
-                                            }
-                                        }
-                                        val editor =
-                                            getSharedPreferences(
-                                                "SORTING_ARTIST",
-                                                MODE_PRIVATE
-                                            ).edit()
-                                        editor.putInt("SORT ORDER FOR ARTIST", artistSortBy)
-                                        editor.apply()
-                                    }
-                                }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
-                                    currentSort = wich
-                                }
-                                val customDialog = build.create()
-                                customDialog.show()
-                                customDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(Color.GREEN)
-                            }
-                        }
+                        sortMusics()
                     }
                 }
                 true
@@ -333,13 +201,13 @@ class MainActivity : AppCompatActivity() {
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
 
         if (albumSortBy == 1) {
-            val list = Stuff.sortByMusicAmount(songByAlbum)
+            val list = sortByMusicAmount(songByAlbum)
             songByAlbum = LinkedHashMap()
             for (x in list) {
                 songByAlbum[x.key] = x.value
             }
         } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = Stuff.sortByName(
+            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
                 songByAlbum
             )
             songByAlbum = LinkedHashMap()
@@ -348,13 +216,13 @@ class MainActivity : AppCompatActivity() {
         albumAdapter = AlbumViewAdapter(this, songByAlbum)
 
         if (artistSortBy == 1) {
-            val list = Stuff.sortByMusicAmount(songByArtist)
+            val list = sortByMusicAmount(songByArtist)
             songByArtist = LinkedHashMap()
             for (x in list) {
                 songByArtist[x.key] = x.value
             }
         } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = Stuff.sortByName(
+            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
                 songByArtist
             )
             songByArtist = LinkedHashMap()
@@ -416,38 +284,51 @@ class MainActivity : AppCompatActivity() {
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.DATE_ADDED,
-            MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.ALBUM_ID
+            MediaStore.Audio.AudioColumns._ID,
+            MediaStore.Audio.AudioColumns.TITLE,
+            MediaStore.Audio.AudioColumns.ALBUM,
+            MediaStore.Audio.AudioColumns.ARTIST,
+            MediaStore.Audio.AudioColumns.DURATION,
+            MediaStore.Audio.AudioColumns.DATE_ADDED,
+            MediaStore.Audio.AudioColumns.DATA,
+            MediaStore.Audio.AudioColumns.ALBUM_ID,
+            MediaStore.Audio.AudioColumns.SIZE,
         )
-        val cursor = this.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            sortingList[sortBy], null
+        val cursor = this.contentResolver.queryCursor(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null
         )
+
+//        val cursor = this.contentResolver.query(
+//            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null,
+//            sortingList[sortBy], null
+//        )
+
         if (cursor != null) {
             if (cursor.moveToFirst())
                 do {
                     val titleC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE))
                             ?: "Unknown"
-                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
-                        ?: "Unknown"
+                    val idC =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID))
+                            .toString()
                     val albumC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM))
                             ?: "Unknown"
                     val artistC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST))
                             ?: "Unknown"
-                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                    val dateC =
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATE_ADDED))
+                            ?: "Unknown"
+                    val sizeC =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.SIZE))
+                    val pathC =
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA))
                     val durationC =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION))
                     val albumIdC =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID))
                             .toString()
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
@@ -461,28 +342,61 @@ class MainActivity : AppCompatActivity() {
                         path = pathC,
                         duration = durationC,
                         artUri = artUriC,
-                        lyrics = lyricsC
+                        lyrics = lyricsC,
+                        genre = "Unknown",
+                        date = dateC,
+                        size = sizeC
                     )
                     val file = File(music.path)
                     if (file.exists()) {
                         tempList.add(music)
-                        if (songByAlbum.containsKey(music.album)) {
-                            songByAlbum[music.album]?.add(music)
-                        } else {
-                            songByAlbum[music.album] = ArrayList()
-                            songByAlbum[music.album]?.add(music)
-                        }
-
-                        if (songByArtist.containsKey(music.artist)) {
-                            songByArtist[music.artist]?.add(music)
-                        } else {
-                            songByArtist[music.artist] = ArrayList()
-                            songByArtist[music.artist]?.add(music)
-                        }
                     }
                 } while (cursor.moveToNext())
             cursor.close()
         }
+
+        contentResolver.useQuery(
+            MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME)
+        ) { genreCursor ->
+            val idIndex = genreCursor.getColumnIndexOrThrow(MediaStore.Audio.Genres._ID)
+            val nameIndex = genreCursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME)
+
+            while (genreCursor.moveToNext()) {
+                val id = genreCursor.getLong(idIndex)
+                val name = (genreCursor.getStringOrNull(nameIndex) ?: continue).id3GenreName
+                contentResolver.useQuery(
+                    MediaStore.Audio.Genres.Members.getContentUri(VOLUME_EXTERNAL, id),
+                    arrayOf(MediaStore.Audio.Genres.Members._ID)
+                ) { cursor ->
+                    val songIdIndex =
+                        cursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.Members._ID)
+
+                    while (cursor.moveToNext()) {
+                        val songId = cursor.getLong(songIdIndex)
+                        tempList.find { it.id.toLong() == songId }
+                            ?.let { song -> song.genre = name }
+                    }
+                }
+            }
+        }
+
+        for (music in tempList) {
+            if (songByAlbum.containsKey(music.album)) {
+                songByAlbum[music.album]?.add(music)
+            } else {
+                songByAlbum[music.album] = ArrayList()
+                songByAlbum[music.album]?.add(music)
+            }
+
+            if (songByArtist.containsKey(music.artist)) {
+                songByArtist[music.artist]?.add(music)
+            } else {
+                songByArtist[music.artist] = ArrayList()
+                songByArtist[music.artist]?.add(music)
+            }
+        }
+
         return tempList
     }
 
@@ -539,7 +453,8 @@ class MainActivity : AppCompatActivity() {
         val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
         editor.putString("Playlists", jsonStringPlaylist)
         if (Player.musicService != null && Player.isMusicListPaInitialized() && Player.musicListPA.size != 0) {
-            val recentMusic = GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])
+            val recentMusic =
+                GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])
             editor.putString("RecentMusic", recentMusic)
             editor.putString(
                 "RecentMusicCurrentPosition",
@@ -562,16 +477,18 @@ class MainActivity : AppCompatActivity() {
                 val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
                 val sortValue = sortEditor.getInt("SORT ORDER", 0)
                 if (sortBy != sortValue) {
-                    if (Player.isMusicListPaInitialized()) {
-                        val music = Player.musicListPA[Player.songPosition]
-                        musicAdapter.update()
-                        MusicListMA = getAllAudio()
-                        Player.songPosition = Stuff.findMusicById(music)
-                        musicAdapter.updateMusicList(MusicListMA)
-                    } else {
-                        MusicListMA = getAllAudio()
-                        musicAdapter.updateMusicList(MusicListMA)
+                    when (sortBy) {
+                        2 -> {
+                            sortByMusic(this)
+                        }
+                        1 -> {
+                            sortByAlbum(this)
+                        }
+                        0 -> {
+                            sortByArtist(this)
+                        }
                     }
+                    musicAdapter.updateMusicList(MusicListMA)
                 }
             }
             1 -> {
@@ -581,47 +498,25 @@ class MainActivity : AppCompatActivity() {
                     albumSortBy = sortValue
                     when (albumSortBy) {
                         0 -> {
-                            val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                Stuff.sortByName(
-                                    songByAlbum
-                                )
-                            songByAlbum = LinkedHashMap()
-                            songByAlbum = newList
-                            albumAdapter.updateForSort(songByAlbum)
+                            sortByAlbumName()
                         }
                         1 -> {
-                            val list = Stuff.sortByMusicAmount(songByAlbum)
-                            songByAlbum = LinkedHashMap()
-                            for (x in list) {
-                                songByAlbum[x.key] = x.value
-                            }
-                            albumAdapter.updateForSort(songByAlbum)
+                            sortByAlbumSongAmount()
                         }
                     }
                 }
             }
             0 -> {
-                val albumSortEditor = getSharedPreferences("SORTING_ARTIST", MODE_PRIVATE)
-                val sortValue = albumSortEditor.getInt("SORT ORDER FOR ARTIST", 0)
+                val artistSortEditor = getSharedPreferences("SORTING_ARTIST", MODE_PRIVATE)
+                val sortValue = artistSortEditor.getInt("SORT ORDER FOR ARTIST", 0)
                 if (artistSortBy != sortValue) {
                     artistSortBy = sortValue
                     when (artistSortBy) {
                         0 -> {
-                            val newList: LinkedHashMap<String, ArrayList<Music>> =
-                                Stuff.sortByName(
-                                    songByArtist
-                                )
-                            songByArtist = LinkedHashMap()
-                            songByArtist = newList
-                            artistAdapter.updateForSort(songByArtist)
+                            sortByArtistName()
                         }
                         1 -> {
-                            val list = Stuff.sortByMusicAmount(songByArtist)
-                            songByArtist = LinkedHashMap()
-                            for (x in list) {
-                                songByArtist[x.key] = x.value
-                            }
-                            artistAdapter.updateForSort(songByArtist)
+                            sortByArtistSonAmount()
                         }
                     }
                 }
@@ -652,5 +547,61 @@ class MainActivity : AppCompatActivity() {
 
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun getSavedInfo() {
+        Favourite.favoriteSongs = ArrayList()
+        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
+        val jsonString = editor.getString("FavouriteSongs", null)
+        val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
+        if (jsonString != null) {
+            val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
+            Favourite.favoriteSongs.addAll(data)
+        }
+
+        Playlist.listOfPlaylists = ListOfPlaylists()
+        val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
+        val jsonStringPlaylist = editorPlaylist.getString("Playlists", null)
+        val typeTokenPlaylist = object : TypeToken<ListOfPlaylists>() {}.type
+        if (jsonStringPlaylist != null) {
+            val data: ListOfPlaylists =
+                GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
+            Playlist.listOfPlaylists = data
+        }
+
+        val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
+        if (!recentMusicIsPlaying.toBoolean()) {
+            val editorRecentMusic = getSharedPreferences("savedInfo", MODE_PRIVATE)
+            val jsonStringRecentMusic = editorRecentMusic.getString("RecentMusic", null)
+            val typeTokenRecentMusic = object : TypeToken<Music>() {}.type
+            if (jsonStringRecentMusic != null) {
+                val music: Music =
+                    GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
+                val pos = Stuff.findMusicById(music)
+                if (pos != -1) {
+                    val intent = Intent(this, Player::class.java)
+                    intent.putExtra("index", pos)
+                    intent.putExtra("class", "RecentMusic")
+                    val currentPosition = editor.getString("RecentMusicCurrentPosition", "")
+                    intent.putExtra("recentMusicCurrentPosition", currentPosition?.toInt())
+                    intent.putExtra("RecentMusicIsPlaying", recentMusicIsPlaying?.toBoolean())
+                    ContextCompat.startActivity(this, intent, null)
+                }
+            }
+        }
+    }
+
+    private fun sortMusics() {
+        when (binding.musicArtistAlbum.currentItem) {
+            2 -> {
+                sortByMusic(this)
+            }
+            1 -> {
+                sortByAlbum(this)
+            }
+            0 -> {
+                sortByArtist(this)
+            }
+        }
     }
 }

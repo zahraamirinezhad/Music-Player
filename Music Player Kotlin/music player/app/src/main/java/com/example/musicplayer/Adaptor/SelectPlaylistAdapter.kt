@@ -37,38 +37,30 @@ class SelectPlaylistAdapter(
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
-            try {
-                val img = Stuff.getImageArt(
-                    Playlist.listOfPlaylists.ref[position].musics.get(0).path,
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
-                    )
-                )
-                var image = if (img != null) {
-                    BitmapFactory.decodeByteArray(img, 0, img.size)
-                } else {
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
-                    )
+            if (Playlist.listOfPlaylists.ref[position].musics[0].image == null) {
+                try {
+                    val img =
+                        Stuff.getImageArt(Playlist.listOfPlaylists.ref[position].musics[0].path)
+                    val image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    }
+                    Playlist.listOfPlaylists.ref[position].musics[0].image = image
+                    holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(Playlist.listOfPlaylists.ref[position].musics[0].image!!))
+                } catch (e: Exception) {
+                    Playlist.listOfPlaylists.ref[position].musics[0].image =
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(Playlist.listOfPlaylists.ref[position].musics[0].image!!))
                 }
-
-                if (image == null) {
-                    image = BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
-                    )
-                }
-
-                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
-            } catch (e: Exception) {
-                val image = BitmapFactory.decodeResource(
-                    context.resources,
-                    R.drawable.image_background
-                )
-
-                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(image))
+            } else {
+                holder.image.setImageBitmap(ImageFormatter.getReflectionBackground(Playlist.listOfPlaylists.ref[position].musics[0].image!!))
             }
         } else {
             val image = BitmapFactory.decodeResource(

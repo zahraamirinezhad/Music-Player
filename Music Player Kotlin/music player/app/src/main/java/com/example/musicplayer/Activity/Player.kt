@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
-import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -26,9 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import com.example.musicplayer.*
 import com.example.musicplayer.Fragment.PlayerViewPagerAdapter
 import com.example.musicplayer.Music_Stuff.*
@@ -184,20 +180,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         }
 
         binding.equalizer.setOnClickListener {
-//            try {
-//                val EqIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
-//                EqIntent.putExtra(
-//                    AudioEffect.EXTRA_AUDIO_SESSION,
-//                    musicService!!.mediaPlayer!!.audioSessionId
-//                )
-//                EqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
-//                EqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-//                startActivityForResult(EqIntent, 13)
-//            } catch (e: Exception) {
-//                Toast.makeText(this, "Equalizer Feature Doesn't Support .", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-
             val intent = Intent(this, MyEqualizer::class.java)
             startActivity(intent)
 
@@ -281,10 +263,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         binding.songNamePA.isSelected = true
 
         val img = Stuff.getImageArt(
-            musicListPA[songPosition].path, BitmapFactory.decodeResource(
-                this.resources,
-                R.drawable.image_background
-            )
+            musicListPA[songPosition].path
         )
         var image = if (img != null) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
@@ -724,7 +703,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
                 artist = "Unknown",
                 duration = duration,
                 artUri = "Unknown",
-                path = path
+                path = path,
+                genre = "Unknown"
             )
         } finally {
             cursor?.close()

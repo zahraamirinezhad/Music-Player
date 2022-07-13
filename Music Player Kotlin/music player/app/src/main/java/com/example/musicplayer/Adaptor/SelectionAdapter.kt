@@ -1,11 +1,14 @@
 package com.example.musicplayer.Adaptor
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.Stuff
+import com.example.musicplayer.Music_Stuff.Stuff.Companion.getImageArt
 import com.example.musicplayer.R
 
 class SelectionAdapter(
@@ -21,7 +24,8 @@ class SelectionAdapter(
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = Stuff.formatDuration(musicList[position].duration)
-        holder.image.setImageBitmap(getSongImage(position))
+
+        setImage(musicList[position].path,holder.image,musicList[position])
 
         if (!selectAll) {
             var exist = false

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.musicplayer.*
 import com.example.musicplayer.Activity.PlayNext
 import com.example.musicplayer.Activity.Player
@@ -35,29 +36,29 @@ class PlayNextAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: MyHolder, @SuppressLint("RecyclerView") position: Int) {
-        val img = Stuff.getImageArt(
-            musicList[position].path, BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.music_player_icon_slash_screen
-            )
-        )
-        var myImage = if (img != null) {
-            BitmapFactory.decodeByteArray(img, 0, img.size)
+        if (Player.musicListPA[Player.songPosition].image == null) {
+            try {
+                val img = Stuff.getImageArt(Player.musicListPA[Player.songPosition].path)
+                val image = if (img != null) {
+                    BitmapFactory.decodeByteArray(img, 0, img.size)
+                } else {
+                    BitmapFactory.decodeResource(
+                        context.resources,
+                        R.drawable.image_background
+                    )
+                }
+                Player.musicListPA[Player.songPosition].image = image
+                holder.image.setImageBitmap(Player.musicListPA[Player.songPosition].image)
+            } catch (e: Exception) {
+                Player.musicListPA[Player.songPosition].image = BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.image_background
+                )
+                holder.image.setImageBitmap(Player.musicListPA[Player.songPosition].image)
+            }
         } else {
-            BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.image_background
-            )
+            holder.image.setImageBitmap(Player.musicListPA[Player.songPosition].image)
         }
-
-        if (myImage == null) {
-            myImage = BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.image_background
-            )
-        }
-
-        holder.image.setImageBitmap(myImage)
 
         holder.title.text = musicList[position].title
         holder.title.isSelected = true

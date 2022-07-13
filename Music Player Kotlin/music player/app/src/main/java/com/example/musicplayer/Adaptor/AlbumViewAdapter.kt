@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
 import com.example.musicplayer.Music_Stuff.*
 import com.example.musicplayer.R
@@ -61,33 +62,51 @@ class AlbumViewAdapter(
         holder.name.text = listOfAlbums.keys.elementAt(position)
 
         if (listOfAlbums[listOfAlbums.keys.elementAt(position)]?.size != 0) {
-            try {
-                val img = Stuff.getImageArt(
+            if (listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                    0
+                )!!.image == null
+            ) {
+                try {
+                    val img = Stuff.getImageArt(
+                        listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                            0
+                        )!!.path
+                    )
+                    val image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    }
                     listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
                         0
-                    )!!.path,
-                    BitmapFactory.decodeResource(
+                    )!!.image = image
+                    holder.image.setImageBitmap(
+                        listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                            0
+                        )!!.image
+                    )
+                } catch (e: Exception) {
+                    listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                        0
+                    )!!.image = BitmapFactory.decodeResource(
                         context.resources,
                         R.drawable.image_background
                     )
-                )
-                val image = if (img != null) {
-                    BitmapFactory.decodeByteArray(img, 0, img.size)
-                } else {
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
+                    holder.image.setImageBitmap(
+                        listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                            0
+                        )!!.image
                     )
                 }
-
-                holder.image.setImageBitmap(image)
-            } catch (e: Exception) {
-                val image = BitmapFactory.decodeResource(
-                    context.resources,
-                    R.drawable.image_background
+            } else {
+                holder.image.setImageBitmap(
+                    listOfAlbums[listOfAlbums.keys.elementAt(position)]?.get(
+                        0
+                    )!!.image
                 )
-
-                holder.image.setImageBitmap(image)
             }
         } else {
             val image = BitmapFactory.decodeResource(
@@ -129,7 +148,11 @@ class AlbumViewAdapter(
                             for (music in MainActivity.songByAlbum[MainActivity.songByAlbum.keys.elementAt(
                                 currentAlbum
                             )]!!) {
-                                if (!Stuff.doesListContainsThisMusic(PlayNext.playNextList, music.id))
+                                if (!Stuff.doesListContainsThisMusic(
+                                        PlayNext.playNextList,
+                                        music.id
+                                    )
+                                )
                                     PlayNext.playNextList.add(music)
                             }
                             Player.musicListPA = ArrayList()

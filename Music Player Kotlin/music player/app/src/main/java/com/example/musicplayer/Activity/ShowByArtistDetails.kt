@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Adaptor.ShowByArtistAdapter
 import com.example.musicplayer.Music_Stuff.ImageFormatter
 import com.example.musicplayer.Music_Stuff.Stuff
@@ -20,9 +19,6 @@ class ShowByArtistDetails : AppCompatActivity() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var adapter: ShowByArtistAdapter
-        fun isAdapterSHBALInitialized(): Boolean {
-            return this::adapter.isInitialized
-        }
     }
 
     lateinit var binding: ActivityShowByArtistDetailsBinding
@@ -52,38 +48,49 @@ class ShowByArtistDetails : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        try {
-            val img = Stuff.getImageArt(
-                MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].path,
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.music_bg
+
+        if (MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].image == null) {
+            try {
+                val img = Stuff.getImageArt(
+                    MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].path
                 )
-            )
-            var image = if (img != null) {
-                BitmapFactory.decodeByteArray(img, 0, img.size)
-            } else {
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.music_bg
+                val image = if (img != null) {
+                    BitmapFactory.decodeByteArray(img, 0, img.size)
+                } else {
+                    BitmapFactory.decodeResource(
+                        resources,
+                        R.drawable.image_background
+                    )
+                }
+                MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].image =
+                    image
+                binding.showByArtistDTBG.setImageBitmap(
+                    ImageFormatter.getReflectionBackground(
+                        MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                            currentArtist
+                        )]!![0].image!!
+                    )
+                )
+            } catch (e: Exception) {
+                MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].image =
+                    BitmapFactory.decodeResource(
+                        resources,
+                        R.drawable.image_background
+                    )
+                binding.showByArtistDTBG.setImageBitmap(
+                    ImageFormatter.getReflectionBackground(
+                        MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
+                            currentArtist
+                        )]!![0].image!!
+                    )
                 )
             }
-
-            if (image == null) {
-                image = BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.music_bg
+        } else {
+            binding.showByArtistDTBG.setImageBitmap(
+                ImageFormatter.getReflectionBackground(
+                    MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(currentArtist)]!![0].image!!
                 )
-            }
-
-            binding.showByArtistDTBG.setImageBitmap(ImageFormatter.getReflectionBackground(image))
-        } catch (e: Exception) {
-            val image = BitmapFactory.decodeResource(
-                resources,
-                R.drawable.music_bg
             )
-
-            binding.showByArtistDTBG.setImageBitmap(ImageFormatter.getReflectionBackground(image))
         }
     }
 

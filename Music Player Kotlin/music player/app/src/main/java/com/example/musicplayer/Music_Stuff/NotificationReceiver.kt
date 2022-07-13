@@ -3,6 +3,7 @@ package com.example.musicplayer.Music_Stuff
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -153,22 +154,32 @@ class NotificationReceiver : BroadcastReceiver() {
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
 
-            val img = Stuff.getImageArt(
-                Player.musicListPA[Player.songPosition].path, BitmapFactory.decodeResource(
-                    context.resources,
-                    R.drawable.music_player_icon_slash_screen
-                )
-            )
-            val image = if (img != null) {
-                BitmapFactory.decodeByteArray(img, 0, img.size)
+            var image: Bitmap?
+            if (Player.musicListPA[Player.songPosition].image == null) {
+                try {
+                    val img = Stuff.getImageArt(
+                        Player.musicListPA[Player.songPosition].path
+                    )
+                    image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    }
+                } catch (e: Exception) {
+                    image = BitmapFactory.decodeResource(
+                        context.resources,
+                        R.drawable.image_background
+                    )
+                }
+
             } else {
-                BitmapFactory.decodeResource(
-                    context.resources,
-                    R.drawable.music_player_icon_slash_screen
-                )
+                image = Player.musicListPA[Player.songPosition].image
             }
 
-            val final_Bitmap = ImageFormatter.returnBlurredBackground(image, context)
+            val final_Bitmap = ImageFormatter.returnBlurredBackground(image!!, context)
             val newdr: Drawable = BitmapDrawable(final_Bitmap)
             Player.binding.musicContainer.background = newdr
 

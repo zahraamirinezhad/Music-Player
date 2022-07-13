@@ -1,6 +1,5 @@
 package com.example.musicplayer.Music_Stuff
 
-import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
@@ -9,11 +8,11 @@ import com.example.musicplayer.Activity.Favourite
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.R
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
 import kotlin.system.exitProcess
 
 class Stuff {
@@ -27,18 +26,12 @@ class Stuff {
             return String.format("%02d:%02d", minutes, seconds)
         }
 
-        fun getImageArt(path: String, dr: Bitmap): ByteArray? {
-            return try {
-                val retriever = MediaMetadataRetriever()
-                retriever.setDataSource(path)
-                retriever.embeddedPicture
-            } catch (e: Exception) {
-                val bitmap = dr
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                val bitmapdata = stream.toByteArray()
-                bitmapdata
-            }
+        fun getImageArt(uri: String): ByteArray? {
+            val retriever = MediaMetadataRetriever()
+            retriever.setDataSource(uri)
+            val art = retriever.embeddedPicture
+            retriever.release()
+            return art
         }
 
         fun setSongPosition(increment: Boolean) {
@@ -149,64 +142,6 @@ class Stuff {
                 .append(DateUtils.formatElapsedTime(music.duration / 1000))
                 .bold { append("\n\nLocation: ") }.append(music.path)
             return str
-        }
-
-        fun sortByMusicAmount(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
-            val companyFounderSet: ArrayList<Map.Entry<String, ArrayList<Music>>> = ArrayList()
-            companyFounderSet.addAll(listOfAlbums.entries)
-
-            val companyFounderListEntry: List<Map.Entry<String, ArrayList<Music>>> = ArrayList(
-                companyFounderSet
-            )
-            Collections.sort(
-                companyFounderListEntry
-            ) { p0, p1 -> p1!!.value.size.compareTo(p0!!.value.size) }
-
-            listOfAlbums.clear()
-
-            for ((key, value) in companyFounderListEntry) {
-                listOfAlbums[key] = value
-            }
-
-            return listOfAlbums
-        }
-
-        fun sortByName(listOfAlbums: LinkedHashMap<String, ArrayList<Music>>): LinkedHashMap<String, ArrayList<Music>> {
-            val names: ArrayList<String> = ArrayList()
-            names.addAll(listOfAlbums.keys)
-            quickSort(names, 0, names.size - 1)
-            val newList: LinkedHashMap<String, ArrayList<Music>> = LinkedHashMap()
-            for (x in names) {
-                newList[x] = listOfAlbums.getValue(x)
-            }
-            return newList
-        }
-
-        fun quickSort(arr: ArrayList<String>, low: Int, high: Int) {
-            if (low < high) {
-                val pi = partition(arr, low, high)
-                quickSort(arr, low, pi - 1)
-                quickSort(arr, pi + 1, high)
-            }
-        }
-
-        fun partition(arr: ArrayList<String>, low: Int, high: Int): Int {
-            val pivot = arr[high]
-            var i = low - 1
-            for (j in low until high) {
-                if (arr[j].lowercase() < pivot.lowercase()) {
-                    i++
-                    swap(arr, i, j)
-                }
-            }
-            swap(arr, i + 1, high)
-            return i + 1
-        }
-
-        fun swap(arr: ArrayList<String>, i: Int, j: Int) {
-            val temp = arr[i]
-            arr[i] = arr[j]
-            arr[j] = temp
         }
     }
 }
