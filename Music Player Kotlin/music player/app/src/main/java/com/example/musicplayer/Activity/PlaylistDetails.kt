@@ -12,13 +12,11 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.musicplayer.Adaptor.PlaylistDetailsAdapter
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.GsonBuilder
 
 class PlaylistDetails : AppCompatActivity() {
     companion object {
@@ -134,10 +132,5 @@ class PlaylistDetails : AppCompatActivity() {
             binding.playlistNamePLD.isSelected = true
         }
         adapter.notifyDataSetChanged()
-
-        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
-        editor.putString("Playlists", jsonStringPlaylist)
-        editor.apply()
     }
 }

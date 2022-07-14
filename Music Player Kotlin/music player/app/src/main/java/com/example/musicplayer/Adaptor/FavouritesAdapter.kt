@@ -13,7 +13,6 @@ import com.example.musicplayer.R
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.google.android.material.snackbar.Snackbar
-import java.io.File
 
 class FavouritesAdapter(
     context: Context,
@@ -25,9 +24,10 @@ class FavouritesAdapter(
 
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
+        holder.genre.text = musicList[position].genre
         holder.duration.text = Stuff.formatDuration(musicList[position].duration)
 
-        setImage(musicList[position].path, holder.image,musicList[position])
+        setImage(musicList[position].path, holder.image, musicList[position])
 
         if (Player.isMusicListPaInitialized() && Player.musicListPA.size != 0 && musicList[position].id == Player.musicListPA[Player.songPosition].id) {
             holder.root.setBackgroundResource(R.drawable.fragment_background)

@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.*
@@ -62,11 +61,11 @@ class PlaylistViewAdapter(
             ContextCompat.startActivity(context, intent, null)
         }
 
-        if (Playlist.listOfPlaylists.ref[position].musics.size > 0) {
-            if (Playlist.listOfPlaylists.ref[position].musics.get(0).image == null) {
+        if (playlistList[position].musics.size > 0) {
+            if (playlistList[position].musics[0].image == null) {
                 try {
                     val img =
-                        Stuff.getImageArt(Playlist.listOfPlaylists.ref[position].musics.get(0).path)
+                        Stuff.getImageArt(playlistList[position].musics[0].path)
                     val image = if (img != null) {
                         BitmapFactory.decodeByteArray(img, 0, img.size)
                     } else {
@@ -75,34 +74,28 @@ class PlaylistViewAdapter(
                             R.drawable.image_background
                         )
                     }
-                    Playlist.listOfPlaylists.ref[position].musics.get(0).image = image
+                    playlistList[position].musics[0].image = image
                     holder.image.setImageBitmap(
                         ImageFormatter.getReflectionBackground(
-                            Playlist.listOfPlaylists.ref[position].musics.get(
-                                0
-                            ).image!!
+                            playlistList[position].musics[0].image!!
                         )
                     )
                 } catch (e: Exception) {
-                    Playlist.listOfPlaylists.ref[position].musics.get(0).image =
+                    playlistList[position].musics[0].image =
                         BitmapFactory.decodeResource(
                             context.resources,
                             R.drawable.image_background
                         )
                     holder.image.setImageBitmap(
                         ImageFormatter.getReflectionBackground(
-                            Playlist.listOfPlaylists.ref[position].musics.get(
-                                0
-                            ).image!!
+                            playlistList[position].musics[0].image!!
                         )
                     )
                 }
             } else {
                 holder.image.setImageBitmap(
                     ImageFormatter.getReflectionBackground(
-                        Playlist.listOfPlaylists.ref[position].musics.get(
-                            0
-                        ).image!!
+                        playlistList[position].musics[0].image!!
                     )
                 )
             }
@@ -124,7 +117,7 @@ class PlaylistViewAdapter(
     fun refresh() {
         playlistList = ArrayList()
         playlistList.addAll(Playlist.listOfPlaylists.ref)
-        if (!Playlist.listOfPlaylists.ref.isNotEmpty()) Playlist.binding.instructionPA.visibility =
+        if (Playlist.listOfPlaylists.ref.isEmpty()) Playlist.binding.instructionPA.visibility =
             View.VISIBLE
         notifyDataSetChanged()
     }

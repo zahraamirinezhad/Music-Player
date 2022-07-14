@@ -75,11 +75,9 @@ class MainActivity : AppCompatActivity() {
         lateinit var songByAlbum: LinkedHashMap<String, ArrayList<Music>>
         lateinit var songByArtist: LinkedHashMap<String, ArrayList<Music>>
         lateinit var allMusicsLyrics: LinkedHashMap<String, String>
-        val sortingList = arrayOf(
-            MediaStore.Audio.Media.DATE_ADDED + " DESC",
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.SIZE + " DESC"
-        )
+        fun isAdapterSHBMUInitialized(): Boolean {
+            return this::musicAdapter.isInitialized
+        }
     }
 
     @SuppressLint("RestrictedApi", "DiscouragedPrivateApi")
@@ -100,7 +98,10 @@ class MainActivity : AppCompatActivity() {
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) {
             initializeLayout()
-            getSavedInfo()
+            try {
+                getSavedInfo()
+            } catch (e: Exception) {
+            }
         }
 
         binding.favoritesBtn.setOnClickListener {
@@ -110,7 +111,6 @@ class MainActivity : AppCompatActivity() {
         binding.playlistBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, Playlist::class.java)
             startActivity(intent)
-
         }
 
         binding.navView.setNavigationItemSelectedListener {
@@ -197,6 +197,20 @@ class MainActivity : AppCompatActivity() {
         artistSortBy = artistSortEditor.getInt("SORT ORDER FOR ARTIST", 0)
 
         MusicListMA = getAllAudio()
+        when (sortBy) {
+            0 -> SortMusics.sortAllMusics(
+                MusicListMA, 0, MusicListMA.size - 1,
+                sortBy
+            )
+            1 -> SortMusics.sortAllMusics(
+                MusicListMA, 0, MusicListMA.size - 1,
+                sortBy
+            )
+            2 -> SortMusics.sortAllMusics(
+                MusicListMA, 0, MusicListMA.size - 1,
+                sortBy
+            )
+        }
 
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
 
@@ -262,7 +276,7 @@ class MainActivity : AppCompatActivity() {
 
         val editor = getSharedPreferences("ShowBy", MODE_PRIVATE)
         val show = editor.getInt("SHOW BY", 0)
-        viewPager.setCurrentItem(show)
+        viewPager.currentItem = show
         if (Player.musicService != null) {
             musicAdapter.updateMusicList(MusicListMA)
         }
@@ -444,9 +458,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    override fun onResume() {
-        super.onResume()
+    override fun onBackPressed() {
+        super.onBackPressed()
+        saveAllInfo()
+    }
+
+    fun saveAllInfo() {
         val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(Favourite.favoriteSongs)
         editor.putString("FavouriteSongs", jsonString)
@@ -471,7 +488,11 @@ class MainActivity : AppCompatActivity() {
         val lyricsJsonString = GsonBuilder().create().toJson(allMusicsLyrics)
         editor.putString("AllMusicsLyrics", lyricsJsonString)
         editor.apply()
+    }
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun onResume() {
+        super.onResume()
         when (binding.musicArtistAlbum.currentItem) {
             2 -> {
                 val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
@@ -558,6 +579,9 @@ class MainActivity : AppCompatActivity() {
             val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
             Favourite.favoriteSongs.addAll(data)
         }
+        for (music in Favourite.favoriteSongs) {
+            music.image = null
+        }
 
         Playlist.listOfPlaylists = ListOfPlaylists()
         val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
@@ -568,6 +592,11 @@ class MainActivity : AppCompatActivity() {
                 GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
             Playlist.listOfPlaylists = data
         }
+        for (list in Playlist.listOfPlaylists.ref) {
+            for (music in list.musics) {
+                music.image = null
+            }
+        }
 
         val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
         if (!recentMusicIsPlaying.toBoolean()) {
@@ -577,6 +606,7 @@ class MainActivity : AppCompatActivity() {
             if (jsonStringRecentMusic != null) {
                 val music: Music =
                     GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
+                music.image = null
                 val pos = Stuff.findMusicById(music)
                 if (pos != -1) {
                     val intent = Intent(this, Player::class.java)

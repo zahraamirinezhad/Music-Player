@@ -262,46 +262,7 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         else binding.favoritesBTN.setImageResource(R.drawable.favorite_empty_icon)
         binding.songNamePA.isSelected = true
 
-        val img = Stuff.getImageArt(
-            musicListPA[songPosition].path
-        )
-        var image = if (img != null) {
-            BitmapFactory.decodeByteArray(img, 0, img.size)
-        } else {
-            BitmapFactory.decodeResource(
-                resources,
-                R.drawable.image_background
-            )
-        }
-        if (image == null) {
-            image = BitmapFactory.decodeResource(
-                resources,
-                R.drawable.image_background
-            )
-        }
-
-        NowPlaying.binding.songImgNP.setImageBitmap(image)
         NowPlaying.binding.songNameNP.text = musicListPA[songPosition].title
-
-        val output = Bitmap.createBitmap(
-            image.width,
-            image.height, Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(output)
-
-        val color = -0xbdbdbe
-        val paint = Paint()
-        val rect = Rect(0, 0, image.width, image.height)
-
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        paint.color = color
-        canvas.drawCircle(
-            (image.width / 1.5).toFloat(), (image.height / 1.5).toFloat(),
-            (image.width / 2).toFloat(), paint
-        )
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(image, rect, rect, paint)
 
         binding.songNamePA.text = musicListPA[songPosition].title
 
@@ -549,6 +510,8 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
 //        if (MainActivity.isAlbumAdapterInitialized()) MainActivity.albumAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
+        if (ShowByArtistDetails.isAdapterSHBARInitialized())
+            ShowByArtistDetails.adapter.update()
     }
 
     private fun pauseMusic() {
@@ -579,12 +542,14 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         if (isShuffle)
             Stuff.setSongPositionShuffle()
         else Stuff.setSongPosition(increment)
-        MainActivity.musicAdapter.update()
-        if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
+        if (MainActivity.isAdapterSHBMUInitialized())
+            MainActivity.musicAdapter.update()
         if (isPlayingPlaylist) PlaylistDetails.adapter.update()
         if (isPlayingFavourites) Favourite.adapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized())
             ShowByAlbumDetails.adapter.update()
+        if (ShowByArtistDetails.isAdapterSHBARInitialized())
+            ShowByArtistDetails.adapter.update()
         setLayout()
         createMediaPlayer()
     }
@@ -613,11 +578,11 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
         if (isShuffle)
             Stuff.setSongPositionShuffle()
         else Stuff.setSongPosition(true)
-        MainActivity.musicAdapter.update()
+        if (MainActivity.isAdapterSHBMUInitialized()) MainActivity.musicAdapter.update()
         if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
         if (isPlayingFavourites) Favourite.adapter.update()
-        if (ShowByAlbumDetails.isAdapterSHBALInitialized())
-            ShowByAlbumDetails.adapter.update()
+        if (ShowByArtistDetails.isAdapterSHBARInitialized())
+            ShowByArtistDetails.adapter.update()
         try {
             createMediaPlayer()
             setLayout()
@@ -697,14 +662,9 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             val title =
                 cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)) ?: "Unknown"
             return Music(
-                id = "Unknown",
                 title = title,
-                album = "Unknown",
-                artist = "Unknown",
                 duration = duration,
-                artUri = "Unknown",
-                path = path,
-                genre = "Unknown"
+                path = path
             )
         } finally {
             cursor?.close()

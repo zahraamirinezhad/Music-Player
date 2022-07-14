@@ -145,15 +145,15 @@ class NotificationReceiver : BroadcastReceiver() {
                 Stuff.setSongPositionShuffle()
             else Stuff.setSongPosition(increment)
 
-            MainActivity.musicAdapter.update()
+            if (MainActivity.isAdapterSHBMUInitialized()) MainActivity.musicAdapter.update()
             if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
+            if (ShowByArtistDetails.isAdapterSHBARInitialized()) ShowByArtistDetails.adapter.update()
             if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
             if (Player.isPlayingFavourites) Favourite.adapter.update()
 
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
-
             var image: Bitmap?
             if (Player.musicListPA[Player.songPosition].image == null) {
                 try {
@@ -174,7 +174,6 @@ class NotificationReceiver : BroadcastReceiver() {
                         R.drawable.image_background
                     )
                 }
-
             } else {
                 image = Player.musicListPA[Player.songPosition].image
             }

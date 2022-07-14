@@ -19,6 +19,9 @@ class ShowByArtistDetails : AppCompatActivity() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var adapter: ShowByArtistAdapter
+        fun isAdapterSHBARInitialized(): Boolean {
+            return this::adapter.isInitialized
+        }
     }
 
     lateinit var binding: ActivityShowByArtistDetailsBinding

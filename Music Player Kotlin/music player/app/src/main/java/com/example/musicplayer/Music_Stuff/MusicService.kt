@@ -101,28 +101,23 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         )
 
         var image: Bitmap?
-        if (Player.musicListPA[Player.songPosition].image == null) {
-            try {
-                val img = Stuff.getImageArt(
-                    Player.musicListPA[Player.songPosition].path
-                )
-                image = if (img != null) {
-                    BitmapFactory.decodeByteArray(img, 0, img.size)
-                } else {
-                    BitmapFactory.decodeResource(
-                        resources,
-                        R.drawable.image_background
-                    )
-                }
-            } catch (e: Exception) {
-                image = BitmapFactory.decodeResource(
+        try {
+            val img = Stuff.getImageArt(
+                Player.musicListPA[Player.songPosition].path
+            )
+            image = if (img != null) {
+                BitmapFactory.decodeByteArray(img, 0, img.size)
+            } else {
+                BitmapFactory.decodeResource(
                     resources,
                     R.drawable.image_background
                 )
             }
-
-        } else {
-            image = Player.musicListPA[Player.songPosition].image
+        } catch (e: Exception) {
+            image = BitmapFactory.decodeResource(
+                resources,
+                R.drawable.image_background
+            )
         }
 
         if (Player.isContent) {

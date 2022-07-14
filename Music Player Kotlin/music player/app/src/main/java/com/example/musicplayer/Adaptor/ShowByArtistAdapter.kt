@@ -26,6 +26,7 @@ class ShowByArtistAdapter(
 
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
+        holder.genre.text = musicList[position].genre
         holder.duration.text = Stuff.formatDuration(musicList[position].duration)
 
         setImage(musicList[position].path,holder.image,musicList[position])

@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.FavouritesAdapter
-import com.example.musicplayer.Adaptor.MusicAdapter
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
@@ -20,9 +19,6 @@ class Favourite : AppCompatActivity() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var adapter: FavouritesAdapter
-        fun isAdapterInitialized(): Boolean {
-            return this::adapter.isInitialized
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
