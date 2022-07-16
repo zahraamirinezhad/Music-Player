@@ -5,6 +5,9 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.musicplayer.Music_Stuff.Constants.Companion.GMAIL
+import com.example.musicplayer.Music_Stuff.Constants.Companion.GMAIL_PASSWORD
+import com.example.musicplayer.Music_Stuff.Constants.Companion.STH_WENT_WRONG
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityFeedbackBinding
 import java.util.*
@@ -20,14 +23,14 @@ class Feedback : AppCompatActivity() {
         //Initializing Binding
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = "FEEDBACK"
+        supportActionBar?.title = this.getString(R.string.feedback)
 
         binding.sendFD.setOnClickListener {
             val feedbackMsg =
                 binding.feedbackFD.text.toString() + "\n From \n " + binding.emailFD.text.toString()
             val subject = binding.topicFD.text.toString()
-            val user = "zahraamiri1381216@gmail.com"
-            val password = "kagurasougo"
+            val user = GMAIL
+            val password = GMAIL_PASSWORD
             val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             if (feedbackMsg.isNotEmpty() && subject.isNotEmpty() && cm.activeNetworkInfo?.isConnectedOrConnecting == true) {
                 Thread {
@@ -53,7 +56,7 @@ class Feedback : AppCompatActivity() {
                     }
                 }.start()
             } else {
-                Toast.makeText(this, "Something Went Wrong :(", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, STH_WENT_WRONG, Toast.LENGTH_SHORT).show()
             }
         }
     }

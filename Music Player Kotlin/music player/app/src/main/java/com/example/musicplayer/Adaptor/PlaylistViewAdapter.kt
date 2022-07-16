@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
+import com.example.musicplayer.Music_Stuff.Constants.Companion.NO
+import com.example.musicplayer.Music_Stuff.Constants.Companion.WANNA_DELETE_PLAYLIST
+import com.example.musicplayer.Music_Stuff.Constants.Companion.YES
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -40,13 +44,13 @@ class PlaylistViewAdapter(
         holder.deleteBTN.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(context)
             builder.setTitle(playlistList[position].name)
-                .setMessage("Do you want to delete this playlist ?")
-                .setPositiveButton("YES") { dialog, _ ->
+                .setMessage(WANNA_DELETE_PLAYLIST)
+                .setPositiveButton(YES) { dialog, _ ->
                     Playlist.listOfPlaylists.ref.removeAt(position)
                     refresh()
                     dialog.dismiss()
                 }
-                .setNegativeButton("NO") { dialog, _ ->
+                .setNegativeButton(NO) { dialog, _ ->
                     dialog.dismiss()
                 }
             val customDialog = builder.create()
@@ -57,7 +61,7 @@ class PlaylistViewAdapter(
 
         holder.root.setOnClickListener {
             val intent = Intent(context, PlaylistDetails::class.java)
-            intent.putExtra("index", position)
+            intent.putExtra(INDEX, position)
             ContextCompat.startActivity(context, intent, null)
         }
 

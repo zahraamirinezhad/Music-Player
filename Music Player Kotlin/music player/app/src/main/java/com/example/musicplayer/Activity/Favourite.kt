@@ -7,6 +7,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.FavouritesAdapter
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CLASS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.FAVOURITES_SHUFFLE
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
@@ -45,8 +48,8 @@ class Favourite : AppCompatActivity() {
         binding.shuffleFav.setOnClickListener {
             if (favoriteSongs.isNotEmpty()) {
                 val intent = Intent(this@Favourite, Player::class.java)
-                intent.putExtra("index", 0)
-                intent.putExtra("class", "FavouritesShuffle")
+                intent.putExtra(INDEX, 0)
+                intent.putExtra(CLASS, FAVOURITES_SHUFFLE)
                 startActivity(intent)
             }
         }

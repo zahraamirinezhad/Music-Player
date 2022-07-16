@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.MUSICS_ADDED_SUCCESSFULLY
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.SelectPlaylistViewBinding
 
@@ -84,7 +85,7 @@ class SelectPlaylistAdapter(
                         playlistList[position].musics.add(music)
                     }
                 }
-                Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, MUSICS_ADDED_SUCCESSFULLY, Toast.LENGTH_SHORT).show()
                 AlbumViewAdapter.menu.dismiss()
             } else if (MainActivity.binding.musicArtistAlbum.currentItem == 0) {
                 for (music in MainActivity.songByArtist[MainActivity.songByArtist.keys.elementAt(
@@ -94,7 +95,7 @@ class SelectPlaylistAdapter(
                         playlistList[position].musics.add(music)
                     }
                 }
-                Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, MUSICS_ADDED_SUCCESSFULLY, Toast.LENGTH_SHORT).show()
                 ArtistViewAdapter.menu.dismiss()
             }
         }

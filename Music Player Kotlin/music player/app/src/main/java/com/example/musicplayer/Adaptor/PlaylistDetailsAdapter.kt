@@ -1,11 +1,12 @@
 package com.example.musicplayer.Adaptor
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
-import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAYLIST_DETAILS_ADAPTER
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAY_SONG_FIRST
+import com.example.musicplayer.Music_Stuff.Constants.Companion.REMOVE
 import com.example.musicplayer.Music_Stuff.CustomDialog
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.Stuff
@@ -39,7 +40,7 @@ class PlaylistDetailsAdapter(
                 LayoutInflater.from(context).inflate(R.layout.more_feature, holder.root, false)
             val bindingMF = MoreFeatureBinding.bind(customDialog)
             val dialog = CustomDialog.getDialogForOnLongClickListener(context, customDialog)
-            bindingMF.deleteBtn.text = "Remove"
+            bindingMF.deleteBtn.text = REMOVE
 
             bindingMF.AddToPNBtn.setOnClickListener {
                 try {
@@ -52,7 +53,7 @@ class PlaylistDetailsAdapter(
                     Player.musicListPA = ArrayList()
                     Player.musicListPA.addAll(PlayNext.playNextList)
                 } catch (e: Exception) {
-                    Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
+                    Snackbar.make(context, holder.root, PLAY_SONG_FIRST, 3000).show()
                 }
                 dialog.dismiss()
             }
@@ -96,7 +97,7 @@ class PlaylistDetailsAdapter(
         }
 
         holder.root.setOnClickListener {
-            sendIntent("PlaylistDetailsAdapter", position)
+            sendIntent(PLAYLIST_DETAILS_ADAPTER, position)
         }
     }
 }

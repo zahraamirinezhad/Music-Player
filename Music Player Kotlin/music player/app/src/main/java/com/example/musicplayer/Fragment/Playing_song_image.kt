@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.R
@@ -35,7 +36,7 @@ class playing_song_image : Fragment() {
 
         Player.mainImageAnimator = ObjectAnimator.ofFloat(
             songImage,
-            "rotation",
+            Constants.ROTATION,
             (Math.toDegrees(2 * Math.PI)).toFloat()
         )
         Player.mainImageAnimator.repeatCount = Animation.INFINITE
@@ -55,53 +56,59 @@ class playing_song_image : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        var image: Bitmap?
-        if (Player.musicListPA[Player.songPosition].image == null) {
-            try {
-                val img = Stuff.getImageArt(
-                    Player.musicListPA[Player.songPosition].path
-                )
-                image = if (img != null) {
-                    BitmapFactory.decodeByteArray(img, 0, img.size)
-                } else {
-                    BitmapFactory.decodeResource(
+        try {
+            var image: Bitmap?
+            if (Player.musicListPA[Player.songPosition].image == null) {
+                try {
+                    val img = Stuff.getImageArt(
+                        Player.musicListPA[Player.songPosition].path
+                    )
+                    image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            resources,
+                            R.drawable.image_background
+                        )
+                    }
+                } catch (e: Exception) {
+                    image = BitmapFactory.decodeResource(
                         resources,
                         R.drawable.image_background
                     )
                 }
-            } catch (e: Exception) {
-                image = BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.image_background
-                )
+
+            } else {
+                image = Player.musicListPA[Player.songPosition].image
             }
 
-        } else {
-            image = Player.musicListPA[Player.songPosition].image
+            if (NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.setImageBitmap(
+                image
+            )
+
+//            val output = Bitmap.createBitmap(
+//                image!!.width,
+//                image.height, Bitmap.Config.ARGB_8888
+//            )
+//            val canvas = Canvas(output)
+//
+//            val color = -0xbdbdbe
+//            val paint = Paint()
+//            val rect = Rect(0, 0, image.width, image.height)
+//
+//            paint.isAntiAlias = true
+//            canvas.drawARGB(0, 0, 0, 0)
+//            paint.color = color
+//            canvas.drawCircle(
+//                (image.width / 2).toFloat(), (image.height / 2).toFloat(),
+//                (image.width / 3).toFloat(), paint
+//            )
+//            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+//            canvas.drawBitmap(image, rect, rect, paint)
+
+            songImage.setImageBitmap(image)
+        } catch (e: Exception) {
+            Toast.makeText(context, e.message.toString(), Toast.LENGTH_LONG).show()
         }
-
-        if (NowPlaying.isBindingNPInitialized()) NowPlaying.binding.songImgNP.setImageBitmap(image)
-
-        val output = Bitmap.createBitmap(
-            image!!.width,
-            image.height, Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(output)
-
-        val color = -0xbdbdbe
-        val paint = Paint()
-        val rect = Rect(0, 0, image.width, image.height)
-
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        paint.color = color
-        canvas.drawCircle(
-            (image.width / 2).toFloat(), (image.height / 2).toFloat(),
-            (image.width / 3).toFloat(), paint
-        )
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(image, rect, rect, paint)
-
-        songImage.setImageBitmap(output)
     }
 }

@@ -16,6 +16,8 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import com.example.musicplayer.Activity.Player
+import com.example.musicplayer.Music_Stuff.Constants.Companion.LYRICS_ADDED_SUCCESSFULLY
+import com.example.musicplayer.Music_Stuff.Constants.Companion.NO_LYRICS
 import com.example.musicplayer.R
 
 class playin_song_lyrics : Fragment() {
@@ -59,13 +61,13 @@ class playin_song_lyrics : Fragment() {
                                 rootView.findViewById<EditText>(R.id.lyrics).text.toString()
                             Toast.makeText(
                                 context,
-                                "Lyrics Saved Successfully :)",
+                                LYRICS_ADDED_SUCCESSFULLY,
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             Toast.makeText(
                                 context,
-                                "There is No Lyrics to Save :(",
+                                NO_LYRICS,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

@@ -1,21 +1,18 @@
 package com.example.musicplayer.Adaptor
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
-import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ALBUM_DETAILS_ADAPTER
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAY_SONG_FIRST
 import com.example.musicplayer.Music_Stuff.CustomDialog
 import com.example.musicplayer.Music_Stuff.Music
-import com.example.musicplayer.Music_Stuff.NowPlaying
 import com.example.musicplayer.Music_Stuff.Stuff
-import com.example.musicplayer.Music_Stuff.Stuff.Companion.getImageArt
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.google.android.material.snackbar.Snackbar
-import java.io.File
 
 class AlbumAdapter(
     context: Context,
@@ -54,7 +51,7 @@ class AlbumAdapter(
                     Player.musicListPA = ArrayList()
                     Player.musicListPA.addAll(PlayNext.playNextList)
                 } catch (e: Exception) {
-                    Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
+                    Snackbar.make(context, holder.root, PLAY_SONG_FIRST, 3000).show()
                 }
                 dialog.dismiss()
             }
@@ -80,7 +77,7 @@ class AlbumAdapter(
         }
 
         holder.root.setOnClickListener {
-            sendIntent("AlbumDetailsAdapter", position)
+            sendIntent(ALBUM_DETAILS_ADAPTER, position)
         }
     }
 }

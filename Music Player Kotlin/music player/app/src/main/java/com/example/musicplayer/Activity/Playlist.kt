@@ -9,6 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.musicplayer.Music_Stuff.ListOfPlaylists
 import com.example.musicplayer.Adaptor.PlaylistViewAdapter
+import com.example.musicplayer.Music_Stuff.Constants
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ADD
+import com.example.musicplayer.Music_Stuff.Constants.Companion.DAY_FORMATTER
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAYLIST_EXIST
 import com.example.musicplayer.R
 import com.example.musicplayer.Music_Stuff.MyPlaylist
 import com.example.musicplayer.databinding.ActivityPlaylistBinding
@@ -54,8 +58,8 @@ class Playlist : AppCompatActivity() {
             .inflate(R.layout.add_playlist_dialog, binding.root, false)
         val binder = AddPlaylistDialogBinding.bind(dialog)
         val builder = MaterialAlertDialogBuilder(this)
-        builder.setView(dialog).setTitle("PLAYLIST NAME")
-            .setPositiveButton("ADD") { dialog, _ ->
+        builder.setView(dialog).setTitle(Constants.PLAYLIST_NAME)
+            .setPositiveButton(ADD) { dialog, _ ->
                 binding.instructionPA.visibility = View.GONE
                 val name = binder.playListNamePL.text
                 val username = binder.userNamePL.text
@@ -75,14 +79,14 @@ class Playlist : AppCompatActivity() {
             }
         }
 
-        if (playlistExist) Toast.makeText(this, "Playlist Exist !!", Toast.LENGTH_SHORT).show()
+        if (playlistExist) Toast.makeText(this, PLAYLIST_EXIST, Toast.LENGTH_SHORT).show()
         else {
             val tempPlaylist = MyPlaylist()
             tempPlaylist.name = name
             tempPlaylist.createdBy = username
             tempPlaylist.musics = ArrayList()
             val calender = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.US)
+            val sdf = SimpleDateFormat(DAY_FORMATTER, Locale.US)
             tempPlaylist.createdOn = sdf.format(calender)
             listOfPlaylists.ref.add(tempPlaylist)
             adapter.refresh()

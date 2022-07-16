@@ -5,14 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.provider.MediaStore.VOLUME_EXTERNAL
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -23,7 +19,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.database.getStringOrNull
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.example.musicplayer.*
 import com.example.musicplayer.Adaptor.AlbumViewAdapter
@@ -34,23 +29,30 @@ import com.example.musicplayer.Fragment.ShowByArtist
 import com.example.musicplayer.Fragment.ShowByMusic
 import com.example.musicplayer.Fragment.ViewPagerAdapter
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ALBUM
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ARTIST
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CLASS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
+import com.example.musicplayer.Music_Stuff.Constants.Companion.MAIN_ACTIVITY
+import com.example.musicplayer.Music_Stuff.Constants.Companion.MUSIC
+import com.example.musicplayer.Music_Stuff.Constants.Companion.NO
+import com.example.musicplayer.Music_Stuff.Constants.Companion.RECENT_MUSIC
+import com.example.musicplayer.Music_Stuff.Constants.Companion.RECENT_MUSIC_CURRENT_POSITION
+import com.example.musicplayer.Music_Stuff.Constants.Companion.RECENT_MUSIC_IS_PLAYING
+import com.example.musicplayer.Music_Stuff.Constants.Companion.SHOW_BY
+import com.example.musicplayer.Music_Stuff.Constants.Companion.SHOW_BY_PASSWORD
+import com.example.musicplayer.Music_Stuff.Constants.Companion.UNKNOWN
+import com.example.musicplayer.Music_Stuff.Constants.Companion.WANNA_GO
+import com.example.musicplayer.Music_Stuff.Constants.Companion.YES
+import com.example.musicplayer.Music_Stuff.Data.Companion.saveAllInfo
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortAllAtBeginning
 import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbum
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbumName
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByAlbumSongAmount
 import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtist
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtistName
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByArtistSonAmount
 import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByMusic
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByMusicAmount
-import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortByName
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortCommandAlbumSettings
+import com.example.musicplayer.Music_Stuff.SortMusics.Companion.sortCommandSongSettings
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import org.oxycblt.auxio.music.id3GenreName
-import org.oxycblt.auxio.music.queryCursor
-import org.oxycblt.auxio.music.useQuery
-import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -75,9 +77,6 @@ class MainActivity : AppCompatActivity() {
         lateinit var songByAlbum: LinkedHashMap<String, ArrayList<Music>>
         lateinit var songByArtist: LinkedHashMap<String, ArrayList<Music>>
         lateinit var allMusicsLyrics: LinkedHashMap<String, String>
-        fun isAdapterSHBMUInitialized(): Boolean {
-            return this::musicAdapter.isInitialized
-        }
     }
 
     @SuppressLint("RestrictedApi", "DiscouragedPrivateApi")
@@ -98,8 +97,26 @@ class MainActivity : AppCompatActivity() {
         //checking for permission & if permission is granted then initializeLayout
         if (requestRuntimePermission()) {
             initializeLayout()
+
             try {
-                getSavedInfo()
+                Data.getSavedInfo(this)
+                if (Player.musicService == null) {
+                    if (Data.playingPlayList.size != 0 && Data.nowPlayingMusicID != UNKNOWN && Data.nowPlayingMusicPositionInSeekBar != -1 && Data.isCurrentMusicPlaying != null) {
+                        val intent = Intent(this, Player::class.java)
+                        var pos = 0
+                        for (i in 0 until Data.playingPlayList.size) {
+                            if (Data.playingPlayList[i].id == Data.nowPlayingMusicID) pos = i
+                        }
+                        intent.putExtra(INDEX, pos)
+                        intent.putExtra(CLASS, RECENT_MUSIC)
+                        intent.putExtra(
+                            RECENT_MUSIC_CURRENT_POSITION,
+                            Data.nowPlayingMusicPositionInSeekBar
+                        )
+                        intent.putExtra(RECENT_MUSIC_IS_PLAYING, Data.isCurrentMusicPlaying)
+                        ContextCompat.startActivity(this, intent, null)
+                    }
+                }
             } catch (e: Exception) {
             }
         }
@@ -120,13 +137,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.about -> startActivity(Intent(this@MainActivity, About::class.java))
                 R.id.exit -> {
                     val builder = MaterialAlertDialogBuilder(this)
-                    builder.setTitle("EXIT")
-                        .setMessage("Do You Want to Close the App ?")
-                        .setPositiveButton("YES") { _, _ ->
+                    builder.setTitle(this.getString(R.string.exit))
+                        .setMessage(WANNA_GO)
+                        .setPositiveButton(YES) { _, _ ->
 //                            exitApplication()
                             finish()
                         }
-                        .setNegativeButton("NO") { dialog, _ ->
+                        .setNegativeButton(NO) { dialog, _ ->
                             dialog.dismiss()
                         }
                     val customDialog = builder.create()
@@ -138,12 +155,12 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        binding.refreshLayout.setOnRefreshListener {
-            MusicListMA = getAllAudio()
-            musicAdapter.updateMusicList(MusicListMA)
-            binding.refreshLayout.isRefreshing = false
-        }
+//               TODO
+//        binding.refreshLayout.setOnRefreshListener {
+//            MusicListMA = getAllAudio(this)
+//            musicAdapter.updateMusicList(MusicListMA)
+//            binding.refreshLayout.isRefreshing = false
+//        }
 
         binding.moreBtn.setOnClickListener {
             val popupMenu = PopupMenu(this, binding.moreBtn)
@@ -155,8 +172,8 @@ class MainActivity : AppCompatActivity() {
                     R.id.shuffle_menu -> {
                         if (MusicListMA.size != 0) {
                             val intent = Intent(this@MainActivity, Player::class.java)
-                            intent.putExtra("index", 0)
-                            intent.putExtra("class", "MainActivity")
+                            intent.putExtra(INDEX, 0)
+                            intent.putExtra(CLASS, MAIN_ACTIVITY)
                             startActivity(intent)
                         }
                     }
@@ -182,73 +199,16 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    @SuppressLint("SetTextI18n")
     private fun initializeLayout() {
         search = false
 
-        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
-        sortBy = sortEditor.getInt("SORT ORDER", 0)
-
-        val albumSortEditor = getSharedPreferences("SORTING_ALBUM", MODE_PRIVATE)
-        albumSortBy = albumSortEditor.getInt("SORT ORDER FOR ALBUM", 0)
-
-        val artistSortEditor = getSharedPreferences("SORTING_ARTIST", MODE_PRIVATE)
-        artistSortBy = artistSortEditor.getInt("SORT ORDER FOR ARTIST", 0)
-
-        MusicListMA = getAllAudio()
-        when (sortBy) {
-            0 -> SortMusics.sortAllMusics(
-                MusicListMA, 0, MusicListMA.size - 1,
-                sortBy
-            )
-            1 -> SortMusics.sortAllMusics(
-                MusicListMA, 0, MusicListMA.size - 1,
-                sortBy
-            )
-            2 -> SortMusics.sortAllMusics(
-                MusicListMA, 0, MusicListMA.size - 1,
-                sortBy
-            )
-        }
-
-        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
-
-        if (albumSortBy == 1) {
-            val list = sortByMusicAmount(songByAlbum)
-            songByAlbum = LinkedHashMap()
-            for (x in list) {
-                songByAlbum[x.key] = x.value
-            }
-        } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
-                songByAlbum
-            )
-            songByAlbum = LinkedHashMap()
-            songByAlbum = newList
-        }
-        albumAdapter = AlbumViewAdapter(this, songByAlbum)
-
-        if (artistSortBy == 1) {
-            val list = sortByMusicAmount(songByArtist)
-            songByArtist = LinkedHashMap()
-            for (x in list) {
-                songByArtist[x.key] = x.value
-            }
-        } else {
-            val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
-                songByArtist
-            )
-            songByArtist = LinkedHashMap()
-            songByArtist = newList
-        }
-        artistAdapter = ArtistViewAdapter(this, songByArtist)
+        sortAllAtBeginning(this)
 
         val viewPager = binding.musicArtistAlbum
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.add(ShowByArtist(), "ARTIST")
-        adapter.add(ShowByAlbum(), "ALBUM")
-        adapter.add(ShowByMusic(), "MUSIC")
+        adapter.add(ShowByArtist(), ARTIST)
+        adapter.add(ShowByAlbum(), ALBUM)
+        adapter.add(ShowByMusic(), MUSIC)
         viewPager.adapter = adapter
         val tabLayout = binding.musicArtistAlbumTabLayout
         tabLayout.setupWithViewPager(viewPager)
@@ -261,9 +221,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(Position: Int) {
-                val editor = getSharedPreferences("ShowBy", MODE_PRIVATE).edit()
+                val editor = getSharedPreferences(SHOW_BY, MODE_PRIVATE).edit()
                 editor.putInt(
-                    "SHOW BY",
+                    SHOW_BY_PASSWORD,
                     Position
                 )
                 editor.apply()
@@ -274,144 +234,12 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-        val editor = getSharedPreferences("ShowBy", MODE_PRIVATE)
-        val show = editor.getInt("SHOW BY", 0)
+        val editor = getSharedPreferences(SHOW_BY, MODE_PRIVATE)
+        val show = editor.getInt(SHOW_BY_PASSWORD, 0)
         viewPager.currentItem = show
         if (Player.musicService != null) {
             musicAdapter.updateMusicList(MusicListMA)
         }
-    }
-
-    @SuppressLint("Recycle", "Range")
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun getAllAudio(): ArrayList<Music> {
-        allMusicsLyrics = LinkedHashMap()
-        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
-        val jsonString = editor.getString("AllMusicsLyrics", null)
-        val typeToken = object : TypeToken<LinkedHashMap<String, String>>() {}.type
-        if (jsonString != null) {
-            allMusicsLyrics = GsonBuilder().create().fromJson(jsonString, typeToken)
-
-        }
-        songByAlbum = LinkedHashMap()
-        songByArtist = LinkedHashMap()
-        val tempList = ArrayList<Music>()
-        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
-        val projection = arrayOf(
-            MediaStore.Audio.AudioColumns._ID,
-            MediaStore.Audio.AudioColumns.TITLE,
-            MediaStore.Audio.AudioColumns.ALBUM,
-            MediaStore.Audio.AudioColumns.ARTIST,
-            MediaStore.Audio.AudioColumns.DURATION,
-            MediaStore.Audio.AudioColumns.DATE_ADDED,
-            MediaStore.Audio.AudioColumns.DATA,
-            MediaStore.Audio.AudioColumns.ALBUM_ID,
-            MediaStore.Audio.AudioColumns.SIZE,
-        )
-        val cursor = this.contentResolver.queryCursor(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null
-        )
-
-//        val cursor = this.contentResolver.query(
-//            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-//            sortingList[sortBy], null
-//        )
-
-        if (cursor != null) {
-            if (cursor.moveToFirst())
-                do {
-                    val titleC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE))
-                            ?: "Unknown"
-                    val idC =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID))
-                            .toString()
-                    val albumC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM))
-                            ?: "Unknown"
-                    val artistC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST))
-                            ?: "Unknown"
-                    val dateC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATE_ADDED))
-                            ?: "Unknown"
-                    val sizeC =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.SIZE))
-                    val pathC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA))
-                    val durationC =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION))
-                    val albumIdC =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID))
-                            .toString()
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
-                    val lyricsC: String? =
-                        if (allMusicsLyrics.containsKey(idC)) allMusicsLyrics[idC] else null
-                    val music = Music(
-                        id = idC,
-                        title = titleC,
-                        album = albumC,
-                        artist = artistC,
-                        path = pathC,
-                        duration = durationC,
-                        artUri = artUriC,
-                        lyrics = lyricsC,
-                        genre = "Unknown",
-                        date = dateC,
-                        size = sizeC
-                    )
-                    val file = File(music.path)
-                    if (file.exists()) {
-                        tempList.add(music)
-                    }
-                } while (cursor.moveToNext())
-            cursor.close()
-        }
-
-        contentResolver.useQuery(
-            MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME)
-        ) { genreCursor ->
-            val idIndex = genreCursor.getColumnIndexOrThrow(MediaStore.Audio.Genres._ID)
-            val nameIndex = genreCursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME)
-
-            while (genreCursor.moveToNext()) {
-                val id = genreCursor.getLong(idIndex)
-                val name = (genreCursor.getStringOrNull(nameIndex) ?: continue).id3GenreName
-                contentResolver.useQuery(
-                    MediaStore.Audio.Genres.Members.getContentUri(VOLUME_EXTERNAL, id),
-                    arrayOf(MediaStore.Audio.Genres.Members._ID)
-                ) { cursor ->
-                    val songIdIndex =
-                        cursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.Members._ID)
-
-                    while (cursor.moveToNext()) {
-                        val songId = cursor.getLong(songIdIndex)
-                        tempList.find { it.id.toLong() == songId }
-                            ?.let { song -> song.genre = name }
-                    }
-                }
-            }
-        }
-
-        for (music in tempList) {
-            if (songByAlbum.containsKey(music.album)) {
-                songByAlbum[music.album]?.add(music)
-            } else {
-                songByAlbum[music.album] = ArrayList()
-                songByAlbum[music.album]?.add(music)
-            }
-
-            if (songByArtist.containsKey(music.artist)) {
-                songByArtist[music.artist]?.add(music)
-            } else {
-                songByArtist[music.artist] = ArrayList()
-                songByArtist[music.artist]?.add(music)
-            }
-        }
-
-        return tempList
     }
 
     //For requesting permission
@@ -440,7 +268,6 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 13) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 initializeLayout()
             } else
                 ActivityCompat.requestPermissions(
@@ -460,34 +287,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        saveAllInfo()
-    }
-
-    fun saveAllInfo() {
-        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE).edit()
-        val jsonString = GsonBuilder().create().toJson(Favourite.favoriteSongs)
-        editor.putString("FavouriteSongs", jsonString)
-        val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
-        editor.putString("Playlists", jsonStringPlaylist)
-        if (Player.musicService != null && Player.isMusicListPaInitialized() && Player.musicListPA.size != 0) {
-            val recentMusic =
-                GsonBuilder().create().toJson(Player.musicListPA[Player.songPosition])
-            editor.putString("RecentMusic", recentMusic)
-            editor.putString(
-                "RecentMusicCurrentPosition",
-                Player.musicService!!.mediaPlayer!!.currentPosition.toString()
-            )
-            editor.putString("RecentMusicIsPlaying", Player.isPlaying.toString())
-        }
-        for (music in MusicListMA) {
-            if (music.lyrics != null && music.lyrics != "") allMusicsLyrics.put(
-                music.id,
-                music.lyrics!!
-            )
-        }
-        val lyricsJsonString = GsonBuilder().create().toJson(allMusicsLyrics)
-        editor.putString("AllMusicsLyrics", lyricsJsonString)
-        editor.apply()
+        saveAllInfo(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -495,52 +295,13 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         when (binding.musicArtistAlbum.currentItem) {
             2 -> {
-                val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
-                val sortValue = sortEditor.getInt("SORT ORDER", 0)
-                if (sortBy != sortValue) {
-                    when (sortBy) {
-                        2 -> {
-                            sortByMusic(this)
-                        }
-                        1 -> {
-                            sortByAlbum(this)
-                        }
-                        0 -> {
-                            sortByArtist(this)
-                        }
-                    }
-                    musicAdapter.updateMusicList(MusicListMA)
-                }
+                sortCommandSongSettings(this)
             }
             1 -> {
-                val albumSortEditor = getSharedPreferences("SORTING_ALBUM", MODE_PRIVATE)
-                val sortValue = albumSortEditor.getInt("SORT ORDER FOR ALBUM", 0)
-                if (albumSortBy != sortValue) {
-                    albumSortBy = sortValue
-                    when (albumSortBy) {
-                        0 -> {
-                            sortByAlbumName()
-                        }
-                        1 -> {
-                            sortByAlbumSongAmount()
-                        }
-                    }
-                }
+                sortCommandAlbumSettings(this)
             }
             0 -> {
-                val artistSortEditor = getSharedPreferences("SORTING_ARTIST", MODE_PRIVATE)
-                val sortValue = artistSortEditor.getInt("SORT ORDER FOR ARTIST", 0)
-                if (artistSortBy != sortValue) {
-                    artistSortBy = sortValue
-                    when (artistSortBy) {
-                        0 -> {
-                            sortByArtistName()
-                        }
-                        1 -> {
-                            sortByArtistSonAmount()
-                        }
-                    }
-                }
+                SortMusics.sortCommandArtistSettings(this)
             }
         }
     }
@@ -568,57 +329,6 @@ class MainActivity : AppCompatActivity() {
 
         })
         return super.onCreateOptionsMenu(menu)
-    }
-
-    private fun getSavedInfo() {
-        Favourite.favoriteSongs = ArrayList()
-        val editor = getSharedPreferences("savedInfo", MODE_PRIVATE)
-        val jsonString = editor.getString("FavouriteSongs", null)
-        val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
-        if (jsonString != null) {
-            val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
-            Favourite.favoriteSongs.addAll(data)
-        }
-        for (music in Favourite.favoriteSongs) {
-            music.image = null
-        }
-
-        Playlist.listOfPlaylists = ListOfPlaylists()
-        val editorPlaylist = getSharedPreferences("savedInfo", MODE_PRIVATE)
-        val jsonStringPlaylist = editorPlaylist.getString("Playlists", null)
-        val typeTokenPlaylist = object : TypeToken<ListOfPlaylists>() {}.type
-        if (jsonStringPlaylist != null) {
-            val data: ListOfPlaylists =
-                GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
-            Playlist.listOfPlaylists = data
-        }
-        for (list in Playlist.listOfPlaylists.ref) {
-            for (music in list.musics) {
-                music.image = null
-            }
-        }
-
-        val recentMusicIsPlaying = editor.getString("RecentMusicIsPlaying", "false")
-        if (!recentMusicIsPlaying.toBoolean()) {
-            val editorRecentMusic = getSharedPreferences("savedInfo", MODE_PRIVATE)
-            val jsonStringRecentMusic = editorRecentMusic.getString("RecentMusic", null)
-            val typeTokenRecentMusic = object : TypeToken<Music>() {}.type
-            if (jsonStringRecentMusic != null) {
-                val music: Music =
-                    GsonBuilder().create().fromJson(jsonStringRecentMusic, typeTokenRecentMusic)
-                music.image = null
-                val pos = Stuff.findMusicById(music)
-                if (pos != -1) {
-                    val intent = Intent(this, Player::class.java)
-                    intent.putExtra("index", pos)
-                    intent.putExtra("class", "RecentMusic")
-                    val currentPosition = editor.getString("RecentMusicCurrentPosition", "")
-                    intent.putExtra("recentMusicCurrentPosition", currentPosition?.toInt())
-                    intent.putExtra("RecentMusicIsPlaying", recentMusicIsPlaying?.toBoolean())
-                    ContextCompat.startActivity(this, intent, null)
-                }
-            }
-        }
     }
 
     private fun sortMusics() {

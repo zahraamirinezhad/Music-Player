@@ -2,9 +2,13 @@ package com.example.musicplayer.Music_Stuff
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayer.Activity.MainActivity
+import com.example.musicplayer.Adaptor.AlbumViewAdapter
+import com.example.musicplayer.Adaptor.ArtistViewAdapter
+import com.example.musicplayer.Adaptor.MusicAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 import kotlin.collections.ArrayList
@@ -33,10 +37,10 @@ class SortMusics {
         }
 
         fun sortByArtist(context: Context) {
-            val menuList = arrayOf("Artist Name", "Song Amount")
+            val menuList = arrayOf(Constants.ARTIST_NAME, Constants.SONG_AMOUNT)
             var currentSort = MainActivity.artistSortBy
             val build = MaterialAlertDialogBuilder(context)
-            build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+            build.setTitle(Constants.SORT_ORDER).setPositiveButton(Constants.YES) { _, _ ->
                 if (MainActivity.artistSortBy != currentSort) {
                     MainActivity.artistSortBy = currentSort
                     when (MainActivity.artistSortBy) {
@@ -49,10 +53,10 @@ class SortMusics {
                     }
                     val editor =
                         context.getSharedPreferences(
-                            "SORTING_ARTIST",
+                            Constants.SORTING_ARTIST,
                             AppCompatActivity.MODE_PRIVATE
                         ).edit()
-                    editor.putInt("SORT ORDER FOR ARTIST", MainActivity.artistSortBy)
+                    editor.putInt(Constants.SORT_ORDER_FOR_ARTIST, MainActivity.artistSortBy)
                     editor.apply()
                 }
             }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
@@ -84,10 +88,10 @@ class SortMusics {
         }
 
         fun sortByAlbum(context: Context) {
-            val menuList = arrayOf("Album Name", "Song Amount")
+            val menuList = arrayOf(Constants.ALBUM_NAME, Constants.SONG_AMOUNT)
             var currentSort = MainActivity.albumSortBy
             val build = MaterialAlertDialogBuilder(context)
-            build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+            build.setTitle(Constants.SORT_ORDER).setPositiveButton(Constants.YES) { _, _ ->
                 if (MainActivity.albumSortBy != currentSort) {
                     MainActivity.albumSortBy = currentSort
                     when (MainActivity.albumSortBy) {
@@ -100,10 +104,10 @@ class SortMusics {
                     }
                     val editor =
                         context.getSharedPreferences(
-                            "SORTING_ALBUM",
+                            Constants.SORTING_ALBUM,
                             AppCompatActivity.MODE_PRIVATE
                         ).edit()
-                    editor.putInt("SORT ORDER FOR ALBUM", MainActivity.albumSortBy)
+                    editor.putInt(Constants.SORT_ORDER_FOR_ALBUM, MainActivity.albumSortBy)
                     editor.apply()
                 }
             }.setSingleChoiceItems(menuList, currentSort) { _, wich ->
@@ -116,10 +120,11 @@ class SortMusics {
         }
 
         fun sortByMusic(context: Context) {
-            val menuList = arrayOf("Recently Added", "Song Title", "File Size")
+            val menuList =
+                arrayOf(Constants.RECEANTLY_ADDED, Constants.SONG_TITLE, Constants.FILE_SIZE)
             var currentSort = MainActivity.sortBy
             val build = MaterialAlertDialogBuilder(context)
-            build.setTitle("SORT ORDER").setPositiveButton("YES") { _, _ ->
+            build.setTitle(Constants.SORT_ORDER).setPositiveButton(Constants.YES) { _, _ ->
                 if (MainActivity.sortBy != currentSort) {
                     MainActivity.sortBy = currentSort
                     when (MainActivity.sortBy) {
@@ -138,9 +143,12 @@ class SortMusics {
                     }
                     MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
                     val editor =
-                        context.getSharedPreferences("SORTING", AppCompatActivity.MODE_PRIVATE)
+                        context.getSharedPreferences(
+                            Constants.SORTING,
+                            AppCompatActivity.MODE_PRIVATE
+                        )
                             .edit()
-                    editor.putInt("SORT ORDER", currentSort)
+                    editor.putInt(Constants.SORT_ORDER, currentSort)
                     editor.apply()
                 }
 
@@ -257,6 +265,132 @@ class SortMusics {
             val temp = arr[i]
             arr[i] = arr[j]
             arr[j] = temp
+        }
+
+        fun sortCommandArtistSettings(context: Context) {
+            val artistSortEditor = context.getSharedPreferences(
+                Constants.SORTING_ARTIST,
+                AppCompatActivity.MODE_PRIVATE
+            )
+            val sortValue = artistSortEditor.getInt(Constants.SORT_ORDER_FOR_ARTIST, 0)
+            if (MainActivity.artistSortBy != sortValue) {
+                MainActivity.artistSortBy = sortValue
+                when (MainActivity.artistSortBy) {
+                    0 -> {
+                        sortByArtistName()
+                    }
+                    1 -> {
+                        sortByArtistSonAmount()
+                    }
+                }
+            }
+        }
+
+        fun sortCommandAlbumSettings(context: Context) {
+            val albumSortEditor = context.getSharedPreferences(
+                Constants.SORTING_ALBUM,
+                AppCompatActivity.MODE_PRIVATE
+            )
+            val sortValue = albumSortEditor.getInt(Constants.SORT_ORDER_FOR_ALBUM, 0)
+            if (MainActivity.albumSortBy != sortValue) {
+                MainActivity.albumSortBy = sortValue
+                when (MainActivity.albumSortBy) {
+                    0 -> {
+                        sortByAlbumName()
+                    }
+                    1 -> {
+                        sortByAlbumSongAmount()
+                    }
+                }
+            }
+        }
+
+        fun sortCommandSongSettings(context: Context) {
+            val sortEditor =
+                context.getSharedPreferences(Constants.SORT_ORDER, AppCompatActivity.MODE_PRIVATE)
+            val sortValue = sortEditor.getInt(Constants.SORT_ORDER, 0)
+            if (MainActivity.sortBy != sortValue) {
+                when (MainActivity.sortBy) {
+                    2 -> {
+                        sortByMusic(context)
+                    }
+                    1 -> {
+                        sortByAlbum(context)
+                    }
+                    0 -> {
+                        sortByArtist(context)
+                    }
+                }
+                MainActivity.musicAdapter.updateMusicList(MainActivity.MusicListMA)
+            }
+        }
+
+        fun sortAllAtBeginning(context: Context) {
+            val sortEditor =
+                context.getSharedPreferences(Constants.SORTING, AppCompatActivity.MODE_PRIVATE)
+            MainActivity.sortBy = sortEditor.getInt(Constants.SORT_ORDER, 0)
+
+            val albumSortEditor = context.getSharedPreferences(
+                Constants.SORTING_ALBUM,
+                AppCompatActivity.MODE_PRIVATE
+            )
+            MainActivity.albumSortBy = albumSortEditor.getInt(Constants.SORT_ORDER_FOR_ALBUM, 0)
+
+            val artistSortEditor = context.getSharedPreferences(
+                Constants.SORTING_ARTIST,
+                AppCompatActivity.MODE_PRIVATE
+            )
+            MainActivity.artistSortBy = artistSortEditor.getInt(Constants.SORT_ORDER_FOR_ARTIST, 0)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                MainActivity.MusicListMA = Data.getAllAudio(context)
+            }
+            when (MainActivity.sortBy) {
+                0 -> sortAllMusics(
+                    MainActivity.MusicListMA, 0, MainActivity.MusicListMA.size - 1,
+                    MainActivity.sortBy
+                )
+                1 -> sortAllMusics(
+                    MainActivity.MusicListMA, 0, MainActivity.MusicListMA.size - 1,
+                    MainActivity.sortBy
+                )
+                2 -> sortAllMusics(
+                    MainActivity.MusicListMA, 0, MainActivity.MusicListMA.size - 1,
+                    MainActivity.sortBy
+                )
+            }
+
+            MainActivity.musicAdapter = MusicAdapter(context, MainActivity.MusicListMA)
+
+            if (MainActivity.albumSortBy == 1) {
+                val list = sortByMusicAmount(MainActivity.songByAlbum)
+                MainActivity.songByAlbum = LinkedHashMap()
+                for (x in list) {
+                    MainActivity.songByAlbum[x.key] = x.value
+                }
+            } else {
+                val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
+                    MainActivity.songByAlbum
+                )
+                MainActivity.songByAlbum = LinkedHashMap()
+                MainActivity.songByAlbum = newList
+            }
+            MainActivity.albumAdapter = AlbumViewAdapter(context, MainActivity.songByAlbum)
+
+            if (MainActivity.artistSortBy == 1) {
+                val list = sortByMusicAmount(MainActivity.songByArtist)
+                MainActivity.songByArtist = LinkedHashMap()
+                for (x in list) {
+                    MainActivity.songByArtist[x.key] = x.value
+                }
+            } else {
+                val newList: LinkedHashMap<String, ArrayList<Music>> = sortByName(
+                    MainActivity.songByArtist
+                )
+                MainActivity.songByArtist = LinkedHashMap()
+                MainActivity.songByArtist = newList
+            }
+            MainActivity.artistAdapter = ArtistViewAdapter(context, MainActivity.songByArtist)
         }
     }
 }

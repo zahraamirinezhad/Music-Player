@@ -9,10 +9,8 @@ import com.example.musicplayer.Activity.MainActivity
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.R
 import java.io.File
-import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashMap
 import kotlin.system.exitProcess
 
 class Stuff {
@@ -54,13 +52,6 @@ class Stuff {
             if (Player.isPlaying)
                 return R.drawable.pause_music
             return R.drawable.play_music
-        }
-
-        fun favouriteState(): Int {
-            Player.fIndex = favoriteChecker(Player.musicListPA[Player.songPosition].id)
-            if (Player.fIndex != -1)
-                return R.drawable.favorite_full_icon
-            return R.drawable.favorite_empty_icon
         }
 
         fun doesListContainsThisMusic(list: ArrayList<Music>, ID: String): Boolean {
@@ -126,22 +117,12 @@ class Stuff {
             return playlist
         }
 
-        fun findMusicById(music: Music): Int {
-            for ((index, x) in MainActivity.MusicListMA.withIndex()) {
-                if (x.id == music.id) {
-                    return index
-                }
-            }
-            return -1
-        }
-
         fun getDetails(music: Music): SpannableStringBuilder {
-            val str = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
+            return SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
                 .append(music.title)
                 .bold { append("\n\nDuration: ") }
                 .append(DateUtils.formatElapsedTime(music.duration / 1000))
                 .bold { append("\n\nLocation: ") }.append(music.path)
-            return str
         }
     }
 }

@@ -23,9 +23,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ADD
+import com.example.musicplayer.Music_Stuff.Constants.Companion.DAY_FORMATTER
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
+import com.example.musicplayer.Music_Stuff.Constants.Companion.ITS_FROM_PLAY_BTN
+import com.example.musicplayer.Music_Stuff.Constants.Companion.MUSICS_ADDED_SUCCESSFULLY
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAYLIST_EXIST
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAYLIST_NAME
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAY_SONG_FIRST
+import com.example.musicplayer.Music_Stuff.Constants.Companion.SELECT_PALY_LIST
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.AddPlaylistDialogBinding
 import com.example.musicplayer.databinding.AlbumViewBinding
@@ -127,8 +135,8 @@ class AlbumViewAdapter(
                 when (p0.itemId) {
                     R.id.play_album_view -> {
                         val intent2 = Intent(context, ShowByAlbumDetails::class.java)
-                        intent2.putExtra("index", position)
-                        intent2.putExtra("ItsFromPlayBTN", true)
+                        intent2.putExtra(INDEX, position)
+                        intent2.putExtra(ITS_FROM_PLAY_BTN, true)
                         ContextCompat.startActivity(context, intent2, null)
                     }
                     R.id.add_to_playlist_album_view -> {
@@ -136,7 +144,7 @@ class AlbumViewAdapter(
                         val ft: FragmentManager =
                             (context as FragmentActivity).supportFragmentManager
                         menu = SelectPlayList()
-                        menu.show(ft, "SELECT PLAYLIST")
+                        menu.show(ft, SELECT_PALY_LIST)
                     }
                     R.id.add_to_play_next_album_view -> {
                         try {
@@ -157,10 +165,10 @@ class AlbumViewAdapter(
                             }
                             Player.musicListPA = ArrayList()
                             Player.musicListPA.addAll(PlayNext.playNextList)
-                            Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, MUSICS_ADDED_SUCCESSFULLY, Toast.LENGTH_SHORT)
                                 .show()
                         } catch (e: Exception) {
-                            Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
+                            Snackbar.make(context, holder.root, PLAY_SONG_FIRST, 3000).show()
                         }
                     }
                     R.id.add_to_favourites -> {
@@ -170,7 +178,7 @@ class AlbumViewAdapter(
                             if (!Stuff.doesListContainsThisMusic(Favourite.favoriteSongs, music.id))
                                 Favourite.favoriteSongs.add(music)
                         }
-                        Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, MUSICS_ADDED_SUCCESSFULLY, Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -181,7 +189,7 @@ class AlbumViewAdapter(
 
         holder.root.setOnClickListener {
             val intent = Intent(context, ShowByAlbumDetails::class.java)
-            intent.putExtra("index", position)
+            intent.putExtra(INDEX, position)
             ContextCompat.startActivity(context, intent, null)
         }
     }
@@ -239,13 +247,13 @@ class AlbumViewAdapter(
                 )
             val binder = AddPlaylistDialogBinding.bind(dialog)
             val builder = MaterialAlertDialogBuilder(context as Activity)
-            builder.setView(dialog).setTitle("PLAYLIST NAME")
-                .setPositiveButton("ADD") { dialog, _ ->
+            builder.setView(dialog).setTitle(PLAYLIST_NAME)
+                .setPositiveButton(ADD) { dialog, _ ->
                     val name = binder.playListNamePL.text
                     val username = binder.userNamePL.text
                     if (name != null && username != null && name.isNotEmpty() && username.isNotEmpty()) {
                         addPlaylist(name.toString(), username.toString())
-                        Toast.makeText(context, "Musics Added Successfully", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, MUSICS_ADDED_SUCCESSFULLY, Toast.LENGTH_SHORT)
                             .show()
                         dialog.dismiss()
                         menu.dismiss()
@@ -265,7 +273,7 @@ class AlbumViewAdapter(
                 }
             }
 
-            if (playlistExist) Toast.makeText(context, "Playlist Exist !!", Toast.LENGTH_SHORT)
+            if (playlistExist) Toast.makeText(context, PLAYLIST_EXIST, Toast.LENGTH_SHORT)
                 .show()
             else {
                 val tempPlaylist = MyPlaylist()
@@ -278,7 +286,7 @@ class AlbumViewAdapter(
                 tempPlaylist.name = name
                 tempPlaylist.createdBy = username
                 val calender = Calendar.getInstance().time
-                val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.US)
+                val sdf = SimpleDateFormat(DAY_FORMATTER, Locale.US)
                 tempPlaylist.createdOn = sdf.format(calender)
                 Playlist.listOfPlaylists.ref.add(tempPlaylist)
             }

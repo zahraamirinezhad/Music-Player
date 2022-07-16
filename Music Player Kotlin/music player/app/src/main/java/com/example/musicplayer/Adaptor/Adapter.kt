@@ -3,6 +3,7 @@ package com.example.musicplayer.Adaptor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CLASS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.NowPlaying
 import com.example.musicplayer.Music_Stuff.Stuff
@@ -108,23 +111,31 @@ open class Adapter(
             Player.musicService!!.mediaPlayer!!.reset()
             Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
             Player.musicService!!.mediaPlayer!!.prepare()
-            try {
-                Glide.with(context).asBitmap().load(
-                    if (Stuff.getImageArt(Player.musicListPA[Player.songPosition].path) == null) BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_background
-                    ) else Stuff.getImageArt(
+            var image: Bitmap?
+            if (Player.musicListPA[Player.songPosition].image == null) {
+                try {
+                    val img = Stuff.getImageArt(
                         Player.musicListPA[Player.songPosition].path
                     )
-                ).into(NowPlaying.binding.songImgNP)
-            } catch (e: Exception) {
-                Glide.with(context).asBitmap().load(
-                    BitmapFactory.decodeResource(
+                    image = if (img != null) {
+                        BitmapFactory.decodeByteArray(img, 0, img.size)
+                    } else {
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.image_background
+                        )
+                    }
+                } catch (e: Exception) {
+                    image = BitmapFactory.decodeResource(
                         context.resources,
                         R.drawable.image_background
                     )
-                ).into(NowPlaying.binding.songImgNP)
+                }
+            } else {
+                image = Player.musicListPA[Player.songPosition].image
             }
+
+            NowPlaying.binding.songImgNP.setImageBitmap(image)
 
             Player.binding.seekMusic.progress = 0
             Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
@@ -137,7 +148,6 @@ open class Adapter(
 
             Player.musicService!!.showNotification(
                 Stuff.playingState(),
-                Stuff.favouriteState(),
                 Stuff.musicState()
             )
 
@@ -158,15 +168,14 @@ open class Adapter(
         NowPlaying.binding.playPauseNP.setIconResource(R.drawable.pause_music)
         Player.musicService!!.showNotification(
             Stuff.playingState(),
-            Stuff.favouriteState(),
             Stuff.musicState()
         )
     }
 
     fun sendIntent(ref: String, pos: Int) {
         val intent = Intent(context, Player::class.java)
-        intent.putExtra("index", pos)
-        intent.putExtra("class", ref)
+        intent.putExtra(INDEX, pos)
+        intent.putExtra(CLASS, ref)
         ContextCompat.startActivity(context, intent, null)
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.example.musicplayer.Music_Stuff.Constants.Companion.OK
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CustomDialog {
@@ -21,7 +22,7 @@ class CustomDialog {
             val dDialog = MaterialAlertDialogBuilder(context)
                 .setBackground(ColorDrawable(0x99000000.toInt()))
                 .setView(detailsDialog)
-                .setPositiveButton("OK") { self, _ -> self.dismiss() }
+                .setPositiveButton(OK) { self, _ -> self.dismiss() }
                 .setCancelable(false)
                 .create()
             dDialog.show()

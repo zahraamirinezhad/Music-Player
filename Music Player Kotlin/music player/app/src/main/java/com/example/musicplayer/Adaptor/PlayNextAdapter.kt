@@ -9,11 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.musicplayer.*
 import com.example.musicplayer.Activity.PlayNext
 import com.example.musicplayer.Activity.Player
 import com.example.musicplayer.Music_Stuff.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CANT_REMOVE_CURRENT_PLAYING
+import com.example.musicplayer.Music_Stuff.Constants.Companion.REMOVE
 import com.example.musicplayer.databinding.DetailsViewBinding
 import com.example.musicplayer.databinding.MoreFeatureBinding
 import com.example.musicplayer.databinding.PlayNextViewBinding
@@ -69,13 +70,13 @@ class PlayNextAdapter(
                     .inflate(R.layout.more_feature, holder.root, false)
             val bindingMF = MoreFeatureBinding.bind(customDialog)
             val dialog = CustomDialog.getDialogForOnLongClickListener(context, customDialog)
-            bindingMF.AddToPNBtn.text = "Remove"
+            bindingMF.AddToPNBtn.text = REMOVE
             bindingMF.deleteBtn.visibility = View.GONE
             bindingMF.AddToPNBtn.setOnClickListener {
                 if (position == Player.songPosition)
                     Snackbar.make(
                         (context as Activity).findViewById(R.id.linearLayoutPN),
-                        "Can't Remove Currently Playing Song.", Snackbar.LENGTH_SHORT
+                        CANT_REMOVE_CURRENT_PLAYING, Snackbar.LENGTH_SHORT
                     ).show()
                 else {
                     if (Player.songPosition < position && Player.songPosition != 0) --Player.songPosition

@@ -3,7 +3,6 @@ package com.example.musicplayer.Music_Stuff
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.*
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CLASS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
+import com.example.musicplayer.Music_Stuff.Constants.Companion.NOW_PLAYING
+import com.example.musicplayer.Music_Stuff.PlayerJobs.Companion.prevNextNotPlayer
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentNowPlayingBinding
 
@@ -46,8 +49,7 @@ class NowPlaying : Fragment() {
 
         binding.root.setOnClickListener {
             val intent = Intent(requireContext(), Player::class.java)
-            intent.putExtra("index", Player.songPosition)
-            intent.putExtra("class", "NowPlaying")
+            intent.putExtra(CLASS, NOW_PLAYING)
             ContextCompat.startActivity(requireContext(), intent, null)
         }
         return view
@@ -55,55 +57,19 @@ class NowPlaying : Fragment() {
 
     private fun prevNext(prevOrNext: Boolean) {
         try {
-            if (Player.musicService!!.mediaPlayer == null) Player.musicService!!.mediaPlayer =
-                MediaPlayer()
-
-            if (Player.isShuffle)
-                Stuff.setSongPositionShuffle()
-            else Stuff.setSongPosition(prevOrNext)
-            MainActivity.musicAdapter.update()
-            if (ShowByAlbumDetails.isAdapterSHBALInitialized()) ShowByAlbumDetails.adapter.update()
-            if (Player.isPlayingPlaylist) PlaylistDetails.adapter.update()
-            if (Player.isPlayingFavourites) Favourite.adapter.update()
-
-            Player.musicService!!.mediaPlayer!!.reset()
-            Player.musicService!!.mediaPlayer!!.setDataSource(Player.musicListPA[Player.songPosition].path)
-            Player.musicService!!.mediaPlayer!!.prepare()
-
-            Glide.with(binding.root).asBitmap().load(
-                if (Stuff.getImageArt(Player.musicListPA[Player.songPosition].path) == null) BitmapFactory.decodeResource(
-                    binding.root.resources,
-                    R.drawable.image_background
-                ) else Stuff.getImageArt(
-                    Player.musicListPA[Player.songPosition].path
-                )
-            ).into(binding.songImgNP)
-
-            Player.binding.seekMusic.progress = 0
-            Player.binding.seekMusic.max = Player.musicService!!.mediaPlayer!!.duration
-            Player.binding.seekMusicStart.text =
-                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.currentPosition.toLong())
-            Player.binding.seekMusicEnd.text =
-                Stuff.formatDuration(Player.musicService!!.mediaPlayer!!.duration.toLong())
-
-            binding.songNameNP.text = Player.musicListPA[Player.songPosition].title
-
+            prevNextNotPlayer(requireContext(), prevOrNext)
 
             if (!prevOrNext)
                 Player.musicService!!.showNotification(
                     Stuff.playingState(),
-                    Stuff.favouriteState(),
                     Stuff.musicState()
                 )
             else Player.musicService!!.showNotification(
                 Stuff.playingState(),
-                Stuff.favouriteState(),
                 Stuff.musicState()
             )
 
             playMusic()
-            if (ShowByAlbumDetails.isAdapterSHBALInitialized())
-                ShowByAlbumDetails.adapter.update()
         } catch (e: Exception) {
 
         }
@@ -164,7 +130,6 @@ class NowPlaying : Fragment() {
         binding.playPauseNP.setIconResource(R.drawable.pause_music)
         Player.musicService!!.showNotification(
             Stuff.playingState(),
-            Stuff.favouriteState(),
             Stuff.musicState()
         )
     }
@@ -175,7 +140,6 @@ class NowPlaying : Fragment() {
         binding.playPauseNP.setIconResource(R.drawable.play_music)
         Player.musicService!!.showNotification(
             Stuff.playingState(),
-            Stuff.favouriteState(),
             Stuff.musicState()
         )
     }

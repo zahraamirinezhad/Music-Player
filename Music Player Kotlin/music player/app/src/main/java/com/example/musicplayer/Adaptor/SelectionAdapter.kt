@@ -1,14 +1,11 @@
 package com.example.musicplayer.Adaptor
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.example.musicplayer.Activity.Playlist
 import com.example.musicplayer.Activity.PlaylistDetails
 import com.example.musicplayer.Music_Stuff.Music
 import com.example.musicplayer.Music_Stuff.Stuff
-import com.example.musicplayer.Music_Stuff.Stuff.Companion.getImageArt
 import com.example.musicplayer.R
 
 class SelectionAdapter(

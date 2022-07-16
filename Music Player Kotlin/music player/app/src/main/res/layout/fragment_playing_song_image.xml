@@ -1,41 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/imageContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.41000003">
+    android:layout_height="wrap_content">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImgPA"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/image_background"
         android:contentDescription="@string/song_image"
         android:scaleType="centerCrop"
-        android:src="@drawable/image_background"
-        app:layout_constraintBottom_toBottomOf="@+id/imageContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageContainer"
-        app:layout_constraintVertical_bias="0.0"
+        app:shapeAppearanceOverlay="@style/circle"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/pauseOrPlay"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:contentDescription="@string/song_image"
-        android:src="@drawable/gramophone"
-        android:layout_marginRight="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/songImgPA"
-        app:layout_constraintEnd_toEndOf="@+id/songImgPA"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/songImgPA" />
+        android:src="@drawable/gramophone" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

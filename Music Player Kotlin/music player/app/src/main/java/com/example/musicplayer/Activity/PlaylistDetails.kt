@@ -13,6 +13,13 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.Adaptor.PlaylistDetailsAdapter
+import com.example.musicplayer.Music_Stuff.Constants.Companion.CLASS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.INDEX
+import com.example.musicplayer.Music_Stuff.Constants.Companion.NO
+import com.example.musicplayer.Music_Stuff.Constants.Companion.PLAYLIST_DETAILS_SHUFFLE
+import com.example.musicplayer.Music_Stuff.Constants.Companion.REMOVE_ALL_MUSICS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.WANNA_REMOVE_ALL_MUSICS
+import com.example.musicplayer.Music_Stuff.Constants.Companion.YES
 import com.example.musicplayer.Music_Stuff.Stuff
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.ActivityPlaylistDetailsBinding
@@ -34,7 +41,7 @@ class PlaylistDetails : AppCompatActivity() {
         setTheme(R.style.blackTheme)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        currentPlaylist = intent.extras?.get("index") as Int
+        currentPlaylist = intent.extras?.get(INDEX) as Int
         Playlist.listOfPlaylists.ref[currentPlaylist].musics =
             Stuff.checkPlaylist(Playlist.listOfPlaylists.ref[currentPlaylist].musics)
 
@@ -53,8 +60,8 @@ class PlaylistDetails : AppCompatActivity() {
 
         binding.shufflePLD.setOnClickListener {
             val intent = Intent(this@PlaylistDetails, Player::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "PlaylistDetailsShuffle")
+            intent.putExtra(INDEX, 0)
+            intent.putExtra(CLASS, PLAYLIST_DETAILS_SHUFFLE)
             startActivity(intent)
         }
 
@@ -72,14 +79,14 @@ class PlaylistDetails : AppCompatActivity() {
 
                     R.id.removeAllPLA -> {
                         val builder = MaterialAlertDialogBuilder(this)
-                        builder.setTitle("Remove All The Musics")
-                            .setMessage("Do You Want to Remove All the Musics in this Playlist ?")
-                            .setPositiveButton("YES") { dialog, _ ->
+                        builder.setTitle(REMOVE_ALL_MUSICS)
+                            .setMessage(WANNA_REMOVE_ALL_MUSICS)
+                            .setPositiveButton(YES) { dialog, _ ->
                                 Playlist.listOfPlaylists.ref[currentPlaylist].musics.clear()
                                 adapter.refreshPlaylist()
                                 dialog.dismiss()
                             }
-                            .setNegativeButton("NO") { dialog, _ ->
+                            .setNegativeButton(NO) { dialog, _ ->
                                 dialog.dismiss()
                             }
                         val customDialog = builder.create()
