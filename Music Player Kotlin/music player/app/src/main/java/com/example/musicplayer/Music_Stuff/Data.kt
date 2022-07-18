@@ -42,7 +42,7 @@ class Data {
             val jsonStringPlaylist = GsonBuilder().create().toJson(Playlist.listOfPlaylists)
             editor.putString(PLAYLISTS, jsonStringPlaylist)
 
-            if (Player.musicListPA != null && Player.musicListPA.size != 0 && Player.musicService != null && Player.musicService!!.mediaPlayer != null) {
+            if (Player.musicListPA.size != 0 && Player.musicService != null && Player.musicService!!.mediaPlayer != null) {
                 val jsonStringPlayerMusicList = GsonBuilder().create().toJson(Player.musicListPA)
                 editor.putString(RECENT_MUSIC, jsonStringPlayerMusicList)
                 editor.putString(
@@ -205,6 +205,12 @@ class Data {
                 val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
                 Favourite.favoriteSongs.addAll(data)
             }
+            for (i in Favourite.favoriteSongs.size - 1 until -1) {
+                val file = File(Favourite.favoriteSongs[i].path)
+                if (!file.exists()) {
+                    Favourite.favoriteSongs.removeAt(i)
+                }
+            }
             for (music in Favourite.favoriteSongs) {
                 music.image = null
             }
@@ -219,6 +225,14 @@ class Data {
                     GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
                 Playlist.listOfPlaylists = data
             }
+            for (i in Playlist.listOfPlaylists.ref.size - 1 until -1) {
+                for (j in Playlist.listOfPlaylists.ref[i].musics.size - 1 until -1) {
+                    val file = File(Playlist.listOfPlaylists.ref[i].musics[i].path)
+                    if (!file.exists()) {
+                        Playlist.listOfPlaylists.ref[i].musics.removeAt(i)
+                    }
+                }
+            }
             for (list in Playlist.listOfPlaylists.ref) {
                 for (music in list.musics) {
                     music.image = null
@@ -232,6 +246,12 @@ class Data {
                 val data: ArrayList<Music> = GsonBuilder().create()
                     .fromJson(jsonStringPlayerMusicList, typeTokenPlayerMusicList)
                 musicList.addAll(data)
+            }
+            for (i in musicList.size - 1 until -1) {
+                val file = File(musicList[i].path)
+                if (!file.exists()) {
+                    musicList.removeAt(i)
+                }
             }
             for (music in musicList) {
                 music.image = null

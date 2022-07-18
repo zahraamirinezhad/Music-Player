@@ -284,7 +284,6 @@ class Player : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionL
             }
         } else {
             songPosition = intent.getIntExtra(INDEX, 0)
-            Toast.makeText(this, songPosition.toString(), Toast.LENGTH_SHORT).show()
             when (classType) {
                 PLAYLIST_DETAILS_SHUFFLE -> {
                     isPlayingPlaylist = true
